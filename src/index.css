@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Tabular figures keep point/rank columns from jittering as digits change width */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
