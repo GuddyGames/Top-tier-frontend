@@ -1,9 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/+$/, '');
 
 async function request(path, options = {}) {
   const token = localStorage.getItem('topTierToken');
 
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`
+    ${API_URL}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -41,8 +42,8 @@ export const api = {
       body: JSON.stringify({ proofUrl }),
     }),
   getDemoPrices: () => request('/api/demo/prices'),
-  getDemoCandles: (symbol, hours = 4) =>
-    request(`/api/demo/prices/${encodeURIComponent(symbol)}/candles?hours=${hours}`),
+  getDemoCandles: (symbol, hours = 4, interval = 1) =>
+    request(`/api/demo/prices/${encodeURIComponent(symbol)}/candles?hours=${hours}&interval=${interval}`),
   getDemoAccount: () => request('/api/demo/account'),
   getDemoPerformance: () => request('/api/demo/performance'),
   getDemoTrades: () => request('/api/demo/trades'),

@@ -3,10 +3,20 @@ import { api } from '../api/client';
 import PriceChart from '../components/PriceChart';
 import Callout from '../components/Callout';
 
-const SYMBOLS = ['EUR/USD', 'GBP/USD', 'USD/JPY', 'BTC/USD', 'ETH/USD'];
+const SYMBOLS = ['EUR/USD', 'GBP/USD', 'USD/JPY', 'AUD/USD', 'USD/CAD', 'XAU/USD', 'XAG/USD', 'BTC/USD', 'ETH/USD', 'SOL/USD'];
+
+const TIMEFRAMES = [
+  { key: '1m', label: '1m', interval: 1, hours: 2 },
+  { key: '5m', label: '5m', interval: 5, hours: 12 },
+  { key: '15m', label: '15m', interval: 15, hours: 48 },
+  { key: '1H', label: '1H', interval: 60, hours: 24 * 7 },
+];
 
 function decimalsFor(symbol) {
-  return symbol.includes('/JPY') ? 3 : symbol.includes('BTC') || symbol.includes('ETH') ? 2 : 5;
+  if (symbol.includes('/JPY')) return 3;
+  if (symbol.startsWith('BTC') || symbol.startsWith('ETH') || symbol.startsWith('SOL')) return 2;
+  if (symbol.startsWith('XAU') || symbol.startsWith('XAG')) return 2;
+  return 5;
 }
 
 // A simple, clearly-labeled moving-average read on recent candles — this
@@ -98,6 +108,7 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
 
 export default function Terminal() {
   const [symbol, setSymbol] = useState(SYMBOLS[0]);
+  const [timeframe, setTimeframe] = useState(TIMEFRAMES[0]);
   const [prices, setPrices] = useState({});
   const [candles, setCandles] = useState([]);
   const [account, setAccount] = useState(null);
@@ -117,8 +128,8 @@ export default function Terminal() {
     setTrades(tradeData.trades);
   }, []);
 
-  const refreshCandles = useCallback((sym) => {
-    api.getDemoCandles(sym, 4).then((d) => setCandles(d.candles)).catch(() => {});
+  const refreshCandles = useCallback((sym, tf) => {
+    api.getDemoCandles(sym, tf.hours, tf.interval).then((d) => setCandles(d.candles)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -132,10 +143,10 @@ export default function Terminal() {
   }, [refreshCore]);
 
   useEffect(() => {
-    refreshCandles(symbol);
-    const interval = setInterval(() => refreshCandles(symbol), 10000);
+    refreshCandles(symbol, timeframe);
+    const interval = setInterval(() => refreshCandles(symbol, timeframe), 10000);
     return () => clearInterval(interval);
-  }, [symbol, refreshCandles]);
+  }, [symbol, timeframe, refreshCandles]);
 
   const trend = useMemo(() => trendFromCandles(candles), [candles]);
 
@@ -194,8 +205,30 @@ export default function Terminal() {
         ))}
       </div>
 
-      <div className="mt-4 rounded-xl border border-border bg-surface p-3">
-        <PriceChart candles={candles} />
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="flex gap-1 rounded-lg bg-surface p-1">
+          {TIMEFRAMES.map((tf) => (
+            <button
+              key={tf.key}
+              onClick={() => setTimeframe(tf)}
+              className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
+                timeframe.key === tf.key ? 'bg-gold text-base' : 'text-ink-muted hover:text-ink-primary'
+              }`}
+            >
+              {tf.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-2 rounded-xl border border-border bg-surface p-3">
+        {candles.length === 0 ? (
+          <div className="flex h-[280px] items-center justify-center text-sm text-ink-muted">
+            Collecting price data — check back in a minute.
+          </div>
+        ) : (
+          <PriceChart candles={candles} />
+        )}
       </div>
 
       {trend && (
