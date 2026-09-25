@@ -7,6 +7,7 @@ export default function Tasks() {
   const [proof, setProof] = useState({});
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState({});
+  const [telegramLink, setTelegramLink] = useState(null);
 
   const load = async () => {
     try {
@@ -35,6 +36,17 @@ export default function Tasks() {
 
   const submissionByTask = Object.fromEntries(submissions.map((s) => [s.task_id, s]));
 
+  const startTelegramTask = async (taskId) => {
+    setBusy((v) => ({ ...v, [taskId]: true }));
+    try {
+      const result = await api.startTelegramVerification();
+      setTelegramLink(result.telegram_url);
+      window.open(result.telegram_url, '_blank', 'noopener,noreferrer');
+      await load();
+    } catch (e) { setError(e.message); }
+    finally { setBusy((v) => ({ ...v, [taskId]: false })); }
+  };
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
       <h1 className="font-display text-2xl font-semibold">Tasks</h1>
@@ -43,6 +55,7 @@ export default function Tasks() {
       </p>
 
       {error && <p className="mt-4 text-sm text-loss">{error}</p>}
+      {telegramLink && <p className="mt-2 text-xs text-ink-muted">Telegram verification opened. Complete it in Telegram and return here.</p>}
 
       <div className="mt-6 space-y-3">
         {tasks.map((task) => {
@@ -76,6 +89,13 @@ export default function Tasks() {
                   {submission.status === 'rejected' && (
                     <p className="mt-1 text-xs text-loss">Your proof was rejected. Contact an admin if you need to resubmit.</p>
                   )}
+                </div>
+              ) : task.task_type === 'telegram' ? (
+                <div className="mt-4 rounded-lg border border-gold/30 bg-gold/5 px-3 py-3">
+                  <p className="text-xs text-ink-muted">This task is verified automatically by the Top-Tier Telegram bot. Join the channel, then verify through the bot.</p>
+                  <button onClick={() => startTelegramTask(task.id)} disabled={busy[task.id]} className="mt-2 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-base disabled:opacity-50">
+                    {busy[task.id] ? 'Checking…' : 'Verify with Telegram'}
+                  </button>
                 </div>
               ) : (
                 <div className="mt-4 space-y-3">
