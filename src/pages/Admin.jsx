@@ -247,6 +247,39 @@ function UsersTab() {
   );
 }
 
+function ReferralsTab() {
+  const [referrals, setReferrals] = useState([]);
+  const [error, setError] = useState(null);
+  useEffect(() => { api.adminGetReferrals().then((d) => setReferrals(d.referrals || [])).catch((e) => setError(e.message)); }, []);
+  return (
+    <div>
+      <p className="text-sm text-ink-muted">Every referral relationship, including the referrer and the new user's Gmail, username and Telegram username.</p>
+      {error && <p className="mt-3 text-sm text-loss">{error}</p>}
+      <div className="mt-4 space-y-2">
+        {referrals.map((r) => (
+          <div key={r.referral_id} className="rounded-xl border border-border bg-surface p-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <p className="text-xs text-ink-muted">Referrer</p>
+                <p className="font-medium">{r.referrer_username}</p>
+                <p className="text-xs text-ink-muted">{r.referrer_email}</p>
+                <p className="text-xs text-ink-muted">{r.referrer_telegram_username ? '@' + r.referrer_telegram_username.replace(/^@/, '') : 'Telegram not provided'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-ink-muted">Referred user</p>
+                <p className="font-medium">{r.referred_username}</p>
+                <p className="text-xs text-ink-muted">{r.referred_email}</p>
+                <p className="text-xs text-ink-muted">{r.referred_telegram_username ? '@' + r.referred_telegram_username.replace(/^@/, '') : 'Telegram not provided'}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+        {referrals.length === 0 && <p className="text-sm text-ink-muted">No referrals yet.</p>}
+      </div>
+    </div>
+  );
+}
+
 function ActivityTab() {
   const [activities, setActivities] = useState([]);
   useEffect(() => { api.adminGetActivity().then((d) => setActivities(d.activities)).catch(() => {}); }, []);
@@ -427,6 +460,7 @@ function TasksAdminTab() {
 
 const TABS = [
   { key: 'users', label: 'Users', Component: UsersTab },
+  { key: 'referrals', label: 'Referrals', Component: ReferralsTab },
   { key: 'activity', label: 'Activity', Component: ActivityTab },
   { key: 'trades', label: 'Trades', Component: TradesTab },
   { key: 'pending', label: 'Pending points', Component: PendingTasksTab },
