@@ -1,14 +1,18 @@
 {
-  "name": "Top Tier",
-  "short_name": "Top Tier",
-  "description": "Top Tier leaderboard and trading practice app",
+  "name": "Top-Tier",
+  "short_name": "Top-Tier",
+  "description": "Top-Tier trading and learning platform",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0b0b0d",
-  "theme_color": "#0b0b0d",
+  "background_color": "#050B1F",
+  "theme_color": "#2563EB",
   "icons": [
-    {"src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    {
+      "src": "/icons/top-tier-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }

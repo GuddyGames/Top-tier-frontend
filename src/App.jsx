@@ -12,6 +12,7 @@ import Admin from './pages/Admin.jsx';
 import Tasks from './pages/Tasks.jsx';
 import InstallApp from './components/InstallApp.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
+import BrandLogo from './components/BrandLogo.jsx';
 
 const PUBLIC_TABS = [
   { key: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
@@ -84,7 +85,6 @@ export default function App() {
     const dx = touch.clientX - start.x;
     const dy = Math.abs(touch.clientY - start.y);
 
-    // Edge swipe from the left opens the mobile navigation drawer.
     if (start.x <= 32 && dx >= 70 && dy <= 90) {
       setDrawerOpen(true);
     }
@@ -107,10 +107,9 @@ export default function App() {
             <button
               onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
               aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-              className="flex items-center gap-2"
+              className="rounded-xl transition-transform hover:scale-[1.02]"
             >
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold text-base font-black">T</span>
-              <span className="font-display text-lg font-bold tracking-tight">Top-Tier</span>
+              <BrandLogo />
             </button>
             {tab !== (isAdmin ? 'admin' : user ? 'home' : 'leaderboard') && (
               <button
@@ -143,10 +142,9 @@ export default function App() {
         <button
           onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
           aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-          className="flex items-center gap-2"
+          className="rounded-xl transition-transform active:scale-95"
         >
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold text-base font-black">T</span>
-          <span className="font-display text-base font-bold">Top-Tier</span>
+          <BrandLogo markClassName="h-9 w-9" textClassName="text-base" />
         </button>
         <div className="flex items-center gap-2">
           <InstallApp />
@@ -173,9 +171,8 @@ export default function App() {
               transition={{ type: 'spring', stiffness: 320, damping: 30 }}
             >
               <div className="flex items-center justify-between">
-                <button onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')} className="flex items-center gap-2">
-                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold text-base font-black">T</span>
-                  <span className="font-display text-base font-bold">Top-Tier</span>
+                <button onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}>
+                  <BrandLogo markClassName="h-9 w-9" textClassName="text-base" />
                 </button>
                 <button onClick={() => setDrawerOpen(false)} aria-label="Close navigation" className="grid h-10 w-10 place-items-center rounded-xl border border-border text-xl">×</button>
               </div>
