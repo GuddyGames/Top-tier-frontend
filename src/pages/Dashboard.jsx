@@ -30,7 +30,7 @@ function TaskCard({ task, submission, onSubmitted }) {
     setError(null);
     setMessage('');
     try {
-      const data = await api.startTelegramVerification();
+      const data = await api.startTelegramTask(task.id);
       if (data.telegram_url) {
         window.open(data.telegram_url, '_blank', 'noopener,noreferrer');
         setMessage('Telegram bot opened. Follow the bot instructions to complete this task.');
@@ -183,7 +183,7 @@ export default function Dashboard() {
   if (!data) return <p className="p-6 text-sm text-ink-muted">Loading…</p>;
 
   const { stats, recent_activities = [], referrals = [], tasks = [] } = data;
-  const submissionByTaskTitle = new Map(submissions.map((item) => [item.title, item]));
+  const submissionByTaskId = new Map(submissions.map((item) => [item.task_id, item]));
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
@@ -247,7 +247,7 @@ export default function Dashboard() {
               <TaskCard
                 key={task.id}
                 task={task}
-                submission={submissionByTaskTitle.get(task.title)}
+                submission={submissionByTaskId.get(task.id)}
                 onSubmitted={loadTasks}
               />
             ))}
