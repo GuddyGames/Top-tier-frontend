@@ -5,15 +5,15 @@ function getReferralCodeFromUrl() {
   return new URLSearchParams(window.location.search).get('ref') || '';
 }
 
-export default function Auth({ onDone }) {
+export default function Auth({ onDone, initialMode = 'login', referralCode = '' }) {
   const { login, signup } = useAuth();
-  const [mode, setMode] = useState('login'); // 'login' | 'signup'
+  const [mode, setMode] = useState(initialMode); // 'login' | 'signup'
   const [form, setForm] = useState({
     username: '',
     email: '',
     password: '',
     telegramUsername: '',
-    referralCode: getReferralCodeFromUrl(),
+    referralCode: referralCode || getReferralCodeFromUrl(),
   });
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
