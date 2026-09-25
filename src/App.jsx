@@ -39,10 +39,9 @@ const PAGE_COMPONENTS = {
 export default function App() {
   const { user, authReady } = useAuth();
   const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
-  const [tab, setTab] = useState(user ? 'home' : referralCode ? 'auth' : 'leaderboard');
-  const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
+  const [tab, setTab] = useState(user ? 'home' : referralCode ? 'home' : 'leaderboard');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const historyRef = useRef([user ? 'home' : 'leaderboard']);
+  const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
 
   if (!authReady) return <SplashScreen />;
