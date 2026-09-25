@@ -39,6 +39,7 @@ export const api = {
   startTelegramVerification: () => request('/api/telegram/verification/start', { method: 'POST' }),
   getTelegramVerificationStatus: () => request('/api/telegram/verification/status'),
   getTasks: () => request('/api/tasks'),
+  getMyTaskSubmissions: () => request('/api/tasks/me'),
   submitTask: (taskId, proofUrl) =>
     request(`/api/tasks/${taskId}/submit`, {
       method: 'POST',
