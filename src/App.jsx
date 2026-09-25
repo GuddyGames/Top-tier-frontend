@@ -40,6 +40,7 @@ export default function App() {
   const { user, authReady } = useAuth();
   const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
   const [tab, setTab] = useState(user ? 'home' : referralCode ? 'auth' : 'leaderboard');
+  const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
   const [drawerOpen, setDrawerOpen] = useState(false);
   const historyRef = useRef([user ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
@@ -91,7 +92,7 @@ export default function App() {
   };
 
   const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin', 'tasks'].includes(tab);
-  if (!user && needsAuth) return <Auth onDone={() => navigate('home')} />;
+  if (!user && needsAuth) return <Auth initialMode={referralCode ? 'signup' : 'login'} referralCode={referralCode} onDone={() => navigate('home')} />;
 
   const PageComponent = PAGE_COMPONENTS[tab];
 
