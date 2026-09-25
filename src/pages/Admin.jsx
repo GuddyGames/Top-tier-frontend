@@ -428,7 +428,7 @@ function TasksAdminTab() {
           <input required type="number" min="1" placeholder="Points" value={form.points} onChange={(e) => setForm({ ...form, points: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
           <input placeholder="Task link" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
           <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
-          <select value={form.taskType} onChange={(e) => setForm({ ...form, taskType: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"><option value="manual">Manual screenshot proof</option><option value="telegram">Automatic Telegram verification</option></select>
+          <select value={form.taskType} onChange={(e) => setForm({ ...form, taskType: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"><option value="manual">Manual screenshot proof</option><option value="telegram">Telegram bot task</option></select>
         </div>
         <button className="mt-3 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-base">Publish task</button>
         {error && <p className="mt-2 text-xs text-loss">{error}</p>}
