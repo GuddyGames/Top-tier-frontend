@@ -37,6 +37,7 @@ export const api = {
     request('/api/profile/me', { method: 'PATCH', body: JSON.stringify(payload) }),
   getMyReferral: () => request('/api/referral/me'),
   startTelegramVerification: () => request('/api/telegram/verification/start', { method: 'POST' }),
+  startTelegramTask: (taskId) => request(`/api/telegram/tasks/${taskId}/start`, { method: 'POST' }),
   getTelegramVerificationStatus: () => request('/api/telegram/verification/status'),
   getTasks: () => request('/api/tasks'),
   getMyTaskSubmissions: () => request('/api/tasks/me'),
