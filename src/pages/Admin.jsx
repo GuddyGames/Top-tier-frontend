@@ -368,7 +368,11 @@ function PendingTasksTab() {
         >
           <div>
             <p><span className="font-medium">{s.username}</span> <span className="text-ink-muted">· {s.task_title} · {s.points} pts</span></p>
-            {s.proof_url && <p className="mt-0.5 text-xs text-ink-muted">{s.proof_url}</p>}
+            {s.proof_url && (
+              <a href={s.proof_url} target="_blank" rel="noreferrer" className="mt-2 block w-fit">
+                <img src={s.proof_url} alt="Task proof" className="max-h-40 max-w-xs rounded-lg border border-border object-contain" />
+              </a>
+            )}
           </div>
           <div className="flex gap-2">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => review(s.id, 'approved')} className="rounded-lg bg-gain/15 px-3 py-1.5 text-xs font-semibold text-gain hover:bg-gain/25">
@@ -389,7 +393,7 @@ function PendingTasksTab() {
 function TasksAdminTab() {
   const [tasks, setTasks] = useState([]);
   const [outstanding, setOutstanding] = useState([]);
-  const [form, setForm] = useState({ title: '', description: '', link: '', points: 100 });
+  const [form, setForm] = useState({ title: '', description: '', link: '', points: 100, taskType: 'manual' });
   const [error, setError] = useState(null);
 
   const load = async () => {
@@ -405,7 +409,7 @@ function TasksAdminTab() {
     e.preventDefault();
     try {
       await api.adminCreateTask({ ...form, points: Number(form.points) });
-      setForm({ title: '', description: '', link: '', points: 100 });
+      setForm({ title: '', description: '', link: '', points: 100, taskType: 'manual' });
       load();
     } catch (e) { setError(e.message); }
   };
@@ -424,6 +428,7 @@ function TasksAdminTab() {
           <input required type="number" min="1" placeholder="Points" value={form.points} onChange={(e) => setForm({ ...form, points: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
           <input placeholder="Task link" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
           <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
+          <select value={form.taskType} onChange={(e) => setForm({ ...form, taskType: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"><option value="manual">Manual screenshot proof</option><option value="telegram">Automatic Telegram verification</option></select>
         </div>
         <button className="mt-3 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-base">Publish task</button>
         {error && <p className="mt-2 text-xs text-loss">{error}</p>}

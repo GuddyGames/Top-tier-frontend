@@ -6,7 +6,7 @@ async function request(path, options = {}) {
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
@@ -40,11 +40,12 @@ export const api = {
   getTelegramVerificationStatus: () => request('/api/telegram/verification/status'),
   getTasks: () => request('/api/tasks'),
   getMyTaskSubmissions: () => request('/api/tasks/me'),
-  submitTask: (taskId, proofUrl) =>
-    request(`/api/tasks/${taskId}/submit`, {
-      method: 'POST',
-      body: JSON.stringify({ proofUrl }),
-    }),
+  submitTask: (taskId, { proofFile, proofUrl } = {}) => {
+    const body = new FormData();
+    if (proofFile) body.append('proof', proofFile);
+    if (proofUrl) body.append('proofUrl', proofUrl);
+    return request(`/api/tasks/${taskId}/submit`, { method: 'POST', body });
+  },
   getDemoPrices: () => request('/api/demo/prices'),
   getDemoCandles: (symbol, hours = 4, interval = 1) =>
     request(`/api/demo/prices/${encodeURIComponent(symbol)}/candles?hours=${hours}&interval=${interval}`),
