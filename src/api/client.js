@@ -86,4 +86,5 @@ export const api = {
   adminDeactivateTask: (id) =>
     request(`/api/tasks/${id}/deactivate`, { method: 'PATCH' }),
   adminGetOutstandingTasks: () => request('/api/admin/tasks/outstanding'),
+  startTelegramVerification: () => request('/api/telegram/verification/start', { method: 'POST' }),
 };
