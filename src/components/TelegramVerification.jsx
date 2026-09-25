@@ -27,6 +27,7 @@ export default function TelegramVerification() {
     try {
       const data = await api.startTelegramVerification();
       setStatus(data);
+      if (data.channel_url) window.open(data.channel_url, '_blank', 'noopener,noreferrer');
       if (data.telegram_url) window.open(data.telegram_url, '_blank', 'noopener,noreferrer');
 
       const deadline = Date.now() + (data.expires_in_seconds || 600) * 1000;
@@ -64,11 +65,19 @@ export default function TelegramVerification() {
         Join {status?.channel_username || '@Toptiertradingchannel'}, then use the verification button.
         Top-Tier will verify your Telegram account directly with Telegram.
       </p>
+      <a
+        href={status?.channel_url || `https://t.me/${String(status?.channel_username || '@Toptiertradingchannel').replace(/^@/, '')}`}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-4 inline-flex rounded-lg border border-gold px-3.5 py-2 text-xs font-semibold text-gold hover:bg-gold/10"
+      >
+        Join Telegram channel
+      </a>
       <button
         type="button"
         onClick={start}
         disabled={starting}
-        className="mt-4 rounded-lg bg-gold px-3.5 py-2 text-xs font-semibold text-base hover:bg-gold-soft disabled:opacity-60"
+        className="ml-2 mt-4 rounded-lg bg-gold px-3.5 py-2 text-xs font-semibold text-base hover:bg-gold-soft disabled:opacity-60"
       >
         {starting ? 'Creating verification link…' : 'Verify Telegram'}
       </button>

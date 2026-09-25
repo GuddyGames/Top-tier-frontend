@@ -35,7 +35,8 @@ const PAGE_COMPONENTS = {
 
 export default function App() {
   const { user, authReady } = useAuth();
-  const [tab, setTab] = useState(user ? 'home' : 'leaderboard');
+  const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
+  const [tab, setTab] = useState(user ? 'home' : referralCode ? 'auth' : 'leaderboard');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const historyRef = useRef([user ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
@@ -198,7 +199,9 @@ export default function App() {
       <main className="mx-auto min-h-[calc(100vh-1px)] max-w-6xl pb-24 md:pb-8">
         <AnimatePresence mode="wait">
           <motion.div key={tab} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -14 }} transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}>
-            {tab === 'home' ? (
+            {tab === 'auth' ? (
+              <Auth initialMode="signup" referralCode={referralCode} onDone={() => navigate('home', true)} />
+            ) : tab === 'home' ? (
               <Home goToTerminal={() => navigate('terminal')} goToLearn={() => navigate('learn')} />
             ) : tab === 'admin' && !isAdmin ? null : (
               PageComponent && <PageComponent />

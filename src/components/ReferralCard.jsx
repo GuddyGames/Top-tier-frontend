@@ -5,7 +5,7 @@ export default function ReferralCard({ referralCode, referralCount = 0 }) {
 
   if (!referralCode) return null;
 
-  const link = `${window.location.origin}/join?ref=${referralCode}`;
+  const link = `${window.location.origin}/?ref=${encodeURIComponent(referralCode)}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(link);
