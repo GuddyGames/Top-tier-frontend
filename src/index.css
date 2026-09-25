@@ -2,11 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: 'Inter', sans-serif;
+html {
+  background: #08090c;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Tabular figures keep point/rank columns from jittering as digits change width */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input, textarea, select {
+  font-size: 16px;
+}
+
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 767px) {
+  body {
+    min-height: 100dvh;
+  }
 }
