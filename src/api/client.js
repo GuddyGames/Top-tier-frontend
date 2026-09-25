@@ -54,6 +54,7 @@ export const api = {
   openDemoTrade: (payload) =>
     request('/api/demo/trades', { method: 'POST', body: JSON.stringify(payload) }),
   closeDemoTrade: (id) => request(`/api/demo/trades/${id}/close`, { method: 'POST' }),
+  adminGetReferrals: () => request('/api/admin/referrals'),
   adminListUsers: (search = '') =>
     request(`/api/admin/users${search ? `?search=${encodeURIComponent(search)}` : ''}`),
   adminGetUser: (id) => request(`/api/admin/users/${id}`),
