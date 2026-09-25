@@ -9,12 +9,14 @@ import Dashboard from './pages/Dashboard.jsx';
 import Profile from './pages/Profile.jsx';
 import Auth from './pages/Auth.jsx';
 import Admin from './pages/Admin.jsx';
+import Tasks from './pages/Tasks.jsx';
 import InstallApp from './components/InstallApp.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 
 const PUBLIC_TABS = [
   { key: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
   { key: 'learn', label: 'Learn', icon: '📚' },
+  { key: 'tasks', label: 'Tasks', icon: '✓' },
 ];
 
 const AUTH_TABS = [
@@ -31,14 +33,15 @@ const PAGE_COMPONENTS = {
   dashboard: Dashboard,
   profile: Profile,
   admin: Admin,
+  tasks: Tasks,
 };
 
 export default function App() {
   const { user, authReady } = useAuth();
   const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
-  const [tab, setTab] = useState(user ? 'home' : referralCode ? 'auth' : 'leaderboard');
+  const [tab, setTab] = useState(user ? 'home' : referralCode ? 'home' : 'leaderboard');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const historyRef = useRef([user ? 'home' : 'leaderboard']);
+  const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
 
   if (!authReady) return <SplashScreen />;
@@ -87,8 +90,8 @@ export default function App() {
     }
   };
 
-  const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin'].includes(tab);
-  if (!user && needsAuth) return <Auth onDone={() => navigate('home')} />;
+  const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin', 'tasks'].includes(tab);
+  if (!user && needsAuth) return <Auth initialMode={referralCode ? 'signup' : 'login'} referralCode={referralCode} onDone={() => navigate('home')} />;
 
   const PageComponent = PAGE_COMPONENTS[tab];
 

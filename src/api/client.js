@@ -39,6 +39,7 @@ export const api = {
   startTelegramVerification: () => request('/api/telegram/verification/start', { method: 'POST' }),
   getTelegramVerificationStatus: () => request('/api/telegram/verification/status'),
   getTasks: () => request('/api/tasks'),
+  getMyTaskSubmissions: () => request('/api/tasks/me'),
   submitTask: (taskId, proofUrl) =>
     request(`/api/tasks/${taskId}/submit`, {
       method: 'POST',
@@ -78,4 +79,9 @@ export const api = {
   adminGetPendingSubmissions: () => request('/api/admin/tasks/pending'),
   adminReviewSubmission: (id, status) =>
     request(`/api/tasks/submissions/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  adminCreateTask: (payload) =>
+    request('/api/tasks', { method: 'POST', body: JSON.stringify(payload) }),
+  adminDeactivateTask: (id) =>
+    request(`/api/tasks/${id}/deactivate`, { method: 'PATCH' }),
+  adminGetOutstandingTasks: () => request('/api/admin/tasks/outstanding'),
 };
