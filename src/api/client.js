@@ -59,6 +59,8 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify({ contribution }),
     }),
+  adminDeleteUser: (id) =>
+    request(`/api/admin/users/${id}`, { method: 'DELETE' }),
   adminScoreUser: (id, points, note) =>
     request(`/api/admin/users/${id}/score`, {
       method: 'POST',

@@ -173,6 +173,21 @@ function UsersTab() {
     load();
   };
 
+  const deleteUser = async (u) => {
+    const confirmed = window.confirm(
+      `Permanently delete ${u.username || u.email}? This removes the account and its user-owned data and cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setError(null);
+    try {
+      await api.adminDeleteUser(u.id);
+      setUsers((current) => current.filter((item) => item.id !== u.id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <>
       <input
@@ -211,6 +226,13 @@ function UsersTab() {
                   className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-primary"
                 >
                   {u.status === 'active' ? 'Suspend' : 'Reactivate'}
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => deleteUser(u)}
+                  className="rounded-lg border border-loss/40 px-3 py-1.5 text-xs font-medium text-loss hover:bg-loss/10"
+                >
+                  Delete account
                 </motion.button>
               </div>
             </div>

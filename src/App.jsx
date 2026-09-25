@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import Profile from './pages/Profile.jsx';
 import Auth from './pages/Auth.jsx';
 import Admin from './pages/Admin.jsx';
+import InstallApp from './components/InstallApp.jsx';
 
 const PUBLIC_TABS = [
   { key: 'leaderboard', label: 'Leaderboard' },
@@ -71,14 +72,17 @@ export default function App() {
               </button>
             ))}
           </div>
-          {!user && (
-            <button
-              onClick={() => setTab('home')}
-              className="rounded-lg border border-border px-3 py-1.5 text-sm text-ink-muted hover:text-ink-primary"
-            >
-              Log in
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            <InstallApp />
+            {!user && (
+              <button
+                onClick={() => setTab('home')}
+                className="rounded-lg border border-border px-3 py-1.5 text-sm text-ink-muted hover:text-ink-primary"
+              >
+                Log in
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 
