@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import ReferralCard from '../components/ReferralCard';
+import TelegramVerification from '../components/TelegramVerification';
 
 function StatCard({ label, value }) {
   return (
@@ -38,8 +39,9 @@ export default function Dashboard() {
         <StatCard label="Current streak" value={`${stats.current_streak}d`} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 space-y-4">
         <ReferralCard referralCode={stats.referral_code} referralCount={stats.referral_count} />
+        <TelegramVerification />
       </div>
 
       <div className="mt-8">
