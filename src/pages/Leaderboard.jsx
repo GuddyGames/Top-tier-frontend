@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { api } from '../api/client';
 import StatusBadge from '../components/StatusBadge';
 import RankBadge from '../components/RankBadge';
+
+const tbodyVariants = { hidden: {}, show: { transition: { staggerChildren: 0.03 } } };
+const rowVariants = {
+  hidden: { opacity: 0, x: -12 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } },
+};
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -69,9 +76,14 @@ export default function Leaderboard() {
                 <th className="px-4 py-3 font-medium">Rank</th>
               </tr>
             </thead>
-            <tbody>
+            <motion.tbody variants={tbodyVariants} initial="hidden" animate="show">
               {rows.map((row, i) => (
-                <tr key={row.id} className={i % 2 === 0 ? 'bg-surface' : 'bg-surfaceAlt'}>
+                <motion.tr
+                  key={row.id}
+                  variants={rowVariants}
+                  whileHover={{ backgroundColor: 'rgba(201, 162, 75, 0.06)' }}
+                  className={i % 2 === 0 ? 'bg-surface' : 'bg-surfaceAlt'}
+                >
                   <td className="px-4 py-3 font-medium">{row.username}</td>
                   <td className="px-4 py-3 text-ink-muted">
                     {row.telegram_username ? `@${row.telegram_username}` : '—'}
@@ -88,9 +100,9 @@ export default function Leaderboard() {
                   <td className="px-4 py-3">
                     <RankBadge position={row.rank ?? i + 1} />
                   </td>
-                </tr>
+                </motion.tr>
               ))}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
 

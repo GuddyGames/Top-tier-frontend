@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './auth/AuthContext';
 import Home from './pages/Home.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
@@ -21,6 +22,15 @@ const AUTH_TABS = [
   { key: 'profile', label: 'Profile' },
 ];
 
+const PAGE_COMPONENTS = {
+  leaderboard: Leaderboard,
+  terminal: Terminal,
+  learn: Learn,
+  dashboard: Dashboard,
+  profile: Profile,
+  admin: Admin,
+};
+
 export default function App() {
   const { user } = useAuth();
   const [tab, setTab] = useState(user ? 'home' : 'leaderboard');
@@ -35,6 +45,8 @@ export default function App() {
     return <Auth onDone={() => setTab('home')} />;
   }
 
+  const PageComponent = PAGE_COMPONENTS[tab];
+
   return (
     <div className="min-h-screen bg-base font-body text-ink-primary">
       <nav className="border-b border-border bg-surface px-6 py-3 sm:px-10">
@@ -44,13 +56,18 @@ export default function App() {
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                  tab === t.key
-                    ? 'bg-gold text-base'
-                    : 'text-ink-muted hover:text-ink-primary'
-                }`}
+                className="relative rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
               >
-                {t.label}
+                {tab === t.key && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-lg bg-gold"
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <span className={`relative ${tab === t.key ? 'text-base' : 'text-ink-muted hover:text-ink-primary'}`}>
+                  {t.label}
+                </span>
               </button>
             ))}
           </div>
@@ -65,13 +82,21 @@ export default function App() {
         </div>
       </nav>
 
-      {tab === 'home' && user && <Home goToTerminal={() => setTab('terminal')} goToLearn={() => setTab('learn')} />}
-      {tab === 'leaderboard' && <Leaderboard />}
-      {tab === 'terminal' && user && <Terminal />}
-      {tab === 'learn' && <Learn />}
-      {tab === 'dashboard' && user && <Dashboard />}
-      {tab === 'profile' && user && <Profile />}
-      {tab === 'admin' && isAdmin && <Admin />}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 16, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.99 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {tab === 'home' ? (
+            <Home goToTerminal={() => setTab('terminal')} goToLearn={() => setTab('learn')} />
+          ) : tab === 'admin' && !isAdmin ? null : (
+            PageComponent && <PageComponent />
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

@@ -3,8 +3,7 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replac
 async function request(path, options = {}) {
   const token = localStorage.getItem('topTierToken');
 
-  const res = await fetch(`
-    ${API_URL}${path}`, {
+  const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -55,9 +54,22 @@ export const api = {
   adminGetUser: (id) => request(`/api/admin/users/${id}`),
   adminSetStatus: (id, status) =>
     request(`/api/admin/users/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  adminUpdateContribution: (id, contribution) =>
+    request(`/api/admin/users/${id}/contribution`, {
+      method: 'PATCH',
+      body: JSON.stringify({ contribution }),
+    }),
   adminScoreUser: (id, points, note) =>
     request(`/api/admin/users/${id}/score`, {
       method: 'POST',
       body: JSON.stringify({ points, note }),
     }),
+  adminUpdateProfile: (id, fields) =>
+    request(`/api/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify(fields) }),
+  adminGetActivity: (limit = 50) => request(`/api/admin/activity?limit=${limit}`),
+  adminGetTrades: (status) =>
+    request(`/api/admin/trades${status ? `?status=${status}` : ''}`),
+  adminGetPendingSubmissions: () => request('/api/admin/tasks/pending'),
+  adminReviewSubmission: (id, status) =>
+    request(`/api/tasks/submissions/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
 };
