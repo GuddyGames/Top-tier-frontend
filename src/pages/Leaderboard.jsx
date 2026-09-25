@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { api } from '../api/client';
 import StatusBadge from '../components/StatusBadge';
 import RankBadge from '../components/RankBadge';
+import { useAuth } from '../auth/AuthContext';
 
 const tbodyVariants = { hidden: {}, show: { transition: { staggerChildren: 0.03 } } };
 const rowVariants = {
@@ -20,9 +21,14 @@ function formatDate(iso) {
 }
 
 export default function Leaderboard() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [scoringId, setScoringId] = useState(null);
+  const [scorePoints, setScorePoints] = useState('');
+  const [scoreNote, setScoreNote] = useState('');
 
   useEffect(() => {
     api
@@ -31,6 +37,23 @@ export default function Leaderboard() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  const applyScore = async (userId) => {
+    const points = Number.parseInt(scorePoints, 10);
+    if (!Number.isInteger(points) || points === 0) return;
+    setScoringId(userId);
+    try {
+      await api.adminScoreUser(userId, points, scoreNote);
+      const data = await api.getLeaderboard(50);
+      setRows(data.leaderboard || []);
+      setScorePoints('');
+      setScoreNote('');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setScoringId(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-base font-body text-ink-primary">
@@ -74,6 +97,7 @@ export default function Leaderboard() {
                 <th className="px-4 py-3 font-medium">Referrals</th>
                 <th className="px-4 py-3 font-medium">Points</th>
                 <th className="px-4 py-3 font-medium">Rank</th>
+                {isAdmin && <th className="px-4 py-3 font-medium">Admin points</th>}
               </tr>
             </thead>
             <motion.tbody variants={tbodyVariants} initial="hidden" animate="show">
@@ -100,6 +124,33 @@ export default function Leaderboard() {
                   <td className="px-4 py-3">
                     <RankBadge position={row.rank ?? i + 1} />
                   </td>
+                  {isAdmin && (
+                    <td className="px-4 py-3">
+                      <div className="flex min-w-[230px] flex-wrap items-center gap-1.5">
+                        <input
+                          type="number"
+                          placeholder="± points"
+                          value={scoringId === row.id ? scorePoints : ''}
+                          onChange={(e) => { setScoringId(row.id); setScorePoints(e.target.value); }}
+                          className="w-20 rounded-md border border-border bg-base px-2 py-1.5 text-xs outline-none focus:border-gold"
+                        />
+                        <input
+                          placeholder="Reason"
+                          value={scoringId === row.id ? scoreNote : ''}
+                          onChange={(e) => { setScoringId(row.id); setScoreNote(e.target.value); }}
+                          className="w-28 rounded-md border border-border bg-base px-2 py-1.5 text-xs outline-none focus:border-gold"
+                        />
+                        <button
+                          type="button"
+                          disabled={scoringId !== row.id || !scorePoints || Number(scorePoints) === 0}
+                          onClick={() => applyScore(row.id)}
+                          className="rounded-md bg-gold px-2.5 py-1.5 text-xs font-semibold text-base disabled:opacity-50"
+                        >
+                          {scoringId === row.id && !scorePoints ? 'Apply' : scoringId === row.id ? 'Apply' : 'Give'}
+                        </button>
+                      </div>
+                    </td>
+                  )}
                 </motion.tr>
               ))}
             </motion.tbody>
