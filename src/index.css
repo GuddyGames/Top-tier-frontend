@@ -12,30 +12,15 @@ body {
   font-family: 'Inter', sans-serif;
   overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
+  touch-action: pan-y;
 }
 
-button, input, select, textarea {
-  font: inherit;
-}
-
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-input, textarea, select {
-  font-size: 16px;
-}
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
+button, input, select, textarea { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+input, textarea, select { font-size: 16px; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 
 @media (max-width: 767px) {
-  body {
-    min-height: 100dvh;
-  }
+  body { min-height: 100dvh; }
 }
