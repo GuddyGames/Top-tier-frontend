@@ -368,7 +368,11 @@ function PendingTasksTab() {
         >
           <div>
             <p><span className="font-medium">{s.username}</span> <span className="text-ink-muted">· {s.task_title} · {s.points} pts</span></p>
-            {s.proof_url && <p className="mt-0.5 text-xs text-ink-muted">{s.proof_url}</p>}
+            {s.proof_url && (
+              <a href={s.proof_url} target="_blank" rel="noreferrer" className="mt-2 block w-fit">
+                <img src={s.proof_url} alt="Task proof" className="max-h-40 max-w-xs rounded-lg border border-border object-contain" />
+              </a>
+            )}
           </div>
           <div className="flex gap-2">
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => review(s.id, 'approved')} className="rounded-lg bg-gain/15 px-3 py-1.5 text-xs font-semibold text-gain hover:bg-gain/25">
