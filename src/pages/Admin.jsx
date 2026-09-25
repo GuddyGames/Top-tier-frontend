@@ -352,11 +352,85 @@ function PendingTasksTab() {
   );
 }
 
+
+function TasksAdminTab() {
+  const [tasks, setTasks] = useState([]);
+  const [outstanding, setOutstanding] = useState([]);
+  const [form, setForm] = useState({ title: '', description: '', link: '', points: 100 });
+  const [error, setError] = useState(null);
+
+  const load = async () => {
+    try {
+      const [taskData, outstandingData] = await Promise.all([api.getTasks(), api.adminGetOutstandingTasks()]);
+      setTasks(taskData.tasks || []);
+      setOutstanding(outstandingData.outstanding || []);
+    } catch (e) { setError(e.message); }
+  };
+  useEffect(() => { load(); }, []);
+
+  const create = async (e) => {
+    e.preventDefault();
+    try {
+      await api.adminCreateTask({ ...form, points: Number(form.points) });
+      setForm({ title: '', description: '', link: '', points: 100 });
+      load();
+    } catch (e) { setError(e.message); }
+  };
+
+  const deactivate = async (id) => {
+    await api.adminDeactivateTask(id);
+    load();
+  };
+
+  return (
+    <div className="space-y-6">
+      <form onSubmit={create} className="rounded-xl border border-border bg-surface p-5">
+        <h2 className="font-display text-sm font-semibold">Create task for all users</h2>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <input required placeholder="Task title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
+          <input required type="number" min="1" placeholder="Points" value={form.points} onChange={(e) => setForm({ ...form, points: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
+          <input placeholder="Task link" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
+          <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
+        </div>
+        <button className="mt-3 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-base">Publish task</button>
+        {error && <p className="mt-2 text-xs text-loss">{error}</p>}
+      </form>
+
+      <section>
+        <h2 className="font-display text-sm font-semibold">Active tasks</h2>
+        <div className="mt-3 space-y-2">
+          {tasks.map((t) => (
+            <div key={t.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface p-4">
+              <div><p className="text-sm font-medium">{t.title}</p><p className="text-xs text-ink-muted">+{t.points} points</p></div>
+              <button onClick={() => deactivate(t.id)} className="rounded-lg border border-loss/40 px-3 py-1.5 text-xs text-loss">Close task</button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="font-display text-sm font-semibold">Users who have not completed active tasks</h2>
+        <p className="mt-1 text-xs text-ink-muted">These users have not submitted a completion for the listed task.</p>
+        <div className="mt-3 space-y-2">
+          {outstanding.map((s) => (
+            <div key={`${s.task_id}-${s.user_id}`} className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-sm">
+              <span><span className="font-medium">{s.username}</span><span className="text-ink-muted"> · {s.task_title}</span></span>
+              <span className="text-gold">+{s.points} pending</span>
+            </div>
+          ))}
+          {outstanding.length === 0 && <p className="text-sm text-ink-muted">Everyone has submitted the active tasks.</p>}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 const TABS = [
   { key: 'users', label: 'Users', Component: UsersTab },
   { key: 'activity', label: 'Activity', Component: ActivityTab },
   { key: 'trades', label: 'Trades', Component: TradesTab },
-  { key: 'pending', label: 'Pending tasks', Component: PendingTasksTab },
+  { key: 'pending', label: 'Pending points', Component: PendingTasksTab },
+  { key: 'tasks', label: 'Tasks', Component: TasksAdminTab },
 ];
 
 export default function Admin() {
