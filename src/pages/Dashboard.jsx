@@ -26,7 +26,7 @@ export default function Dashboard() {
   if (error) return <p className="p-6 text-sm text-loss">Couldn't load your dashboard: {error}</p>;
   if (!data) return <p className="p-6 text-sm text-ink-muted">Loading…</p>;
 
-  const { stats, recent_activities } = data;
+  const { stats, recent_activities, referrals = [], tasks = [] } = data;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
@@ -45,6 +45,53 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-8">
+        <section>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="font-display text-sm font-semibold">Your referrals</h2>
+              <p className="mt-1 text-xs text-ink-muted">People who joined Top-Tier using your referral link.</p>
+            </div>
+            <span className="rounded-full bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">{referrals.length} total</span>
+          </div>
+          <div className="mt-3 space-y-2">
+            {referrals.length === 0 && <div className="rounded-lg border border-border bg-surface px-4 py-3 text-sm text-ink-muted">No referrals yet.</div>}
+            {referrals.map((ref) => (
+              <div key={ref.id} className="rounded-lg border border-border bg-surface px-4 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-medium">{ref.username}</span>
+                  <span className="text-xs text-ink-muted">{new Date(ref.created_at).toLocaleDateString()}</span>
+                </div>
+                <div className="mt-1 text-xs text-ink-muted">{ref.email}{ref.telegram_username ? ` · @${ref.telegram_username.replace(/^@/, '')}` : ' · Telegram not provided'}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-8">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="font-display text-sm font-semibold">Published tasks</h2>
+              <p className="mt-1 text-xs text-ink-muted">Every active task published today is shown here.</p>
+            </div>
+            <span className="rounded-full bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">{tasks.length} active</span>
+          </div>
+          <div className="mt-3 space-y-2">
+            {tasks.length === 0 && <div className="rounded-lg border border-border bg-surface px-4 py-3 text-sm text-ink-muted">No published tasks today.</div>}
+            {tasks.map((task) => (
+              <div key={task.id} className="rounded-lg border border-border bg-surface p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-display text-sm font-semibold">{task.title}</h3>
+                    {task.description && <p className="mt-1 text-sm text-ink-muted">{task.description}</p>}
+                    <p className="mt-2 text-xs font-semibold text-gold">+{task.points} points</p>
+                  </div>
+                  {task.link && <a href={task.link} target="_blank" rel="noreferrer" className="rounded-lg border border-gold px-3 py-2 text-xs font-semibold text-gold">Open task</a>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
         <h2 className="font-display text-sm font-semibold text-ink-primary">Recent activity</h2>
         <ul className="mt-3 space-y-2">
           {recent_activities.length === 0 && (
