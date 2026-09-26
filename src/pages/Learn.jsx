@@ -15,6 +15,7 @@ export default function Learn() {
         The basics, explained plainly. This is general education, not advice for any specific trade —
         markets are unpredictable, and even good process loses money sometimes.
       </p>
+      </div>
 
       <div className="mt-6 space-y-4">
         <Section title="Buying vs. selling">
