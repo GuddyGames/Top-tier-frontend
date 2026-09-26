@@ -350,45 +350,143 @@ function TradesTab() {
 
 function PendingTasksTab() {
   const [submissions, setSubmissions] = useState([]);
-  const load = () => api.adminGetPendingSubmissions().then((d) => setSubmissions(d.submissions)).catch(() => {});
-  useEffect(load, []);
+  const [status, setStatus] = useState('pending');
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('');
+  const [total, setTotal] = useState(0);
+  const [busyId, setBusyId] = useState(null);
+  const [error, setError] = useState(null);
 
-  const review = async (id, status) => {
-    await api.adminReviewSubmission(id, status);
-    load();
+  const load = async () => {
+    setError(null);
+    try {
+      const data = await api.adminGetSubmissions({ status, search: query, limit: 50, offset: 0 });
+      setSubmissions(data.submissions || []);
+      setTotal(data.total || 0);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  useEffect(() => { load(); }, [status, query]);
+
+  const review = async (id, nextStatus) => {
+    setBusyId(id);
+    setError(null);
+    try {
+      await api.adminReviewSubmission(id, nextStatus);
+      await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const submitSearch = (e) => {
+    e.preventDefault();
+    setQuery(search.trim());
   };
 
   return (
-    <motion.div variants={listVariants} initial="hidden" animate="show" className="space-y-2">
-      {submissions.map((s) => (
-        <motion.div
-          key={s.id}
-          variants={itemVariants}
-          className="flex flex-wrap items-center justify-between gap-2 tt-card rounded-2xl px-4 py-3 text-sm"
-        >
+    <div className="space-y-4">
+      <div className="tt-card rounded-2xl p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p><span className="font-medium">{s.username}</span> <span className="text-ink-muted">· {s.task_title} · {s.points} pts</span></p>
-            {s.proof_url && (
-              <a href={s.proof_url} target="_blank" rel="noreferrer" className="mt-2 block w-fit">
-                <img src={s.proof_url} alt="Task proof" className="max-h-40 max-w-xs rounded-xl border border-border object-contain" />
-              </a>
-            )}
+            <h2 className="font-display text-base font-semibold">Submission Management</h2>
+            <p className="mt-1 text-xs text-ink-muted">Review screenshot and task submissions from every user in one queue.</p>
           </div>
-          <div className="flex gap-2">
-            <motion.button whileTap={{ scale: 0.95 }} onClick={() => review(s.id, 'approved')} className="rounded-lg bg-gain/15 px-3 py-1.5 text-xs font-semibold text-gain hover:bg-gain/25">
-              Approve
-            </motion.button>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={() => review(s.id, 'rejected')} className="rounded-lg bg-loss/15 px-3 py-1.5 text-xs font-semibold text-loss hover:bg-loss/25">
-              Reject
-            </motion.button>
+          <span className="rounded-full bg-brand-blue/15 px-3 py-1 text-xs font-bold text-brand-cyan">{total} found</span>
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            { key: 'pending', label: 'Pending' },
+            { key: 'approved', label: 'Approved' },
+            { key: 'rejected', label: 'Rejected' },
+            { key: 'all', label: 'All' },
+          ].map((filter) => (
+            <button
+              key={filter.key}
+              onClick={() => setStatus(filter.key)}
+              className={`rounded-xl px-3 py-2 text-xs font-semibold transition ${
+                status === filter.key ? 'bg-brand-blue text-white' : 'border border-border text-ink-muted hover:text-ink-primary'
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={submitSearch} className="mt-3 flex gap-2">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search user, Gmail or task..."
+            className="min-w-0 flex-1 rounded-xl border border-border bg-base px-3 py-2 text-xs outline-none focus:border-brand-cyan"
+          />
+          <button className="rounded-xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white">Search</button>
+        </form>
+      </div>
+
+      {error && <div className="rounded-xl border border-loss/40 bg-loss/10 p-3 text-xs text-loss">{error}</div>}
+
+      <motion.div variants={listVariants} initial="hidden" animate="show" className="space-y-3">
+        {submissions.map((s) => (
+          <motion.article key={s.id} variants={itemVariants} className="tt-card overflow-hidden rounded-2xl">
+            <div className="p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">{s.username}</span>
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[9px] uppercase text-ink-muted">{s.status}</span>
+                    <span className="text-xs text-brand-cyan">+{s.points} pts</span>
+                  </div>
+                  <p className="mt-1 text-xs text-ink-muted">{s.email}{s.telegram_username ? ` · @${s.telegram_username.replace(/^@/, '')}` : ''}</p>
+                  <p className="mt-2 text-sm font-medium">{s.task_title}</p>
+                  <p className="mt-1 text-[10px] text-ink-muted">Submitted {new Date(s.submitted_at).toLocaleString()}</p>
+                </div>
+                <div className="flex gap-2">
+                  {s.status === 'pending' && (
+                    <>
+                      <button
+                        disabled={busyId === s.id}
+                        onClick={() => review(s.id, 'approved')}
+                        className="rounded-xl bg-gain/15 px-3 py-2 text-xs font-semibold text-gain disabled:opacity-50"
+                      >
+                        {busyId === s.id ? 'Saving…' : 'Approve'}
+                      </button>
+                      <button
+                        disabled={busyId === s.id}
+                        onClick={() => review(s.id, 'rejected')}
+                        className="rounded-xl bg-loss/15 px-3 py-2 text-xs font-semibold text-loss disabled:opacity-50"
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {s.proof_url ? (
+                <a href={s.proof_url} target="_blank" rel="noreferrer" className="mt-4 block">
+                  <img src={s.proof_url} alt={`Proof for ${s.task_title}`} className="max-h-[420px] w-full rounded-xl border border-border bg-base object-contain" />
+                </a>
+              ) : (
+                <div className="mt-4 rounded-xl border border-dashed border-border p-5 text-center text-xs text-ink-muted">No proof image attached.</div>
+              )}
+            </div>
+          </motion.article>
+        ))}
+        {submissions.length === 0 && (
+          <div className="tt-card rounded-2xl p-10 text-center text-sm text-ink-muted">
+            {status === 'pending' ? 'No submissions are waiting for review.' : 'No submissions match this filter.'}
           </div>
-        </motion.div>
-      ))}
-      {submissions.length === 0 && <p className="text-sm text-ink-muted">Nothing pending review.</p>}
-    </motion.div>
+        )}
+      </motion.div>
+    </div>
   );
 }
-
 
 function TasksAdminTab() {
   const [tasks, setTasks] = useState([]);
