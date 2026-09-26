@@ -80,6 +80,11 @@ export const api = {
   adminGetTrades: (status) =>
     request(`/api/admin/trades${status ? `?status=${status}` : ''}`),
   adminGetPendingSubmissions: () => request('/api/admin/tasks/pending'),
+  adminGetSubmissions: ({ status = 'pending', search = '', limit = 50, offset = 0 } = {}) => {
+    const params = new URLSearchParams({ status, limit: String(limit), offset: String(offset) });
+    if (search) params.set('search', search);
+    return request(`/api/admin/submissions?${params.toString()}`);
+  },
   adminReviewSubmission: (id, status) =>
     request(`/api/tasks/submissions/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) }),
   adminCreateTask: (payload) =>
