@@ -85,21 +85,21 @@ export default function Leaderboard() {
 
   return (
     <div className="min-h-screen bg-[#030914] font-body text-ink-primary">
-      <header className="relative overflow-hidden border-b border-brand-blue/10 bg-[#030914] px-6 pb-8 pt-10 sm:px-10">
+      <header className="relative overflow-hidden rounded-b-3xl border-b border-brand-blue/30 bg-gradient-to-br from-[#07162b] via-[#030914] to-[#06152a] px-5 pb-6 pt-5 sm:px-10">
         <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(0,140,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.08)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div className="relative mx-auto max-w-6xl text-center">
-          <p className="font-display text-3xl font-black tracking-wide text-brand-cyan sm:text-4xl">LEADERBOARD</p>
+          <p className="font-display text-xl font-black tracking-wide"><span className="text-brand-cyan">♛</span> TOP TIER</p><p className="mt-3 font-display text-2xl font-black tracking-wide text-ink-primary sm:text-3xl">Leaderboard</p>
           <p className="mx-auto mt-3 max-w-xl text-xs leading-5 text-ink-muted sm:text-sm">
             Earn points, complete tasks, trade in the demo terminal, and rise through the ranks.
           </p>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 pb-12 pt-8 sm:px-8">
-        <section className="relative overflow-hidden border border-brand-blue/10 bg-[#030914] px-3 pb-8 pt-12 sm:px-8">
+      <main className="mx-auto max-w-5xl px-4 pb-12 pt-5 sm:px-8">
+        <section className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-b from-[#06172c] to-[#030914] px-3 pb-7 pt-8 sm:px-8">
           <div className="absolute left-1/2 top-0 h-48 w-[420px] -translate-x-1/2 rounded-full bg-gain/5 blur-3xl" />
           {podium.length > 0 && (
-            <div className="relative grid grid-cols-1 items-end gap-6 pt-8 md:grid-cols-3 md:gap-3">
+            <div className="relative grid grid-cols-3 items-end gap-2 pt-8 md:gap-4">
               <div className="order-2 md:order-1"><PodiumCard row={podium[1]} rank={2} /></div>
               <div className="order-1 md:order-2"><PodiumCard row={podium[0]} rank={1} featured /></div>
               <div className="order-3 md:order-3"><PodiumCard row={podium[2]} rank={3} /></div>
@@ -107,7 +107,7 @@ export default function Leaderboard() {
           )}
         </section>
 
-        <section className="mt-5 overflow-x-auto border border-[#12365A] bg-[#030914]">
+        <section className="mt-4 overflow-x-auto rounded-2xl border border-brand-blue/30 bg-[#061326]">
           <table className="w-full min-w-[1080px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-[#12365A] bg-[#070809] text-[10px] uppercase tracking-[0.14em] text-ink-muted">
