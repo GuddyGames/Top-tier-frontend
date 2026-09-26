@@ -68,7 +68,7 @@ function TaskCard({ task, submission, onSubmitted }) {
   };
 
   return (
-    <div className="rounded-lg border border-[#12365A] bg-[#071426] p-4">
+    <div className="tt-card rounded-2xl p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="font-display text-sm font-semibold">{task.title}</h3>
@@ -82,7 +82,7 @@ function TaskCard({ task, submission, onSubmitted }) {
               href={task.link}
               target="_blank"
               rel="noreferrer"
-              className="rounded-lg border border-[#12365A] px-3 py-2 text-xs font-semibold text-ink-muted hover:text-ink-primary"
+              className="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-ink-muted hover:text-ink-primary"
             >
               Open task
             </a>
@@ -124,7 +124,7 @@ function TaskCard({ task, submission, onSubmitted }) {
       </div>
 
       {file && !submitted && (
-        <p className="mt-3 rounded-lg bg-[#030914] px-3 py-2 text-xs text-ink-muted">
+        <p className="mt-3 rounded-lg bg-base px-3 py-2 text-xs text-ink-muted">
           Selected: <span className="font-medium text-ink-primary">{file.name}</span>
         </p>
       )}
@@ -186,9 +186,9 @@ export default function Dashboard() {
   const submissionByTaskId = new Map(submissions.map((item) => [item.task_id, item]));
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
-      <h1 className="font-display text-2xl font-semibold">Your dashboard</h1>
-      <p className="mt-1 text-sm text-ink-muted">A quick look at where you stand.</p>
+    <div className="mx-auto max-w-5xl px-4 pb-10 pt-5 sm:px-8">
+      <div className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • DASHBOARD</p><h1 className="mt-2 font-display text-2xl font-bold">Good to see you</h1>
+      <p className="mt-1 text-sm text-ink-muted">Track your points, referrals, tasks and streak.</p></div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
         <StatCard label="Total points" value={stats.total_points} />
@@ -213,10 +213,10 @@ export default function Dashboard() {
 
           <div className="mt-3 space-y-2">
             {referrals.length === 0 && (
-              <div className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm text-ink-muted">No referrals yet.</div>
+              <div className="tt-card rounded-2xl px-4 py-3 text-sm text-ink-muted">No referrals yet.</div>
             )}
             {referrals.map((ref) => (
-              <div key={ref.id} className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3">
+              <div key={ref.id} className="tt-card rounded-2xl px-4 py-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-medium">{ref.username}</span>
                   <span className="text-xs text-ink-muted">{new Date(ref.created_at).toLocaleDateString()}</span>
@@ -241,7 +241,7 @@ export default function Dashboard() {
 
           <div className="mt-3 space-y-3">
             {tasks.length === 0 && (
-              <div className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm text-ink-muted">No published tasks today.</div>
+              <div className="tt-card rounded-2xl px-4 py-3 text-sm text-ink-muted">No published tasks today.</div>
             )}
             {tasks.map((task) => (
               <TaskCard
@@ -261,7 +261,7 @@ export default function Dashboard() {
               <li className="text-sm text-ink-muted">Nothing yet — go earn some points.</li>
             )}
             {recent_activities.map((a) => (
-              <li key={a.id} className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-3 py-2 text-sm">
+              <li key={a.id} className="flex items-center justify-between tt-card rounded-2xl px-3 py-2 text-sm">
                 <span className="text-ink-muted">{a.action_type.replace(/_/g, ' ')}</span>
                 <span className="tabular-nums font-medium text-gain">+{a.points}</span>
               </li>
