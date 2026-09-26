@@ -1,6 +1,6 @@
 function Section({ title, children }) {
   return (
-    <section className="tt-card rounded-2xl p-5">
+    <section className="tt-card rounded-2xl border-brand-blue/30 p-4">
       <h2 className="font-display text-base font-semibold text-ink-primary">{title}</h2>
       <div className="mt-2 space-y-2 text-sm leading-relaxed text-ink-muted">{children}</div>
     </section>
@@ -9,7 +9,7 @@ function Section({ title, children }) {
 
 export default function Learn() {
   return (
-    <div className="mx-auto max-w-4xl px-4 pb-10 pt-5 sm:px-8">
+    <div className="mx-auto max-w-5xl px-4 pb-10 pt-5 sm:px-8">
       <div className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • ACADEMY</p><h1 className="mt-2 font-display text-2xl font-bold">Learn & Improve</h1>
       <p className="mt-1 text-sm text-ink-muted">
         The basics, explained plainly. This is general education, not advice for any specific trade —
@@ -17,7 +17,7 @@ export default function Learn() {
       </p>
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
         <Section title="Buying vs. selling">
           <p>Buying (going "long") means you profit if the price rises. Selling (going "short") means you profit if it falls.</p>
           <p>Every position needs a reason tied to something you can point to — a trend, a level, an event — not a hunch.</p>
