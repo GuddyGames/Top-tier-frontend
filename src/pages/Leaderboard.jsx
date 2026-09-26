@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../api/client';
 import StatusBadge from '../components/StatusBadge';
@@ -13,11 +13,37 @@ const rowVariants = {
 
 function formatDate(iso) {
   if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
+  return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function initials(name = '?') {
+  return name.trim().split(/\s+|_/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase() || '?';
+}
+
+function TopAvatar({ name, rank }) {
+  return (
+    <div className="relative mx-auto flex h-24 w-24 items-center justify-center overflow-hidden rounded-xl border border-gain/30 bg-[#101510] shadow-[0_0_28px_rgba(34,197,94,0.12)]">
+      <div className="absolute inset-2 rounded-lg border border-dashed border-gain/20" />
+      <span className="font-display text-2xl font-black tracking-widest text-gain">{initials(name)}</span>
+      <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[9px] font-bold text-gain">#{rank}</span>
+    </div>
+  );
+}
+
+function PodiumCard({ row, rank, featured = false }) {
+  if (!row) return null;
+  return (
+    <div className={`relative flex flex-col items-center ${featured ? 'z-10 -mt-10' : 'mt-2'}`}>
+      <TopAvatar name={row.username} rank={rank} />
+      <div className={`mt-3 w-full max-w-[230px] border bg-[#080a0d] px-4 py-5 text-center ${featured ? 'border-gain shadow-[0_0_30px_rgba(34,197,94,0.12)]' : 'border-border'}`}>
+        <p className="text-xs font-bold tracking-[0.18em] text-gain">[{rank}]</p>
+        <p className="mt-2 truncate font-display text-sm font-semibold text-ink-primary">{row.username}</p>
+        <div className="mx-auto my-3 h-px w-20 bg-border" />
+        <p className="font-display text-xl font-bold tabular-nums text-ink-primary">{Number(row.total_points ?? 0).toLocaleString()}</p>
+        <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-ink-muted">POINTS</p>
+      </div>
+    </div>
+  );
 }
 
 export default function Leaderboard() {
@@ -31,12 +57,14 @@ export default function Leaderboard() {
   const [scoreNote, setScoreNote] = useState('');
 
   useEffect(() => {
-    api
-      .getLeaderboard(50)
+    api.getLeaderboard(50)
       .then((data) => setRows(data.leaderboard || []))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  const podium = useMemo(() => rows.slice(0, 3), [rows]);
+  const tableRows = useMemo(() => rows.slice(3), [rows]);
 
   const applyScore = async (userId) => {
     const points = Number.parseInt(scorePoints, 10);
@@ -56,97 +84,67 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen bg-base font-body text-ink-primary">
-      {/* Hero */}
-      <header className="relative overflow-hidden border-b border-border bg-gradient-to-br from-[#141A26] to-base px-6 py-14 sm:px-10">
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
-        <div className="mx-auto flex max-w-5xl items-center gap-4">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gain/15">
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5 text-gain"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-          <div>
-            <p className="font-display text-3xl font-bold tracking-tight text-ink-primary sm:text-4xl">
-              Top Tier
-            </p>
-            <p className="mt-1 text-sm text-ink-muted">Trade. Refer. Rise the ranks.</p>
-          </div>
+    <div className="min-h-screen bg-black font-body text-ink-primary">
+      <header className="relative overflow-hidden border-b border-gain/10 bg-black px-6 pb-8 pt-10 sm:px-10">
+        <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(34,197,94,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.08)_1px,transparent_1px)] [background-size:64px_64px]" />
+        <div className="relative mx-auto max-w-6xl text-center">
+          <p className="font-display text-3xl font-black tracking-wide text-gain sm:text-4xl">LEADERBOARD</p>
+          <p className="mx-auto mt-3 max-w-xl text-xs leading-5 text-ink-muted sm:text-sm">
+            Earn points, complete tasks, trade in the demo terminal, and rise through the ranks.
+          </p>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-10 sm:px-10">
-        <h1 className="font-display text-2xl font-semibold text-ink-primary">Leaderboard</h1>
-        <p className="mt-1 text-sm text-ink-muted">Ranked by total points — updated daily.</p>
+      <main className="mx-auto max-w-6xl px-4 pb-12 pt-8 sm:px-8">
+        <section className="relative overflow-hidden border border-gain/10 bg-black px-3 pb-8 pt-12 sm:px-8">
+          <div className="absolute left-1/2 top-0 h-48 w-[420px] -translate-x-1/2 rounded-full bg-gain/5 blur-3xl" />
+          {podium.length > 0 && (
+            <div className="relative grid grid-cols-1 items-end gap-6 pt-8 md:grid-cols-3 md:gap-3">
+              <div className="order-2 md:order-1"><PodiumCard row={podium[1]} rank={2} /></div>
+              <div className="order-1 md:order-2"><PodiumCard row={podium[0]} rank={1} featured /></div>
+              <div className="order-3 md:order-3"><PodiumCard row={podium[2]} rank={3} /></div>
+            </div>
+          )}
+        </section>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-border">
-          <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+        <section className="mt-5 overflow-x-auto border border-border bg-black">
+          <table className="w-full min-w-[1080px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-border bg-surface text-xs text-ink-muted">
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Telegram</th>
-                <th className="px-4 py-3 font-medium">Joined</th>
+              <tr className="border-b border-border bg-[#070809] text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                <th className="px-4 py-3 font-medium">Rank</th>
+                <th className="px-4 py-3 font-medium">Player</th>
                 <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Joined</th>
                 <th className="px-4 py-3 font-medium">Contribution</th>
                 <th className="px-4 py-3 font-medium">Referrals</th>
                 <th className="px-4 py-3 font-medium">Points</th>
-                <th className="px-4 py-3 font-medium">Rank</th>
+                <th className="px-4 py-3 font-medium">Telegram</th>
                 {isAdmin && <th className="px-4 py-3 font-medium">Admin points</th>}
               </tr>
             </thead>
             <motion.tbody variants={tbodyVariants} initial="hidden" animate="show">
-              {rows.map((row, i) => (
+              {tableRows.map((row, index) => (
                 <motion.tr
                   key={row.id}
                   variants={rowVariants}
-                  whileHover={{ backgroundColor: 'rgba(201, 162, 75, 0.06)' }}
-                  className={i % 2 === 0 ? 'bg-surface' : 'bg-surfaceAlt'}
+                  whileHover={{ backgroundColor: 'rgba(34,197,94,0.04)' }}
+                  className="border-b border-border/70 bg-black"
                 >
+                  <td className="px-4 py-3"><RankBadge position={row.rank ?? index + 4} /></td>
                   <td className="px-4 py-3 font-medium">{row.username}</td>
-                  <td className="px-4 py-3 text-ink-muted">
-                    {row.telegram_username ? `@${row.telegram_username}` : '—'}
-                  </td>
+                  <td className="px-4 py-3"><StatusBadge status={row.status} /></td>
                   <td className="px-4 py-3 text-ink-muted">{formatDate(row.created_at)}</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={row.status} />
-                  </td>
-                  <td className="px-4 py-3 tabular-nums text-ink-muted">
-                    {row.total_contribution ?? '—'}
-                  </td>
+                  <td className="px-4 py-3 tabular-nums text-ink-muted">{row.total_contribution ?? '—'}</td>
                   <td className="px-4 py-3 tabular-nums text-ink-muted">{row.referral_count ?? 0}</td>
-                  <td className="px-4 py-3 tabular-nums font-semibold">{row.total_points}</td>
-                  <td className="px-4 py-3">
-                    <RankBadge position={row.rank ?? i + 1} />
-                  </td>
+                  <td className="px-4 py-3 tabular-nums font-semibold">{Number(row.total_points ?? 0).toLocaleString()}</td>
+                  <td className="px-4 py-3 text-ink-muted">{row.telegram_username ? `@${row.telegram_username}` : '—'}</td>
                   {isAdmin && (
                     <td className="px-4 py-3">
                       <div className="flex min-w-[230px] flex-wrap items-center gap-1.5">
-                        <input
-                          type="number"
-                          placeholder="± points"
-                          value={scoringId === row.id ? scorePoints : ''}
-                          onChange={(e) => { setScoringId(row.id); setScorePoints(e.target.value); }}
-                          className="w-20 rounded-md border border-border bg-base px-2 py-1.5 text-xs outline-none focus:border-gold"
-                        />
-                        <input
-                          placeholder="Reason"
-                          value={scoringId === row.id ? scoreNote : ''}
-                          onChange={(e) => { setScoringId(row.id); setScoreNote(e.target.value); }}
-                          className="w-28 rounded-md border border-border bg-base px-2 py-1.5 text-xs outline-none focus:border-gold"
-                        />
-                        <button
-                          type="button"
-                          disabled={scoringId !== row.id || !scorePoints || Number(scorePoints) === 0}
-                          onClick={() => applyScore(row.id)}
-                          className="rounded-md bg-gold px-2.5 py-1.5 text-xs font-semibold text-base disabled:opacity-50"
-                        >
-                          {scoringId === row.id && !scorePoints ? 'Apply' : scoringId === row.id ? 'Apply' : 'Give'}
+                        <input type="number" placeholder="± points" value={scoringId === row.id ? scorePoints : ''} onChange={(e) => { setScoringId(row.id); setScorePoints(e.target.value); }} className="w-20 rounded-md border border-border bg-[#08090a] px-2 py-1.5 text-xs outline-none focus:border-gain" />
+                        <input placeholder="Reason" value={scoringId === row.id ? scoreNote : ''} onChange={(e) => { setScoringId(row.id); setScoreNote(e.target.value); }} className="w-28 rounded-md border border-border bg-[#08090a] px-2 py-1.5 text-xs outline-none focus:border-gain" />
+                        <button type="button" disabled={scoringId !== row.id || !scorePoints || Number(scorePoints) === 0} onClick={() => applyScore(row.id)} className="rounded-md bg-gain px-2.5 py-1.5 text-xs font-semibold text-black disabled:opacity-50">
+                          Give
                         </button>
                       </div>
                     </td>
@@ -155,16 +153,12 @@ export default function Leaderboard() {
               ))}
             </motion.tbody>
           </table>
-        </div>
+        </section>
 
-        {loading && <p className="mt-6 text-sm text-ink-muted">Loading leaderboard…</p>}
-        {error && (
-          <p className="mt-6 text-sm text-loss">Couldn't load the leaderboard: {error}</p>
-        )}
+        {loading && <p className="mt-6 text-center text-sm text-ink-muted">Loading leaderboard…</p>}
+        {error && <p className="mt-6 text-center text-sm text-loss">Couldn't load the leaderboard: {error}</p>}
         {!loading && !error && rows.length === 0 && (
-          <p className="mt-6 text-sm text-ink-muted">
-            No one's on the board yet — be the first to earn points.
-          </p>
+          <p className="mt-6 text-center text-sm text-ink-muted">No one's on the board yet — be the first to earn points.</p>
         )}
       </main>
     </div>
