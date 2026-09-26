@@ -179,6 +179,7 @@ export default function Terminal() {
     <div className="mx-auto max-w-6xl px-4 pb-10 pt-5 sm:px-8">
       <div className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • PRACTICE TERMINAL</p><h1 className="mt-2 font-display text-2xl font-bold">Trading Terminal</h1>
       <p className="mt-1 text-sm text-ink-muted">Simulated prices, no real money — practice until it's second nature.</p>
+      </div>
 
       {account && (
         <div className="mt-4 inline-block rounded-xl border border-brand-cyan/30 bg-surface/80 px-4 py-3">
