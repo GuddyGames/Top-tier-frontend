@@ -4,22 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#050B1F',
-        surface: '#0B1430',
-        surfaceAlt: '#111D3D',
-        border: '#1E2C52',
+        base: '#030914',
+        surface: '#071426',
+        surfaceAlt: '#0A1C33',
+        border: '#12365A',
         brand: {
           navy: '#050B1F',
-          blue: '#2563EB',
-          cyan: '#22D3EE',
-          orange: '#FF7A18',
-          amber: '#FFC02E',
+          blue: '#008CFF',
+          cyan: '#19D9FF',
+          orange: '#FF8A1F',
+          amber: '#4DD7FF',
         },
         gold: {
-          DEFAULT: '#FF9D1F',
-          soft: '#FFD27A',
+          DEFAULT: '#00A8FF',
+          soft: '#62DFFF',
         },
-        gain: '#2FAE60',
+        gain: '#18D98B',
         loss: '#E2574C',
         ink: {
           primary: '#F3F7FF',
