@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 
 // TradingView-style candlestick chart with built-in zoom controls.
@@ -8,7 +8,6 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const seriesRef = useRef(null);
-  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -104,23 +103,16 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
     });
   }, [livePrice, candles, intervalMinutes]);
 
-  const changeZoom = (direction) => {
-    const chart = chartRef.current;
-    if (!chart) return;
+  const zoomIn = () => {
+    chartRef.current?.timeScale().zoomIn();
+  };
 
-    const next = Math.min(6, Math.max(0.5, Number((zoom * direction).toFixed(2))));
-    setZoom(next);
-    chart.timeScale().applyOptions({
-      barSpacing: Math.min(24, Math.max(2, 6 * next)),
-    });
+  const zoomOut = () => {
+    chartRef.current?.timeScale().zoomOut();
   };
 
   const resetZoom = () => {
-    const chart = chartRef.current;
-    if (!chart) return;
-    setZoom(1);
-    chart.timeScale().applyOptions({ barSpacing: 6 });
-    chart.timeScale().fitContent();
+    chartRef.current?.timeScale().fitContent();
   };
 
   return (
@@ -128,7 +120,7 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
       <div className="absolute right-2 top-2 z-10 flex overflow-hidden rounded-lg border border-border bg-surface/90 shadow-lg backdrop-blur">
         <button
           type="button"
-          onClick={() => changeZoom(1.25)}
+          onClick={zoomIn}
           className="grid h-9 w-9 place-items-center border-r border-border text-base font-semibold text-ink-primary transition hover:bg-brand-blue/15 active:scale-95"
           aria-label="Zoom in"
           title="Zoom in"
@@ -137,7 +129,7 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
         </button>
         <button
           type="button"
-          onClick={() => changeZoom(0.8)}
+          onClick={zoomOut}
           className="grid h-9 w-9 place-items-center border-r border-border text-base font-semibold text-ink-primary transition hover:bg-brand-blue/15 active:scale-95"
           aria-label="Zoom out"
           title="Zoom out"
