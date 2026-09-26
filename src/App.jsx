@@ -53,7 +53,9 @@ export default function App() {
   if (!authReady) return <SplashScreen />;
 
   const isAdmin = user?.role === 'admin';
-  const tabs = user ? [...AUTH_TABS, ...PUBLIC_TABS] : PUBLIC_TABS;
+  // Authenticated navigation already contains the primary Tasks and Leaderboard entries.
+  // Keep Learn/Terminal available from the menu without duplicating bottom/desktop tabs.
+  const tabs = user ? AUTH_TABS : PUBLIC_TABS;
 
   const navigate = (next, replace = false) => {
     if (next === 'admin' && !isAdmin) return;
@@ -196,6 +198,18 @@ export default function App() {
                     <span>{t.label}</span>
                   </button>
                 ))}
+                {user && (
+                  <button onClick={() => navigate('learn')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="text-lg">📚</span>
+                    <span>Learn</span>
+                  </button>
+                )}
+                {user && (
+                  <button onClick={() => navigate('terminal')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="text-lg">⌁</span>
+                    <span>Terminal</span>
+                  </button>
+                )}
                 {isAdmin && (
                   <button onClick={() => navigate('admin')} className="flex w-full items-center gap-3 rounded-xl bg-brand-blue/10 px-4 py-3 text-left text-sm font-semibold text-brand-cyan">
                     <span className="text-lg">⚙</span>
@@ -224,7 +238,7 @@ export default function App() {
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-brand-blue/25 bg-[#030914]/95 px-1 pb-[calc(8px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl md:hidden">
         <div className="mx-auto flex max-w-xl items-center justify-around gap-0.5 overflow-x-auto">
-          {(user ? [...AUTH_TABS, ...PUBLIC_TABS] : PUBLIC_TABS).map((t) => (
+          {(user ? AUTH_TABS : PUBLIC_TABS).map((t) => (
             <button key={t.key} onClick={() => navigate(t.key)} className="relative flex min-w-[58px] flex-1 flex-col items-center gap-1 rounded-2xl px-1.5 py-2 text-[10px] font-semibold active:scale-95">
               {tab === t.key && <motion.span layoutId="mobile-nav-pill" className="absolute inset-0 rounded-2xl bg-brand-blue/15" />}
               <span className={`relative text-lg leading-none ${tab === t.key ? 'text-brand-cyan' : 'text-ink-muted'}`}>{t.icon}</span>
