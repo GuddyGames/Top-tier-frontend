@@ -348,6 +348,70 @@ function TradesTab() {
   );
 }
 
+function OverviewTab() {
+  const [stats, setStats] = useState({ users: 0, pending: 0, referrals: 0, outstanding: 0 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [users, pending, referrals, outstanding] = await Promise.all([
+        api.adminListUsers(),
+        api.adminGetSubmissions({ status: 'pending', limit: 1, offset: 0 }),
+        api.adminGetReferrals(),
+        api.adminGetOutstandingTasks(),
+      ]);
+      setStats({
+        users: users.users?.length || 0,
+        pending: pending.total ?? pending.submissions?.length ?? 0,
+        referrals: referrals.referrals?.length || 0,
+        outstanding: outstanding.outstanding?.length || 0,
+      });
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const cards = [
+    ['Users', stats.users, 'Registered accounts'],
+    ['Pending submissions', stats.pending, 'Waiting for review'],
+    ['Referrals', stats.referrals, 'Referral records'],
+    ['Outstanding tasks', stats.outstanding, 'Users still to complete tasks'],
+  ];
+
+  return (
+    <div className="space-y-4">
+      {error && <div className="rounded-xl border border-loss/40 bg-loss/10 p-3 text-xs text-loss">{error}</div>}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {cards.map(([label, value, hint]) => (
+          <div key={label} className="tt-card rounded-2xl p-4">
+            <p className="text-[10px] uppercase tracking-wider text-ink-muted">{label}</p>
+            <p className="mt-2 font-display text-2xl font-bold">{loading ? '…' : value.toLocaleString()}</p>
+            <p className="mt-1 text-[10px] text-ink-muted">{hint}</p>
+          </div>
+        ))}
+      </div>
+      <div className="tt-card rounded-2xl p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-base font-semibold">Control Room Overview</h2>
+            <p className="mt-1 text-xs text-ink-muted">Use the sections below to manage users, referrals, tasks and submission reviews.</p>
+          </div>
+          <button onClick={load} disabled={loading} className="rounded-xl border border-border px-3 py-2 text-xs font-semibold hover:border-brand-cyan disabled:opacity-50">
+            {loading ? 'Refreshing…' : 'Refresh'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PendingTasksTab() {
   const [submissions, setSubmissions] = useState([]);
   const [status, setStatus] = useState('pending');
@@ -396,7 +460,10 @@ function PendingTasksTab() {
             <h2 className="font-display text-base font-semibold">Submission Management</h2>
             <p className="mt-1 text-xs text-ink-muted">Review screenshot and task submissions from every user in one queue.</p>
           </div>
-          <span className="rounded-full bg-brand-blue/15 px-3 py-1 text-xs font-bold text-brand-cyan">{total} found</span>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-brand-blue/15 px-3 py-1 text-xs font-bold text-brand-cyan">{total} found</span>
+            <button onClick={load} className="rounded-xl border border-border px-3 py-1.5 text-xs font-semibold hover:border-brand-cyan">Refresh</button>
+          </div>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -562,16 +629,17 @@ function TasksAdminTab() {
 }
 
 const TABS = [
+  { key: 'overview', label: 'Overview', Component: OverviewTab },
   { key: 'users', label: 'Users', Component: UsersTab },
   { key: 'referrals', label: 'Referrals', Component: ReferralsTab },
+  { key: 'submissions', label: 'Submissions', Component: PendingTasksTab },
   { key: 'activity', label: 'Activity', Component: ActivityTab },
   { key: 'trades', label: 'Trades', Component: TradesTab },
-  { key: 'pending', label: 'Pending points', Component: PendingTasksTab },
   { key: 'tasks', label: 'Tasks', Component: TasksAdminTab },
 ];
 
 export default function Admin() {
-  const [tab, setTab] = useState('users');
+  const [tab, setTab] = useState('overview');
   const Active = TABS.find((t) => t.key === tab).Component;
 
   return (
