@@ -38,19 +38,19 @@ function ScoreForm({ userId, onScored }) {
         placeholder="± points"
         value={points}
         onChange={(e) => setPoints(e.target.value)}
-        className="w-24 rounded-lg border border-border bg-base px-2 py-1.5 text-xs outline-none focus:border-gold"
+        className="w-24 rounded-lg border border-[#12365A] bg-[#030914] px-2 py-1.5 text-xs outline-none focus:border-brand-cyan"
       />
       <input
         placeholder="Reason (optional)"
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        className="min-w-[10rem] flex-1 rounded-lg border border-border bg-base px-2 py-1.5 text-xs outline-none focus:border-gold"
+        className="min-w-[10rem] flex-1 rounded-lg border border-[#12365A] bg-[#030914] px-2 py-1.5 text-xs outline-none focus:border-brand-cyan"
       />
       <motion.button
         whileTap={{ scale: 0.95 }}
         type="submit"
         disabled={busy}
-        className="rounded-lg bg-gold px-3 py-1.5 text-xs font-semibold text-base hover:bg-gold-soft disabled:opacity-60"
+        className="rounded-lg bg-brand-blue px-3 py-1.5 text-xs font-semibold text-base hover:bg-brand-blue-soft disabled:opacity-60"
       >
         Apply
       </motion.button>
@@ -88,7 +88,7 @@ function EditableField({ value, placeholder, onSave }) {
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={() => setEditing(false)}
-        className="w-32 rounded border border-gold bg-base px-1.5 py-0.5 text-xs outline-none"
+        className="w-32 rounded border border-gold bg-[#030914] px-1.5 py-0.5 text-xs outline-none"
       />
       <button type="submit" className="text-xs text-gain">✓</button>
     </form>
@@ -119,7 +119,7 @@ function ContributionField({ value, onSave }) {
       <button
         type="button"
         onClick={() => { setDraft(value ?? 0); setEditing(true); }}
-        className="text-gold hover:underline decoration-dotted underline-offset-2"
+        className="text-brand-cyan hover:underline decoration-dotted underline-offset-2"
         title="Click to edit contribution"
       >
         {Number(value || 0).toLocaleString()} contribution
@@ -136,7 +136,7 @@ function ContributionField({ value, onSave }) {
         step="0.01"
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
-        className="w-28 rounded border border-gold bg-base px-1.5 py-0.5 text-xs outline-none"
+        className="w-28 rounded border border-gold bg-[#030914] px-1.5 py-0.5 text-xs outline-none"
       />
       <button type="submit" disabled={busy} className="text-xs text-gain disabled:opacity-50">
         {busy ? '…' : '✓'}
@@ -194,13 +194,13 @@ function UsersTab() {
         placeholder="Search username or email…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full max-w-sm rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-gold"
+        className="w-full max-w-sm rounded-lg border border-[#12365A] bg-[#071426] px-3 py-2 text-sm outline-none focus:border-brand-cyan"
       />
       {error && <p className="mt-4 text-sm text-loss">{error}</p>}
 
       <motion.div variants={listVariants} initial="hidden" animate="show" className="mt-6 space-y-3">
         {users.map((u) => (
-          <motion.div key={u.id} variants={itemVariants} className="rounded-xl border border-border bg-surface p-4">
+          <motion.div key={u.id} variants={itemVariants} className="rounded-xl border border-[#12365A] bg-[#071426] p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-medium">
@@ -223,7 +223,7 @@ function UsersTab() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => toggleStatus(u)}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-primary"
+                  className="rounded-lg border border-[#12365A] px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-primary"
                 >
                   {u.status === 'active' ? 'Suspend' : 'Reactivate'}
                 </motion.button>
@@ -236,7 +236,7 @@ function UsersTab() {
                 </motion.button>
               </div>
             </div>
-            <div className="mt-3 border-t border-border pt-3">
+            <div className="mt-3 border-t border-[#12365A] pt-3">
               <ScoreForm userId={u.id} onScored={load} />
             </div>
           </motion.div>
@@ -257,7 +257,7 @@ function ReferralsTab() {
       {error && <p className="mt-3 text-sm text-loss">{error}</p>}
       <div className="mt-4 space-y-2">
         {referrals.map((r) => (
-          <div key={r.referral_id} className="rounded-xl border border-border bg-surface p-4">
+          <div key={r.referral_id} className="rounded-xl border border-[#12365A] bg-[#071426] p-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <p className="text-xs text-ink-muted">Referrer</p>
@@ -290,7 +290,7 @@ function ActivityTab() {
         <motion.div
           key={a.id}
           variants={itemVariants}
-          className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-2.5 text-sm"
+          className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-2.5 text-sm"
         >
           <span>
             <span className="font-medium">{a.username}</span>{' '}
@@ -313,13 +313,13 @@ function TradesTab() {
 
   return (
     <>
-      <div className="flex gap-1 rounded-lg bg-surface p-1 w-fit">
+      <div className="flex gap-1 rounded-lg bg-[#071426] p-1 w-fit">
         {[{ key: undefined, label: 'All' }, { key: 'open', label: 'Open' }, { key: 'closed', label: 'Closed' }].map((f) => (
           <button
             key={f.label}
             onClick={() => setStatus(f.key)}
             className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
-              status === f.key ? 'bg-gold text-base' : 'text-ink-muted hover:text-ink-primary'
+              status === f.key ? 'bg-brand-blue text-base' : 'text-ink-muted hover:text-ink-primary'
             }`}
           >
             {f.label}
@@ -331,7 +331,7 @@ function TradesTab() {
           <motion.div
             key={t.id}
             variants={itemVariants}
-            className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-2.5 text-sm"
+            className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-2.5 text-sm"
           >
             <span>
               <span className="font-medium">{t.username}</span>{' '}
@@ -364,13 +364,13 @@ function PendingTasksTab() {
         <motion.div
           key={s.id}
           variants={itemVariants}
-          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm"
+          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm"
         >
           <div>
             <p><span className="font-medium">{s.username}</span> <span className="text-ink-muted">· {s.task_title} · {s.points} pts</span></p>
             {s.proof_url && (
               <a href={s.proof_url} target="_blank" rel="noreferrer" className="mt-2 block w-fit">
-                <img src={s.proof_url} alt="Task proof" className="max-h-40 max-w-xs rounded-lg border border-border object-contain" />
+                <img src={s.proof_url} alt="Task proof" className="max-h-40 max-w-xs rounded-lg border border-[#12365A] object-contain" />
               </a>
             )}
           </div>
@@ -421,16 +421,16 @@ function TasksAdminTab() {
 
   return (
     <div className="space-y-6">
-      <form onSubmit={create} className="rounded-xl border border-border bg-surface p-5">
+      <form onSubmit={create} className="rounded-xl border border-[#12365A] bg-[#071426] p-5">
         <h2 className="font-display text-sm font-semibold">Create task for all users</h2>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
-          <input required placeholder="Task title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
-          <input required type="number" min="1" placeholder="Points" value={form.points} onChange={(e) => setForm({ ...form, points: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
-          <input placeholder="Task link" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
-          <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold" />
-          <select value={form.taskType} onChange={(e) => setForm({ ...form, taskType: e.target.value })} className="rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"><option value="manual">Manual screenshot proof</option><option value="telegram">Telegram bot task</option></select>
+          <input required placeholder="Task title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan" />
+          <input required type="number" min="1" placeholder="Points" value={form.points} onChange={(e) => setForm({ ...form, points: e.target.value })} className="rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan" />
+          <input placeholder="Task link" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} className="rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan" />
+          <input placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan" />
+          <select value={form.taskType} onChange={(e) => setForm({ ...form, taskType: e.target.value })} className="rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan"><option value="manual">Manual screenshot proof</option><option value="telegram">Telegram bot task</option></select>
         </div>
-        <button className="mt-3 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-base">Publish task</button>
+        <button className="mt-3 rounded-lg bg-brand-blue px-4 py-2 text-xs font-semibold text-base">Publish task</button>
         {error && <p className="mt-2 text-xs text-loss">{error}</p>}
       </form>
 
@@ -438,7 +438,7 @@ function TasksAdminTab() {
         <h2 className="font-display text-sm font-semibold">Active tasks</h2>
         <div className="mt-3 space-y-2">
           {tasks.map((t) => (
-            <div key={t.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface p-4">
+            <div key={t.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#12365A] bg-[#071426] p-4">
               <div><p className="text-sm font-medium">{t.title}</p><p className="text-xs text-ink-muted">+{t.points} points</p></div>
               <button onClick={() => deactivate(t.id)} className="rounded-lg border border-loss/40 px-3 py-1.5 text-xs text-loss">Close task</button>
             </div>
@@ -451,9 +451,9 @@ function TasksAdminTab() {
         <p className="mt-1 text-xs text-ink-muted">These users have not submitted a completion for the listed task.</p>
         <div className="mt-3 space-y-2">
           {outstanding.map((s) => (
-            <div key={`${s.task_id}-${s.user_id}`} className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-sm">
+            <div key={`${s.task_id}-${s.user_id}`} className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm">
               <span><span className="font-medium">{s.username}</span><span className="text-ink-muted"> · {s.task_title}</span></span>
-              <span className="text-gold">+{s.points} pending</span>
+              <span className="text-brand-cyan">+{s.points} pending</span>
             </div>
           ))}
           {outstanding.length === 0 && <p className="text-sm text-ink-muted">Everyone has submitted the active tasks.</p>}
@@ -481,13 +481,13 @@ export default function Admin() {
       <h1 className="font-display text-2xl font-semibold">Control room</h1>
       <p className="mt-1 text-sm text-ink-muted">Everyone's progress, in one place.</p>
 
-      <div className="mt-4 flex flex-wrap gap-1 rounded-lg bg-surface p-1 w-fit">
+      <div className="mt-4 flex flex-wrap gap-1 rounded-lg bg-[#071426] p-1 w-fit">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-              tab === t.key ? 'bg-gold text-base' : 'text-ink-muted hover:text-ink-primary'
+              tab === t.key ? 'bg-brand-blue text-base' : 'text-ink-muted hover:text-ink-primary'
             }`}
           >
             {t.label}
