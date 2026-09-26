@@ -86,7 +86,7 @@ export default function Leaderboard() {
   return (
     <div className="min-h-screen bg-[#030914] font-body text-ink-primary">
       <header className="relative overflow-hidden border-b border-brand-blue/10 bg-[#030914] px-6 pb-8 pt-10 sm:px-10">
-        <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(34,197,94,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.08)_1px,transparent_1px)] [background-size:64px_64px]" />
+        <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(0,140,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.08)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div className="relative mx-auto max-w-6xl text-center">
           <p className="font-display text-3xl font-black tracking-wide text-brand-cyan sm:text-4xl">LEADERBOARD</p>
           <p className="mx-auto mt-3 max-w-xl text-xs leading-5 text-ink-muted sm:text-sm">
@@ -127,7 +127,7 @@ export default function Leaderboard() {
                 <motion.tr
                   key={row.id}
                   variants={rowVariants}
-                  whileHover={{ backgroundColor: 'rgba(34,197,94,0.04)' }}
+                  whileHover={{ backgroundColor: 'rgba(0,140,255,0.04)' }}
                   className="border-b border-[#12365A]/70 bg-[#030914]"
                 >
                   <td className="px-4 py-3"><RankBadge position={row.rank ?? index + 4} /></td>
