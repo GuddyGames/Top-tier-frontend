@@ -46,7 +46,7 @@ export default function Wallet() {
   const stats = data.stats || {};
   const activities = data.recent_activities || [];
   const earnings = activities.filter((item) => Number(item.points ?? item.amount ?? 0) > 0);
-  const visibleItems = tab === 'earnings' ? earnings : activities;
+  const transactions = activities.filter((item) => Number(item.points ?? item.amount ?? 0) <= 0);\n  const visibleItems = tab === 'earnings' ? earnings : transactions;
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
@@ -86,7 +86,7 @@ export default function Wallet() {
           visibleItems.map((item, index) => <ActivityRow key={item.id || index} item={item} />)
         ) : (
           <div className="tt-card rounded-2xl p-6 text-center text-xs text-ink-muted">
-            No {tab} yet.
+            No {tab === 'earnings' ? 'earnings' : 'transactions'} yet.
           </div>
         )}
       </div>
