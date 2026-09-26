@@ -1,6 +1,6 @@
 function Section({ title, children }) {
   return (
-    <section className="rounded-xl border border-[#12365A] bg-[#071426] p-5">
+    <section className="tt-card rounded-2xl p-5">
       <h2 className="font-display text-base font-semibold text-ink-primary">{title}</h2>
       <div className="mt-2 space-y-2 text-sm leading-relaxed text-ink-muted">{children}</div>
     </section>
@@ -9,8 +9,8 @@ function Section({ title, children }) {
 
 export default function Learn() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8 sm:px-10">
-      <h1 className="font-display text-2xl font-semibold">Learn</h1>
+    <div className="mx-auto max-w-4xl px-4 pb-10 pt-5 sm:px-8">
+      <div className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • ACADEMY</p><h1 className="mt-2 font-display text-2xl font-bold">Learn & Improve</h1>
       <p className="mt-1 text-sm text-ink-muted">
         The basics, explained plainly. This is general education, not advice for any specific trade —
         markets are unpredictable, and even good process loses money sometimes.
