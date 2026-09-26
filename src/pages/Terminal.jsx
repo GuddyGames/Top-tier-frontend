@@ -134,12 +134,26 @@ export default function Terminal() {
 
   useEffect(() => {
     refreshCore().catch((err) => setError(err.message));
-    const interval = setInterval(() => {
-      api.getDemoPrices().then((d) =>
-        setPrices(Object.fromEntries(d.prices.map((p) => [p.symbol, parseFloat(p.price)])))
-      ).catch(() => {});
-    }, 5000);
-    return () => clearInterval(interval);
+
+    const apiUrl = (import.meta.env.VITE_API_URL || window.location.origin).replace(/\\/+$/, '');
+    const wsUrl = apiUrl.replace(/^http/i, 'ws') + '/ws/market';
+    const socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => setError(null);
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type !== 'price' || !message.symbol) return;
+        const nextPrice = Number(message.price);
+        if (!Number.isFinite(nextPrice) || nextPrice <= 0) return;
+        setPrices((current) => ({ ...current, [message.symbol]: nextPrice }));
+      } catch (_) {}
+    };
+    socket.onerror = () => {
+      setError('Live market feed is temporarily unavailable. Showing the latest available prices.');
+    };
+
+    return () => socket.close();
   }, [refreshCore]);
 
   useEffect(() => {
