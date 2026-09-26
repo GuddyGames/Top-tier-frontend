@@ -135,7 +135,7 @@ export default function Terminal() {
   useEffect(() => {
     refreshCore().catch((err) => setError(err.message));
 
-    const apiUrl = (import.meta.env.VITE_API_URL || window.location.origin).replace(/\\/+$/, '');
+    const apiUrl = (import.meta.env.VITE_API_URL || window.location.origin).replace(/\/+$/, '');
     const wsUrl = apiUrl.replace(/^http/i, 'ws') + '/ws/market';
     const socket = new WebSocket(wsUrl);
 
