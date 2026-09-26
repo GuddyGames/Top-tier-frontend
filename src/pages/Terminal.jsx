@@ -242,7 +242,7 @@ export default function Terminal() {
             Collecting price data — check back in a minute.
           </div>
         ) : (
-          <PriceChart candles={candles} />
+          <PriceChart candles={candles} livePrice={price} intervalMinutes={timeframe.interval} />
         )}
       </div>
 
