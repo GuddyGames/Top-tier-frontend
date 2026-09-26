@@ -13,7 +13,7 @@ export default function Home({ goToTerminal, goToLearn }) {
   useEffect(()=>{api.getMyDashboard().then(setData).catch(e=>setError(e.message));},[]);
   if(error) return <p className="p-6 text-sm text-loss">Couldn't load your dashboard: {error}</p>;
   if(!data) return <p className="p-6 text-sm text-ink-muted">Loading…</p>;
-  const s=data.stats||{}; const name=data.username||data.user?.username||'Goodness'; const tasks=(data.tasks||[]).slice(0,1);
+  const s=data.stats||{}; const name=data.user?.username||data.username||'User'; const tasks=(data.tasks||[]).slice(0,1);
   const nav=(key)=>window.dispatchEvent(new CustomEvent('top-tier:navigate',{detail:key}));
   return <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
     <div className="flex items-center justify-between"><div><p className="font-display text-lg font-black tracking-wide">♛ TOP <span className="text-brand-cyan">TIER</span></p><p className="text-[9px] text-ink-muted">Earn • Complete • Withdraw</p></div><div className="flex gap-2"><button className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface">♧</button><button className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface">●</button></div></div>
