@@ -46,7 +46,8 @@ export default function Wallet() {
   const stats = data.stats || {};
   const activities = data.recent_activities || [];
   const earnings = activities.filter((item) => Number(item.points ?? item.amount ?? 0) > 0);
-  const transactions = activities.filter((item) => Number(item.points ?? item.amount ?? 0) <= 0);\n  const visibleItems = tab === 'earnings' ? earnings : transactions;
+  const transactions = activities.filter((item) => Number(item.points ?? item.amount ?? 0) <= 0);
+  const visibleItems = tab === 'earnings' ? earnings : transactions;
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
