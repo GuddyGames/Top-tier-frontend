@@ -5,7 +5,7 @@ import TelegramVerification from '../components/TelegramVerification';
 
 function StatCard({ label, value }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="tt-card rounded-2xl p-4">
       <p className="text-xs text-ink-muted">{label}</p>
       <p className="mt-1 font-display text-2xl font-semibold tabular-nums">{value}</p>
     </div>
@@ -68,12 +68,12 @@ function TaskCard({ task, submission, onSubmitted }) {
   };
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-4">
+    <div className="rounded-lg border border-[#12365A] bg-[#071426] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="font-display text-sm font-semibold">{task.title}</h3>
           {task.description && <p className="mt-1 text-sm text-ink-muted">{task.description}</p>}
-          <p className="mt-2 text-xs font-semibold text-gold">+{task.points} points</p>
+          <p className="mt-2 text-xs font-semibold text-brand-cyan">+{task.points} points</p>
         </div>
 
         <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -82,7 +82,7 @@ function TaskCard({ task, submission, onSubmitted }) {
               href={task.link}
               target="_blank"
               rel="noreferrer"
-              className="rounded-lg border border-border px-3 py-2 text-xs font-semibold text-ink-muted hover:text-ink-primary"
+              className="rounded-lg border border-[#12365A] px-3 py-2 text-xs font-semibold text-ink-muted hover:text-ink-primary"
             >
               Open task
             </a>
@@ -93,7 +93,7 @@ function TaskCard({ task, submission, onSubmitted }) {
               type="button"
               onClick={openTelegramBot}
               disabled={busy || approved}
-              className="rounded-lg bg-gold px-3 py-2 text-xs font-semibold text-base disabled:opacity-60"
+              className="rounded-lg bg-brand-blue px-3 py-2 text-xs font-semibold text-base disabled:opacity-60"
             >
               {approved ? 'Completed ✓' : busy ? 'Opening bot…' : 'Complete with Telegram bot'}
             </button>
@@ -114,7 +114,7 @@ function TaskCard({ task, submission, onSubmitted }) {
                 type="button"
                 onClick={uploadScreenshot}
                 disabled={busy || pending || approved}
-                className="rounded-lg bg-gold px-3 py-2 text-xs font-semibold text-base disabled:opacity-60"
+                className="rounded-lg bg-brand-blue px-3 py-2 text-xs font-semibold text-base disabled:opacity-60"
               >
                 {approved ? 'Approved ✓' : pending ? 'Under review…' : busy ? 'Uploading…' : file ? 'Submit screenshot' : 'Share a screenshot'}
               </button>
@@ -124,7 +124,7 @@ function TaskCard({ task, submission, onSubmitted }) {
       </div>
 
       {file && !submitted && (
-        <p className="mt-3 rounded-lg bg-base px-3 py-2 text-xs text-ink-muted">
+        <p className="mt-3 rounded-lg bg-[#030914] px-3 py-2 text-xs text-ink-muted">
           Selected: <span className="font-medium text-ink-primary">{file.name}</span>
         </p>
       )}
@@ -132,7 +132,7 @@ function TaskCard({ task, submission, onSubmitted }) {
       {submission && (
         <p className="mt-3 text-xs text-ink-muted">
           Status:{' '}
-          <span className={approved ? 'font-semibold text-gain' : rejected ? 'font-semibold text-loss' : 'font-semibold text-gold'}>
+          <span className={approved ? 'font-semibold text-gain' : rejected ? 'font-semibold text-loss' : 'font-semibold text-brand-cyan'}>
             {submission.status}
           </span>
         </p>
@@ -208,15 +208,15 @@ export default function Dashboard() {
               <h2 className="font-display text-sm font-semibold">Your referrals</h2>
               <p className="mt-1 text-xs text-ink-muted">People who joined Top-Tier using your referral link.</p>
             </div>
-            <span className="rounded-full bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">{referrals.length} total</span>
+            <span className="rounded-full bg-brand-blue/10 px-3 py-1 text-xs font-semibold text-brand-cyan">{referrals.length} total</span>
           </div>
 
           <div className="mt-3 space-y-2">
             {referrals.length === 0 && (
-              <div className="rounded-lg border border-border bg-surface px-4 py-3 text-sm text-ink-muted">No referrals yet.</div>
+              <div className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm text-ink-muted">No referrals yet.</div>
             )}
             {referrals.map((ref) => (
-              <div key={ref.id} className="rounded-lg border border-border bg-surface px-4 py-3">
+              <div key={ref.id} className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-medium">{ref.username}</span>
                   <span className="text-xs text-ink-muted">{new Date(ref.created_at).toLocaleDateString()}</span>
@@ -236,12 +236,12 @@ export default function Dashboard() {
               <h2 className="font-display text-sm font-semibold">Published tasks</h2>
               <p className="mt-1 text-xs text-ink-muted">Every active task published today is shown here.</p>
             </div>
-            <span className="rounded-full bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">{tasks.length} active</span>
+            <span className="rounded-full bg-brand-blue/10 px-3 py-1 text-xs font-semibold text-brand-cyan">{tasks.length} active</span>
           </div>
 
           <div className="mt-3 space-y-3">
             {tasks.length === 0 && (
-              <div className="rounded-lg border border-border bg-surface px-4 py-3 text-sm text-ink-muted">No published tasks today.</div>
+              <div className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm text-ink-muted">No published tasks today.</div>
             )}
             {tasks.map((task) => (
               <TaskCard
@@ -261,7 +261,7 @@ export default function Dashboard() {
               <li className="text-sm text-ink-muted">Nothing yet — go earn some points.</li>
             )}
             {recent_activities.map((a) => (
-              <li key={a.id} className="flex items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm">
+              <li key={a.id} className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-3 py-2 text-sm">
                 <span className="text-ink-muted">{a.action_type.replace(/_/g, ' ')}</span>
                 <span className="tabular-nums font-medium text-gain">+{a.points}</span>
               </li>
