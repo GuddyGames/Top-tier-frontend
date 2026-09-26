@@ -477,11 +477,11 @@ export default function Admin() {
   const Active = TABS.find((t) => t.key === tab).Component;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-10 pt-5 sm:px-8">
-      <div className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • ADMIN</p><h1 className="mt-2 font-display text-2xl font-bold">Control Room</h1>
+    <div className="mx-auto max-w-7xl px-4 pb-10 pt-4 sm:px-8">
+      <div className="relative overflow-hidden rounded-2xl border border-brand-blue/40 bg-gradient-to-r from-[#071b35] via-[#061326] to-surface p-4 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • ADMIN</p><h1 className="mt-2 font-display text-2xl font-bold">Control Room</h1>
       <p className="mt-1 text-sm text-ink-muted">Manage users, referrals, tasks, submissions and activity.</p></div>
 
-      <div className="mt-4 flex flex-wrap gap-1 rounded-lg bg-surface/80 p-1 w-fit">
+      <div className="mt-4 grid grid-cols-3 gap-1 rounded-2xl border border-brand-blue/20 bg-[#061326] p-1 sm:flex sm:flex-wrap">
         {TABS.map((t) => (
           <button
             key={t.key}
