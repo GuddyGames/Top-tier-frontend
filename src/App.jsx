@@ -7,6 +7,8 @@ import Terminal from './pages/Terminal.jsx';
 import Learn from './pages/Learn.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Profile from './pages/Profile.jsx';
+import Referrals from './pages/Referrals.jsx';
+import Wallet from './pages/Wallet.jsx';
 import Auth from './pages/Auth.jsx';
 import Admin from './pages/Admin.jsx';
 import Tasks from './pages/Tasks.jsx';
@@ -22,8 +24,9 @@ const PUBLIC_TABS = [
 
 const AUTH_TABS = [
   { key: 'home', label: 'Home', icon: '⌂' },
-  { key: 'terminal', label: 'Terminal', icon: '⌁' },
-  { key: 'dashboard', label: 'Dashboard', icon: '▣' },
+  { key: 'tasks', label: 'Tasks', icon: '✓' },
+  { key: 'leaderboard', label: 'Leaderboard', icon: '♜' },
+  { key: 'wallet', label: 'Wallet', icon: '▣' },
   { key: 'profile', label: 'Profile', icon: '○' },
 ];
 
@@ -35,6 +38,8 @@ const PAGE_COMPONENTS = {
   profile: Profile,
   admin: Admin,
   tasks: Tasks,
+  referrals: Referrals,
+  wallet: Wallet,
 };
 
 export default function App() {
@@ -90,10 +95,17 @@ export default function App() {
     }
   };
 
-  const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin', 'tasks'].includes(tab);
+  const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin', 'tasks', 'referrals', 'wallet'].includes(tab);
   if (!user && needsAuth) return <Auth initialMode={referralCode ? 'signup' : 'login'} referralCode={referralCode} onDone={() => navigate('home')} />;
 
   const PageComponent = PAGE_COMPONENTS[tab];
+
+  if (typeof window !== 'undefined' && !window.__topTierNavigationBound) {
+    window.__topTierNavigationBound = true;
+    window.addEventListener('top-tier:navigate', (event) => {
+      if (event.detail) navigate(event.detail);
+    });
+  }
 
   return (
     <div
