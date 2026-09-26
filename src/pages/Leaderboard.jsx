@@ -195,11 +195,11 @@ export default function Leaderboard() {
                 <th className="px-4 py-3 font-medium">Referrals</th>
                 <th className="px-4 py-3 font-medium">Points</th>
                 <th className="px-4 py-3 font-medium">Telegram</th>
-                {\${isAdmin} && <th className="px-4 py-3 font-medium">Admin points</th>}
+                {isAdmin && <th className="px-4 py-3 font-medium">Admin points</th>}
               </tr>
             </thead>
             <motion.tbody variants={tbodyVariants} initial="hidden" animate="show">
-              {\${tableRows}.map((row, index) => (
+              {tableRows.map((row, index) => (
                 <motion.tr key={row.id} variants={rowVariants} whileHover={{ backgroundColor: 'rgba(0,140,255,0.04)' }} className="border-b border-[#12365A]/70 bg-[#030914]">
                   <td className="px-4 py-3"><RankBadge position={row.rank ?? index + 4} /></td>
                   <td className="px-4 py-3 font-medium">{row.username}</td>
@@ -208,8 +208,8 @@ export default function Leaderboard() {
                   <td className="px-4 py-3 tabular-nums text-ink-muted">{row.total_contribution ?? '—'}</td>
                   <td className="px-4 py-3 tabular-nums text-ink-muted">{row.referral_count ?? 0}</td>
                   <td className="px-4 py-3 tabular-nums font-semibold">{Number(row.total_points ?? 0).toLocaleString()}</td>
-                  <td className="px-4 py-3 text-ink-muted">{row.telegram_username ? \`@\${row.telegram_username}\` : '—'}</td>
-                  {\${isAdmin} && (
+                  <td className="px-4 py-3 text-ink-muted">{row.telegram_username ? `@${row.telegram_username}` : '—'}</td>
+                  {isAdmin && (
                     <td className="px-4 py-3">
                       <div className="flex min-w-[230px] flex-wrap items-center gap-1.5">
                         <input type="number" placeholder="± points" value={scoringId === row.id ? scorePoints : ''} onChange={(e) => { setScoringId(row.id); setScorePoints(e.target.value); }} className="w-20 rounded-md border border-[#12365A] bg-[#08090a] px-2 py-1.5 text-xs outline-none focus:border-brand-blue" />
