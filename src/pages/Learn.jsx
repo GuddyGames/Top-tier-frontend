@@ -1,6 +1,6 @@
 function Section({ title, children }) {
   return (
-    <section className="rounded-xl border border-border bg-surface p-5">
+    <section className="rounded-xl border border-[#12365A] bg-[#071426] p-5">
       <h2 className="font-display text-base font-semibold text-ink-primary">{title}</h2>
       <div className="mt-2 space-y-2 text-sm leading-relaxed text-ink-muted">{children}</div>
     </section>
