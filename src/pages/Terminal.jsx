@@ -54,7 +54,7 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/60 px-6">
-      <form onSubmit={submit} className="w-full max-w-sm tt-card rounded-2xl p-5">
+      <form onSubmit={submit} className="w-full max-w-sm tt-card rounded-2xl border-brand-blue/30 p-4">
         <p className="font-display text-lg font-semibold">
           {side === 'buy' ? 'Buy' : 'Sell'} {symbol}
         </p>
@@ -176,7 +176,7 @@ export default function Terminal() {
   const price = prices[symbol];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-10 pt-5 sm:px-8">
+    <div className="mx-auto max-w-5xl px-4 pb-10 pt-5 sm:px-8">
       <div className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • PRACTICE TERMINAL</p><h1 className="mt-2 font-display text-2xl font-bold">Trading Terminal</h1>
       <p className="mt-1 text-sm text-ink-muted">Simulated prices, no real money — practice until it's second nature.</p>
       </div>
