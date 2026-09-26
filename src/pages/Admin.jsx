@@ -201,7 +201,7 @@ function UsersTab() {
       <motion.div variants={listVariants} initial="hidden" animate="show" className="mt-6 space-y-3">
         {users.map((u) => (
           <motion.div key={u.id} variants={itemVariants} className="tt-card rounded-2xl p-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-medium">
                   <EditableField value={u.username} placeholder="username" onSave={(v) => saveField(u, 'username', v)} />
@@ -218,7 +218,7 @@ function UsersTab() {
                   {u.pending_tasks} pending task{u.pending_tasks === 1 ? '' : 's'}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
                 <StatusBadge status={u.status} />
                 <motion.button
                   whileTap={{ scale: 0.95 }}
@@ -290,7 +290,7 @@ function ActivityTab() {
         <motion.div
           key={a.id}
           variants={itemVariants}
-          className="flex items-center justify-between tt-card rounded-2xl px-4 py-2.5 text-sm"
+          className="flex flex-col gap-2 tt-card rounded-2xl px-4 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between"
         >
           <span>
             <span className="font-medium">{a.username}</span>{' '}
@@ -313,7 +313,7 @@ function TradesTab() {
 
   return (
     <>
-      <div className="flex gap-1 rounded-lg bg-surface/80 p-1 w-fit">
+      <div className="grid w-full grid-cols-3 gap-1 rounded-lg bg-surface/80 p-1 sm:flex sm:w-fit">
         {[{ key: undefined, label: 'All' }, { key: 'open', label: 'Open' }, { key: 'closed', label: 'Closed' }].map((f) => (
           <button
             key={f.label}
@@ -331,7 +331,7 @@ function TradesTab() {
           <motion.div
             key={t.id}
             variants={itemVariants}
-            className="flex items-center justify-between tt-card rounded-2xl px-4 py-2.5 text-sm"
+            className="flex flex-col gap-2 tt-card rounded-2xl px-4 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between"
           >
             <span>
               <span className="font-medium">{t.username}</span>{' '}
@@ -388,7 +388,7 @@ function OverviewTab() {
   return (
     <div className="space-y-4">
       {error && <div className="rounded-xl border border-loss/40 bg-loss/10 p-3 text-xs text-loss">{error}</div>}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 lg:grid-cols-4">
         {cards.map(([label, value, hint]) => (
           <div key={label} className="tt-card rounded-2xl p-4">
             <p className="text-[10px] uppercase tracking-wider text-ink-muted">{label}</p>
@@ -460,7 +460,7 @@ function PendingTasksTab() {
             <h2 className="font-display text-base font-semibold">Submission Management</h2>
             <p className="mt-1 text-xs text-ink-muted">Review screenshot and task submissions from every user in one queue.</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
             <span className="rounded-full bg-brand-blue/15 px-3 py-1 text-xs font-bold text-brand-cyan">{total} found</span>
             <button onClick={load} className="rounded-xl border border-border px-3 py-1.5 text-xs font-semibold hover:border-brand-cyan">Refresh</button>
           </div>
@@ -485,14 +485,14 @@ function PendingTasksTab() {
           ))}
         </div>
 
-        <form onSubmit={submitSearch} className="mt-3 flex gap-2">
+        <form onSubmit={submitSearch} className="mt-3 flex flex-col gap-2 min-[420px]:flex-row">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search user, Gmail or task..."
             className="min-w-0 flex-1 rounded-xl border border-border bg-base px-3 py-2 text-xs outline-none focus:border-brand-cyan"
           />
-          <button className="rounded-xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white">Search</button>
+          <button className="rounded-xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white min-[420px]:w-auto">Search</button>
         </form>
       </div>
 
@@ -603,7 +603,7 @@ function TasksAdminTab() {
         <h2 className="font-display text-sm font-semibold">Active tasks</h2>
         <div className="mt-3 space-y-2">
           {tasks.map((t) => (
-            <div key={t.id} className="flex flex-wrap items-center justify-between gap-3 tt-card rounded-2xl p-4">
+            <div key={t.id} className="flex flex-col gap-3 tt-card rounded-2xl p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <div><p className="text-sm font-medium">{t.title}</p><p className="text-xs text-ink-muted">+{t.points} points</p></div>
               <button onClick={() => deactivate(t.id)} className="rounded-lg border border-loss/40 px-3 py-1.5 text-xs text-loss">Close task</button>
             </div>
@@ -616,7 +616,7 @@ function TasksAdminTab() {
         <p className="mt-1 text-xs text-ink-muted">These users have not submitted a completion for the listed task.</p>
         <div className="mt-3 space-y-2">
           {outstanding.map((s) => (
-            <div key={`${s.task_id}-${s.user_id}`} className="flex items-center justify-between tt-card rounded-2xl px-4 py-3 text-sm">
+            <div key={`${s.task_id}-${s.user_id}`} className="flex flex-col gap-2 tt-card rounded-2xl px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
               <span><span className="font-medium">{s.username}</span><span className="text-ink-muted"> · {s.task_title}</span></span>
               <span className="text-brand-cyan">+{s.points} pending</span>
             </div>
