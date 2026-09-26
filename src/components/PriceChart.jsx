@@ -1,11 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createChart, ColorType } from 'lightweight-charts';
 
-// A TradingView-style candlestick chart for one symbol. Feed it the
-// { time, open, high, low, close } candles from /api/demo/prices/:symbol/candles.
+// TradingView-style candlestick chart with built-in zoom controls.
+// Zoom is intentionally handled by the chart's time scale so the price
+// axis and candle rendering remain intact.
 export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) {
   const containerRef = useRef(null);
+  const chartRef = useRef(null);
   const seriesRef = useRef(null);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -21,7 +24,13 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
       },
       width: containerRef.current.clientWidth,
       height: 280,
-      timeScale: { timeVisible: true, secondsVisible: false },
+      timeScale: {
+        timeVisible: true,
+        secondsVisible: false,
+        barSpacing: 6,
+        minBarSpacing: 2,
+        maxBarSpacing: 24,
+      },
       crosshair: { mode: 0 },
     });
 
@@ -32,16 +41,22 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
       wickUpColor: '#2FAE60',
       wickDownColor: '#E2574C',
     });
+
+    chartRef.current = chart;
     seriesRef.current = series;
 
     const handleResize = () => {
-      if (containerRef.current) chart.applyOptions({ width: containerRef.current.clientWidth });
+      if (containerRef.current) {
+        chart.applyOptions({ width: containerRef.current.clientWidth });
+      }
     };
+
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
       chart.remove();
+      chartRef.current = null;
       seriesRef.current = null;
     };
   }, []);
@@ -89,5 +104,57 @@ export default function PriceChart({ candles, livePrice, intervalMinutes = 1 }) 
     });
   }, [livePrice, candles, intervalMinutes]);
 
-  return <div ref={containerRef} className="w-full" />;
+  const changeZoom = (direction) => {
+    const chart = chartRef.current;
+    if (!chart) return;
+
+    const next = Math.min(6, Math.max(0.5, Number((zoom * direction).toFixed(2))));
+    setZoom(next);
+    chart.timeScale().applyOptions({
+      barSpacing: Math.min(24, Math.max(2, 6 * next)),
+    });
+  };
+
+  const resetZoom = () => {
+    const chart = chartRef.current;
+    if (!chart) return;
+    setZoom(1);
+    chart.timeScale().applyOptions({ barSpacing: 6 });
+    chart.timeScale().fitContent();
+  };
+
+  return (
+    <div className="relative w-full">
+      <div className="absolute right-2 top-2 z-10 flex overflow-hidden rounded-lg border border-border bg-surface/90 shadow-lg backdrop-blur">
+        <button
+          type="button"
+          onClick={() => changeZoom(1.25)}
+          className="grid h-9 w-9 place-items-center border-r border-border text-base font-semibold text-ink-primary transition hover:bg-brand-blue/15 active:scale-95"
+          aria-label="Zoom in"
+          title="Zoom in"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          onClick={() => changeZoom(0.8)}
+          className="grid h-9 w-9 place-items-center border-r border-border text-base font-semibold text-ink-primary transition hover:bg-brand-blue/15 active:scale-95"
+          aria-label="Zoom out"
+          title="Zoom out"
+        >
+          −
+        </button>
+        <button
+          type="button"
+          onClick={resetZoom}
+          className="grid h-9 min-w-9 place-items-center px-2 text-[10px] font-semibold text-ink-muted transition hover:bg-brand-blue/15 hover:text-ink-primary active:scale-95"
+          aria-label="Reset chart zoom"
+          title="Reset zoom"
+        >
+          Reset
+        </button>
+      </div>
+      <div ref={containerRef} className="w-full" />
+    </div>
+  );
 }
