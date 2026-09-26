@@ -3,7 +3,7 @@ import { api } from '../api/client';
 
 function PriceRow({ price, onTrade }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3">
+    <div className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3">
       <div>
         <p className="text-sm font-medium">{price.symbol}</p>
         <p className="tabular-nums text-xs text-ink-muted">{parseFloat(price.price).toFixed(price.symbol.includes('/JPY') ? 3 : 5)}</p>
@@ -86,7 +86,7 @@ export default function DemoTrading() {
       </p>
 
       {account && (
-        <div className="mt-6 rounded-xl border border-gold/40 bg-surface p-4">
+        <div className="mt-6 rounded-xl border border-gold/40 bg-[#071426] p-4">
           <p className="text-xs text-ink-muted">Demo balance</p>
           <p className="font-display text-2xl font-semibold tabular-nums">
             ${parseFloat(account.balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -113,7 +113,7 @@ export default function DemoTrading() {
             {openTrades.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3"
+                className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-medium">
@@ -125,7 +125,7 @@ export default function DemoTrading() {
                 </div>
                 <button
                   onClick={() => handleClose(t.id)}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-primary"
+                  className="rounded-lg border border-[#12365A] px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-primary"
                 >
                   Close
                 </button>
@@ -139,7 +139,7 @@ export default function DemoTrading() {
             {closedTrades.slice(0, 10).map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-sm"
+                className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm"
               >
                 <span>
                   {t.symbol} · {t.side}
@@ -158,7 +158,7 @@ export default function DemoTrading() {
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 px-6">
           <form
             onSubmit={handleOpen}
-            className="w-full max-w-sm rounded-xl border border-border bg-surface p-5"
+            className="w-full max-w-sm rounded-xl border border-[#12365A] bg-[#071426] p-5"
           >
             <p className="font-display text-lg font-semibold">
               {pendingSymbol.side === 'buy' ? 'Buy' : 'Sell'} {pendingSymbol.symbol}
@@ -170,19 +170,19 @@ export default function DemoTrading() {
               step="1"
               value={size}
               onChange={(e) => setSize(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"
+              className="mt-1.5 w-full rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan"
             />
             <div className="mt-4 flex gap-2">
               <button
                 type="button"
                 onClick={() => setPendingSymbol(null)}
-                className="flex-1 rounded-lg border border-border px-3 py-2 text-sm text-ink-muted"
+                className="flex-1 rounded-lg border border-[#12365A] px-3 py-2 text-sm text-ink-muted"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 rounded-lg bg-gold px-3 py-2 text-sm font-semibold text-base hover:bg-gold-soft"
+                className="flex-1 rounded-lg bg-brand-blue px-3 py-2 text-sm font-semibold text-base hover:bg-brand-blue-soft"
               >
                 Confirm
               </button>
