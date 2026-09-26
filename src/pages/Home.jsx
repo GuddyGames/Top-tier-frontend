@@ -26,9 +26,11 @@ export default function Home({ goToTerminal, goToLearn }) {
   const hasTrades = data.total_trades > 0;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">\n      <div className="mb-5 rounded-2xl border border-brand-blue/30 bg-gradient-to-r from-brand-blue/15 via-cyan/5 to-transparent p-5">
+    <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
+      <div className="mb-5 rounded-2xl border border-brand-blue/30 bg-gradient-to-r from-brand-blue/15 via-cyan/5 to-transparent p-5">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-cyan">Dashboard</p><h1 className="mt-1 font-display text-2xl font-bold">Good to see you</h1>
       <p className="mt-1 text-sm text-ink-muted">How your practice trading is going so far.</p>
+      </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="Demo balance" value={`$${parseFloat(data.balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}`} />
