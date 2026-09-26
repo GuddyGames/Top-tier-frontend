@@ -4,7 +4,7 @@ import { api } from '../api/client';
 function Stat({ label, value, tone }) {
   const toneClass = tone === 'gain' ? 'text-gain' : tone === 'loss' ? 'text-loss' : 'text-ink-primary';
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="rounded-xl border border-[#12365A] bg-[#071426] p-4">
       <p className="text-xs text-ink-muted">{label}</p>
       <p className={`mt-1 font-display text-2xl font-semibold tabular-nums ${toneClass}`}>{value}</p>
     </div>
@@ -26,8 +26,8 @@ export default function Home({ goToTerminal, goToLearn }) {
   const hasTrades = data.total_trades > 0;
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8 sm:px-10">
-      <h1 className="font-display text-2xl font-semibold">Your progress</h1>
+    <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">\n      <div className="mb-5 rounded-2xl border border-brand-blue/30 bg-gradient-to-r from-brand-blue/15 via-cyan/5 to-transparent p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-cyan">Dashboard</p><h1 className="mt-1 font-display text-2xl font-bold">Good to see you</h1>
       <p className="mt-1 text-sm text-ink-muted">How your practice trading is going so far.</p>
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -38,16 +38,16 @@ export default function Home({ goToTerminal, goToLearn }) {
       </div>
 
       {!hasTrades ? (
-        <div className="mt-8 rounded-xl border border-dashed border-border p-6 text-center">
+        <div className="mt-8 rounded-xl border border-dashed border-[#12365A] p-6 text-center">
           <p className="text-sm text-ink-primary">You haven't placed a practice trade yet.</p>
           <p className="mt-1 text-sm text-ink-muted">
             Head to the Terminal to open your first position, or check Learn first if you want the basics.
           </p>
           <div className="mt-4 flex justify-center gap-2">
-            <button onClick={goToTerminal} className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-base hover:bg-gold-soft">
+            <button onClick={goToTerminal} className="rounded-lg bg-brand-blue px-4 py-2 text-sm font-semibold text-base hover:bg-brand-blue-soft">
               Open Terminal
             </button>
-            <button onClick={goToLearn} className="rounded-lg border border-border px-4 py-2 text-sm text-ink-muted hover:text-ink-primary">
+            <button onClick={goToLearn} className="rounded-lg border border-[#12365A] px-4 py-2 text-sm text-ink-muted hover:text-ink-primary">
               Go to Learn
             </button>
           </div>
@@ -60,7 +60,7 @@ export default function Home({ goToTerminal, goToLearn }) {
           <h2 className="mt-4 font-display text-sm font-semibold text-ink-primary">Recent trades</h2>
           <div className="mt-3 space-y-2">
             {data.recent_trades.map((t) => (
-              <div key={t.id} className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-sm">
+              <div key={t.id} className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm">
                 <span>
                   {t.symbol} · {t.side}
                   {t.status === 'open' && <span className="ml-1.5 text-ink-muted">(open)</span>}
