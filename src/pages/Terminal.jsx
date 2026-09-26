@@ -54,7 +54,7 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
 
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/60 px-6">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-xl border border-border bg-surface p-5">
+      <form onSubmit={submit} className="w-full max-w-sm rounded-xl border border-[#12365A] bg-[#071426] p-5">
         <p className="font-display text-lg font-semibold">
           {side === 'buy' ? 'Buy' : 'Sell'} {symbol}
         </p>
@@ -63,7 +63,7 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
         <label className="mt-4 block text-xs text-ink-muted">Size (virtual $)</label>
         <input
           type="number" min="1" step="1" value={size} onChange={(e) => setSize(e.target.value)}
-          className="mt-1.5 w-full rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"
+          className="mt-1.5 w-full rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan"
         />
 
         <div className="mt-3 grid grid-cols-2 gap-2">
@@ -72,7 +72,7 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
             <input
               type="number" step="any" value={stopLoss} onChange={(e) => setStopLoss(e.target.value)}
               placeholder={side === 'buy' ? `< ${price.toFixed(dec)}` : `> ${price.toFixed(dec)}`}
-              className="mt-1.5 w-full rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"
+              className="mt-1.5 w-full rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan"
             />
           </div>
           <div>
@@ -80,7 +80,7 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
             <input
               type="number" step="any" value={takeProfit} onChange={(e) => setTakeProfit(e.target.value)}
               placeholder={side === 'buy' ? `> ${price.toFixed(dec)}` : `< ${price.toFixed(dec)}`}
-              className="mt-1.5 w-full rounded-lg border border-border bg-base px-3 py-2 text-sm outline-none focus:border-gold"
+              className="mt-1.5 w-full rounded-lg border border-[#12365A] bg-[#030914] px-3 py-2 text-sm outline-none focus:border-brand-cyan"
             />
           </div>
         </div>
@@ -94,10 +94,10 @@ function TradeModal({ symbol, side, price, onCancel, onSubmit, error }) {
         {error && <p className="mt-3 text-sm text-loss">{error}</p>}
 
         <div className="mt-4 flex gap-2">
-          <button type="button" onClick={onCancel} className="flex-1 rounded-lg border border-border px-3 py-2 text-sm text-ink-muted">
+          <button type="button" onClick={onCancel} className="flex-1 rounded-lg border border-[#12365A] px-3 py-2 text-sm text-ink-muted">
             Cancel
           </button>
-          <button type="submit" className="flex-1 rounded-lg bg-gold px-3 py-2 text-sm font-semibold text-base hover:bg-gold-soft">
+          <button type="submit" className="flex-1 rounded-lg bg-brand-blue px-3 py-2 text-sm font-semibold text-base hover:bg-brand-blue-soft">
             Confirm
           </button>
         </div>
@@ -181,7 +181,7 @@ export default function Terminal() {
       <p className="mt-1 text-sm text-ink-muted">Simulated prices, no real money — practice until it's second nature.</p>
 
       {account && (
-        <div className="mt-4 inline-block rounded-xl border border-gold/40 bg-surface px-4 py-3">
+        <div className="mt-4 inline-block rounded-xl border border-gold/40 bg-[#071426] px-4 py-3">
           <p className="text-xs text-ink-muted">Demo balance</p>
           <p className="font-display text-xl font-semibold tabular-nums">
             ${parseFloat(account.balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -197,7 +197,7 @@ export default function Terminal() {
             key={s}
             onClick={() => setSymbol(s)}
             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-              symbol === s ? 'bg-gold text-base' : 'bg-surface text-ink-muted hover:text-ink-primary'
+              symbol === s ? 'bg-brand-blue text-base' : 'bg-[#071426] text-ink-muted hover:text-ink-primary'
             }`}
           >
             {s}
@@ -206,13 +206,13 @@ export default function Terminal() {
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <div className="flex gap-1 rounded-lg bg-surface p-1">
+        <div className="flex gap-1 rounded-lg bg-[#071426] p-1">
           {TIMEFRAMES.map((tf) => (
             <button
               key={tf.key}
               onClick={() => setTimeframe(tf)}
               className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
-                timeframe.key === tf.key ? 'bg-gold text-base' : 'text-ink-muted hover:text-ink-primary'
+                timeframe.key === tf.key ? 'bg-brand-blue text-base' : 'text-ink-muted hover:text-ink-primary'
               }`}
             >
               {tf.label}
@@ -221,7 +221,7 @@ export default function Terminal() {
         </div>
       </div>
 
-      <div className="mt-2 rounded-xl border border-border bg-surface p-3">
+      <div className="mt-2 rounded-xl border border-[#12365A] bg-[#071426] p-3">
         {candles.length === 0 ? (
           <div className="flex h-[280px] items-center justify-center text-sm text-ink-muted">
             Collecting price data — check back in a minute.
@@ -260,14 +260,14 @@ export default function Terminal() {
           <div className="mt-3 space-y-2">
             {openTrades.length === 0 && <p className="text-sm text-ink-muted">No open positions.</p>}
             {openTrades.map((t) => (
-              <div key={t.id} className="rounded-lg border border-border bg-surface px-4 py-3">
+              <div key={t.id} className="rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">
                     {t.symbol} <span className="text-ink-muted">· {t.side}</span>
                   </p>
                   <button
                     onClick={() => handleClose(t.id)}
-                    className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-ink-muted hover:text-ink-primary"
+                    className="rounded-lg border border-[#12365A] px-2.5 py-1 text-xs font-medium text-ink-muted hover:text-ink-primary"
                   >
                     Close
                   </button>
@@ -285,7 +285,7 @@ export default function Terminal() {
           <div className="mt-3 space-y-2">
             {closedTrades.length === 0 && <p className="text-sm text-ink-muted">No closed trades yet.</p>}
             {closedTrades.slice(0, 10).map((t) => (
-              <div key={t.id} className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-sm">
+              <div key={t.id} className="flex items-center justify-between rounded-lg border border-[#12365A] bg-[#071426] px-4 py-3 text-sm">
                 <span>
                   {t.symbol} · {t.side}
                   {t.close_reason && t.close_reason !== 'manual' && (
