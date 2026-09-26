@@ -1,39 +1,27 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 
-function Stat({ label, value, tone }) {
-  const toneClass = tone === 'gain' ? 'text-gain' : tone === 'loss' ? 'text-loss' : 'text-ink-primary';
-  return <div className="tt-card rounded-2xl p-4"><p className="text-[10px] uppercase tracking-wider text-ink-muted">{label}</p><p className={`mt-1 font-display text-2xl font-bold tabular-nums ${toneClass}`}>{value}</p></div>;
-}
+const Action = ({ icon, label, onClick }) => (
+  <button onClick={onClick} className="tt-card flex items-center gap-3 rounded-2xl p-3 text-left hover:border-brand-blue/60">
+    <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-blue/10 text-lg text-brand-cyan">{icon}</span>
+    <span className="text-xs font-semibold">{label}</span><span className="ml-auto text-brand-cyan">›</span>
+  </button>
+);
 
 export default function Home({ goToTerminal, goToLearn }) {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  useEffect(() => { api.getDemoPerformance().then(setData).catch((err) => setError(err.message)); }, []);
-  if (error) return <p className="p-6 text-sm text-loss">Couldn't load your performance: {error}</p>;
-  if (!data) return <p className="p-6 text-sm text-ink-muted">Loading…</p>;
-  const pnlTone = data.total_pnl > 0 ? 'gain' : data.total_pnl < 0 ? 'loss' : undefined;
-  const hasTrades = data.total_trades > 0;
-
-  return (
-    <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
-      <section className="relative overflow-hidden rounded-3xl border border-brand-blue/35 bg-gradient-to-br from-brand-blue/20 via-surface to-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,.24)]">
-        <div className="absolute -right-10 -top-20 h-56 w-56 rounded-full bg-brand-cyan/10 blur-3xl" />
-        <p className="relative text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • DASHBOARD</p>
-        <h1 className="relative mt-2 font-display text-2xl font-bold">Your progress</h1>
-        <p className="relative mt-1 text-xs text-ink-muted">Track your practice trading and keep building your score.</p>
-      </section>
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="Demo balance" value={`$${parseFloat(data.balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}`} />
-        <Stat label="Return" value={`${data.return_pct > 0 ? '+' : ''}${data.return_pct}%`} tone={data.return_pct >= 0 ? 'gain' : 'loss'} />
-        <Stat label="Win rate" value={data.win_rate !== null ? `${data.win_rate}%` : '—'} />
-        <Stat label="Total P&L" value={`${data.total_pnl >= 0 ? '+' : ''}${data.total_pnl.toFixed(2)}`} tone={pnlTone} />
-      </div>
-      {!hasTrades ? (
-        <div className="tt-card mt-5 rounded-2xl border-dashed p-6 text-center"><p className="text-sm font-semibold">You haven't placed a practice trade yet.</p><p className="mt-1 text-sm text-ink-muted">Open the Terminal to practice, or visit Learn for the basics.</p><div className="mt-4 flex justify-center gap-2"><button onClick={goToTerminal} className="rounded-xl bg-brand-blue px-4 py-2.5 text-sm font-bold text-white">Open Terminal</button><button onClick={goToLearn} className="rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-ink-muted">Go to Learn</button></div></div>
-      ) : (
-        <div className="mt-5"><div className="flex items-center justify-between text-xs text-ink-muted"><span>{data.total_trades} trades · {data.open_trades} open · {data.closed_trades} closed</span><span className="text-brand-cyan">Practice mode</span></div><h2 className="mt-4 font-display text-sm font-bold">Recent trades</h2><div className="mt-3 space-y-2">{data.recent_trades.map((t) => <div key={t.id} className="tt-card flex items-center justify-between rounded-2xl px-4 py-3 text-sm"><span>{t.symbol} · {t.side}{t.status === 'open' && <span className="ml-1.5 text-ink-muted">(open)</span>}</span><span className={`font-medium tabular-nums ${t.pnl == null ? 'text-ink-muted' : t.pnl >= 0 ? 'text-gain' : 'text-loss'}`}>{t.pnl == null ? '—' : `${t.pnl >= 0 ? '+' : ''}${parseFloat(t.pnl).toFixed(2)}`}</span></div>)}</div></div>
-      )}
-    </div>
-  );
+  const [data,setData]=useState(null); const [error,setError]=useState(null);
+  useEffect(()=>{api.getMyDashboard().then(setData).catch(e=>setError(e.message));},[]);
+  if(error) return <p className="p-6 text-sm text-loss">Couldn't load your dashboard: {error}</p>;
+  if(!data) return <p className="p-6 text-sm text-ink-muted">Loading…</p>;
+  const s=data.stats||{}; const name=data.username||data.user?.username||'Goodness'; const tasks=(data.tasks||[]).slice(0,1);
+  const nav=(key)=>window.dispatchEvent(new CustomEvent('top-tier:navigate',{detail:key}));
+  return <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
+    <div className="flex items-center justify-between"><div><p className="font-display text-lg font-black tracking-wide">♛ TOP <span className="text-brand-cyan">TIER</span></p><p className="text-[9px] text-ink-muted">Earn • Complete • Withdraw</p></div><div className="flex gap-2"><button className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface">♧</button><button className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface">●</button></div></div>
+    <div className="mt-5 flex items-center gap-3"><div className="grid h-12 w-12 place-items-center rounded-full border-2 border-brand-cyan/50 bg-brand-blue/20 text-xl">👤</div><div><p className="text-[10px] text-ink-muted">Good morning,</p><h1 className="font-display text-base font-bold">{name}</h1><p className="text-[10px] text-brand-cyan">★ Level {Math.max(1,Math.floor((s.total_points||0)/500)+1)} · {(s.total_points||0).toLocaleString()} pts</p></div></div>
+    <section className="relative mt-4 overflow-hidden rounded-2xl border border-brand-blue/50 bg-gradient-to-r from-brand-blue/20 to-surface p-4"><div><p className="text-[9px] font-bold uppercase tracking-widest text-brand-cyan">▣ DAILY TASKS</p><h2 className="mt-1 font-display text-base font-bold">Complete Tasks.<br/>Earn Points. Get Rewards.</h2><button onClick={()=>nav('tasks')} className="mt-3 rounded-lg bg-brand-blue px-4 py-2 text-[10px] font-bold text-white">View Tasks →</button></div><div className="absolute right-4 top-3 text-5xl">🎁</div></section>
+    <div className="mt-3 grid grid-cols-3 gap-2"><div className="tt-card rounded-2xl p-3 text-center"><p className="text-[9px] text-ink-muted">Total Points</p><p className="mt-1 font-display text-lg font-bold">{(s.total_points||0).toLocaleString()}</p></div><div className="tt-card rounded-2xl p-3 text-center"><p className="text-[9px] text-ink-muted">Today</p><p className="mt-1 font-display text-lg font-bold">+{s.daily_points||0}</p></div><div className="tt-card rounded-2xl p-3 text-center"><p className="text-[9px] text-ink-muted">Rank</p><p className="mt-1 font-display text-lg font-bold">#{s.rank||'—'}</p></div></div>
+    <h2 className="mt-5 font-display text-sm font-bold">Quick Actions</h2><div className="mt-2 grid grid-cols-2 gap-2"><Action icon="✓" label="View Tasks" onClick={()=>nav('tasks')}/><Action icon="♧" label="Referrals" onClick={()=>nav('referrals')}/><Action icon="🏆" label="Leaderboard" onClick={()=>nav('leaderboard')}/><Action icon="▣" label="Wallet" onClick={()=>nav('wallet')}/></div>
+    {tasks.length>0&&<div className="mt-5 tt-card rounded-2xl p-4"><div className="flex items-center justify-between"><div><p className="text-[9px] uppercase text-brand-cyan">Published task</p><p className="mt-1 text-sm font-bold">{tasks[0].title}</p></div><span className="rounded-full bg-brand-blue/10 px-2 py-1 text-[9px] font-bold text-brand-cyan">+{tasks[0].points} pts</span></div><p className="mt-2 text-[10px] text-ink-muted">Every active task published today is available in Tasks.</p></div>}
+    <div className="mt-5 flex gap-2"><button onClick={goToTerminal} className="flex-1 rounded-xl border border-border px-3 py-2 text-xs">Practice Terminal</button><button onClick={goToLearn} className="flex-1 rounded-xl border border-border px-3 py-2 text-xs">Learn</button></div>
+  </div>;
 }
