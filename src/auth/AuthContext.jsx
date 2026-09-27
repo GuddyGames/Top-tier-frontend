@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { api } from '../api/client';
+import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
@@ -67,12 +68,42 @@ export function AuthProvider({ children }) {
     return data.user;
   }, [persist]);
 
+  const loginWithGoogle = useCallback(async () => {
+    if (!supabase) throw new Error('Google sign-in is not configured yet.');
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/?google=1` },
+    });
+    if (error) throw error;
+  }, []);
+
+  const completeGoogleLogin = useCallback(async () => {
+    if (!supabase) return false;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return false;
+    const data = await api.googleLogin(session.access_token);
+    persist(data.token, data.user);
+    await supabase.auth.signOut();
+    return true;
+  }, [persist]);
+
   const logout = useCallback(() => {
     clearSession();
   }, [clearSession]);
 
+  useEffect(() => {
+    let active = true;
+    if (!window.location.search.includes('google=1')) return undefined;
+    completeGoogleLogin().catch((error) => {
+      if (active) console.error('[auth] Google sign-in failed:', error.message);
+    }).finally(() => {
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    });
+    return () => { active = false; };
+  }, [completeGoogleLogin]);
+
   return (
-    <AuthContext.Provider value={{ token, user, login, signup, logout, authReady }}>
+    <AuthContext.Provider value={{ token, user, login, signup, loginWithGoogle, completeGoogleLogin, logout, authReady }}>
       {children}
     </AuthContext.Provider>
   );
