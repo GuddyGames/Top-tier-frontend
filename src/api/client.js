@@ -28,8 +28,8 @@ export const api = {
     request('/api/auth/signup', { method: 'POST', body: JSON.stringify(payload) }),
   login: (payload) =>
     request('/api/auth/login', { method: 'POST', body: JSON.stringify(payload) }),
-  googleLogin: (accessToken) =>
-    request('/api/auth/google', { method: 'POST', body: JSON.stringify({ accessToken }) }),
+  googleLogin: (accessToken, referralCode = '') =>
+    request('/api/auth/google', { method: 'POST', body: JSON.stringify({ accessToken, referralCode }) }),
   getLeaderboard: (limit = 20, offset = 0) =>
     request(`/api/leaderboard?limit=${limit}&offset=${offset}`),
   getDashboard: () => request('/api/dashboard'),
