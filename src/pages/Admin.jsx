@@ -628,6 +628,18 @@ function TasksAdminTab() {
   );
 }
 
+function SupportTab() {
+  const [conversations,setConversations]=useState([]),[selected,setSelected]=useState(null),[chat,setChat]=useState(null),[text,setText]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(null);
+  const load=async()=>{try{const d=await api.adminGetSupport();setConversations(d.conversations||[])}catch(e){setError(e.message)}};
+  useEffect(()=>{load()},[]);
+  const open=async id=>{try{const d=await api.adminGetSupportChat(id);setSelected(id);setChat(d)}catch(e){setError(e.message)}};
+  const send=async e=>{e.preventDefault();if(!text.trim()||!selected)return;setBusy(true);try{const d=await api.adminSendSupportMessage(selected,text.trim());setChat(x=>({...x,messages:[...(x?.messages||[]),d.message]}));setText('');await load()}catch(e){setError(e.message)}finally{setBusy(false)}};
+  return <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
+    <div className="space-y-2"><h2 className="font-display text-sm font-semibold">Support chats</h2>{conversations.map(c=><button key={c.id} onClick={()=>open(c.id)} className={`w-full rounded-2xl border p-3 text-left ${selected===c.id?'border-brand-cyan bg-brand-blue/10':'border-border bg-base/40'}`}><p className="text-xs font-semibold">{c.username}</p><p className="truncate text-[10px] text-ink-muted">{c.last_message||'No messages yet'}</p></button>)}{!conversations.length&&<p className="text-xs text-ink-muted">No support chats yet.</p>}</div>
+    <div className="tt-card min-h-[420px] rounded-2xl p-4">{chat?<><div className="mb-3 border-b border-border pb-3"><p className="font-semibold">{chat.conversation?.id?'Support conversation':''}</p></div><div className="max-h-[45vh] space-y-2 overflow-y-auto">{(chat.messages||[]).map(m=><div key={m.id} className={`max-w-[85%] rounded-xl p-2.5 text-[10px] ${Number(m.sender_user_id)===Number(chat.conversation?.user_id)?'bg-surface':'ml-auto bg-brand-blue text-white'}`}><p>{m.message}</p><p className="mt-1 text-[8px] opacity-60">{m.username} · {new Date(m.created_at).toLocaleString()}</p></div>)}</div><form onSubmit={send} className="mt-3 flex gap-2"><input value={text} onChange={e=>setText(e.target.value)} placeholder="Reply to user…" className="min-w-0 flex-1 rounded-xl border border-border bg-base px-3 py-2.5 text-xs"/><button disabled={busy} className="rounded-xl bg-brand-blue px-4 text-xs font-bold text-white">{busy?'…':'Send'}</button></form></>:<p className="py-20 text-center text-xs text-ink-muted">Select a support conversation.</p>}{error&&<p className="mt-2 text-xs text-loss">{error}</p>}</div>
+  </div>;
+}
+
 const TABS = [
   { key: 'overview', label: 'Overview', Component: OverviewTab },
   { key: 'users', label: 'Users', Component: UsersTab },
@@ -636,6 +648,7 @@ const TABS = [
   { key: 'activity', label: 'Activity', Component: ActivityTab },
   { key: 'trades', label: 'Trades', Component: TradesTab },
   { key: 'tasks', label: 'Tasks', Component: TasksAdminTab },
+  { key: 'support', label: 'Support', Component: SupportTab },
 ];
 
 export default function Admin() {
