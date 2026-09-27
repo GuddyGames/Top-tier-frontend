@@ -62,6 +62,10 @@ export const api = {
     request('/api/demo/trades', { method: 'POST', body: JSON.stringify(payload) }),
   closeDemoTrade: (id) => request(`/api/demo/trades/${id}/close`, { method: 'POST' }),
   adminGetReferrals: () => request('/api/admin/referrals'),
+  adminGetSupport: () => request('/api/admin/support'),
+  adminGetSupportChat: (id) => request(`/api/support/admin/${id}`),
+  adminSendSupportMessage: (id, message) => request(`/api/support/admin/${id}/messages`, { method: 'POST', body: JSON.stringify({ message }) }),
+  adminSendNotification: (title, message) => request('/api/admin/notifications', { method: 'POST', body: JSON.stringify({ title, message }) }),
   adminListUsers: (search = '') =>
     request(`/api/admin/users${search ? `?search=${encodeURIComponent(search)}` : ''}`),
   adminGetUser: (id) => request(`/api/admin/users/${id}`),
