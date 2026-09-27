@@ -640,6 +640,12 @@ function SupportTab() {
   </div>;
 }
 
+function NotificationsAdminTab() {
+  const [title,setTitle]=useState(''),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[result,setResult]=useState(null),[error,setError]=useState(null);
+  const send=async e=>{e.preventDefault();setBusy(true);setResult(null);setError(null);try{const d=await api.adminSendNotification(title,message);setResult(`Sent to ${d.sent_to} active users.`);setTitle('');setMessage('')}catch(e){setError(e.message)}finally{setBusy(false)}};
+  return <div className="max-w-2xl"><div className="tt-card rounded-2xl p-5"><h2 className="font-display text-base font-semibold">Send notification</h2><p className="mt-1 text-xs text-ink-muted">Send an update to every active user. Users can read it from Profile → Notifications.</p><form onSubmit={send} className="mt-4 space-y-3"><input required maxLength={150} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Notification title" className="w-full rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><textarea required maxLength={2000} rows={5} value={message} onChange={e=>setMessage(e.target.value)} placeholder="Write the update..." className="w-full resize-y rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><button disabled={busy} className="w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white disabled:opacity-60">{busy?'Sending…':'Send to all active users'}</button></form>{result&&<p className="mt-3 text-xs text-gain">{result}</p>}{error&&<p className="mt-3 text-xs text-loss">{error}</p>}</div></div>;
+}
+
 const TABS = [
   { key: 'overview', label: 'Overview', Component: OverviewTab },
   { key: 'users', label: 'Users', Component: UsersTab },
@@ -649,6 +655,7 @@ const TABS = [
   { key: 'trades', label: 'Trades', Component: TradesTab },
   { key: 'tasks', label: 'Tasks', Component: TasksAdminTab },
   { key: 'support', label: 'Support', Component: SupportTab },
+  { key: 'notifications', label: 'Notifications', Component: NotificationsAdminTab },
 ];
 
 export default function Admin() {
