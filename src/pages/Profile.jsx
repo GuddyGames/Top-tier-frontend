@@ -46,9 +46,10 @@ export default function Profile() {
         <div className="min-w-0 flex-1"><h1 className="font-display text-lg font-bold truncate">{p.username}</h1><p className="text-[10px] text-brand-cyan">@{p.telegram_username||'telegram-not-linked'}</p><p className="text-[10px] text-ink-muted">Level {Math.max(1,Math.floor((stats.total_points||0)/500)+1)} · {(stats.total_points||0).toLocaleString()} pts</p></div>
       </div>
 
-      <div className="grid grid-cols-2 divide-x divide-y divide-border bg-surface/80 sm:grid-cols-4 sm:divide-y-0">
+      <div className="grid grid-cols-2 divide-x divide-y divide-border bg-surface/80 sm:grid-cols-5 sm:divide-y-0">
         <div className="p-3 text-center"><b>{referrals}</b><p className="text-[9px] text-ink-muted">Referrals</p></div>
-        <div className="p-3 text-center"><b>{stats.total_points||0}</b><p className="text-[9px] text-ink-muted">Points</p></div>
+        <div className="p-3 text-center"><b>{stats.tasks_completed||0}</b><p className="text-[9px] text-ink-muted">Tasks Done</p></div>
+        <div className="p-3 text-center"><b>{stats.referral_points||0}</b><p className="text-[9px] text-ink-muted">Referral Pts</p></div>
         <div className="p-3 text-center"><b>{stats.current_streak||0}</b><p className="text-[9px] text-ink-muted">Day Streak</p></div>
         <div className="p-3 text-center"><b>{stats.rank ? '#'+stats.rank : '—'}</b><p className="text-[9px] text-ink-muted">Rank</p></div>
       </div>
