@@ -79,6 +79,12 @@ export function AuthProvider({ children }) {
 
   const completeGoogleLogin = useCallback(async () => {
     if (!supabase) return false;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      if (error) throw error;
+    }
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return false;
     const data = await api.googleLogin(session.access_token);
