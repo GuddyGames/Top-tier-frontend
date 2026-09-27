@@ -27,7 +27,6 @@ export default function Profile() {
 
   const save=async e=>{e.preventDefault();setSaving(true);setError(null);try{const updated=await api.updateMyProfile({username,email,telegramUsername:tg});setP(x=>({...x,...updated}));setEditing(false)}catch(e){setError(e.message)}finally{setSaving(false)}};
   const openNotifications=async()=>{setNotificationsOpen(true);try{const d=await api.getNotifications();setNotifications(d.notifications||[])}catch(e){setError(e.message)}};
-  const toggleNotifications=async()=>{try{const d=await api.updateNotificationPreference(!(p.notification_enabled!==false));setP(x=>({...x,notification_enabled:d.notification_enabled}))}catch(e){setError(e.message)}};
   const openSupport=async()=>{setSupportOpen(true);try{setSupport(await api.getSupportChat())}catch(e){setError(e.message)}};
   const sendSupport=async e=>{e.preventDefault();if(!supportText.trim())return;setSupportSending(true);try{const d=await api.sendSupportMessage(supportText.trim());setSupport(x=>({...x,messages:[...(x?.messages||[]),d.message]}));setSupportText('')}catch(e){setError(e.message)}finally{setSupportSending(false)}};
   const acceptPrivacy=async()=>{setPrivacySaving(true);try{const d=await api.acceptPrivacy();setP(x=>({...x,privacy_accepted_at:d.privacy_accepted_at,privacy_policy_version:d.privacy_policy_version}));setPrivacyOpen(false)}catch(e){setError(e.message)}finally{setPrivacySaving(false)}};
@@ -71,7 +70,7 @@ export default function Profile() {
         <div className="rounded-xl border border-border bg-base/50 px-3 py-3 sm:px-4">
           <div className="flex items-center justify-between gap-3">
             <button type="button" onClick={openNotifications} className="flex min-w-0 items-center gap-2 text-left text-xs"><span>🔔</span><span><b>Notifications</b><span className="block text-[9px] text-ink-muted">View updates about tasks and your account</span></span></button>
-            <button type="button" onClick={toggleNotifications} aria-label="Toggle notifications" aria-pressed={p.notification_enabled!==false} className={`relative h-6 w-11 shrink-0 rounded-full p-0.5 ${p.notification_enabled!==false?'bg-brand-cyan/25':'bg-ink-muted/20'}`}><span className={`block h-5 w-5 rounded-full shadow-sm transition-transform ${p.notification_enabled!==false?'translate-x-5 bg-brand-cyan':'bg-ink-muted'}`}/></button>
+            <span aria-label="Notifications enabled" className="relative h-6 w-11 shrink-0 rounded-full bg-brand-cyan/25 p-0.5"><span className="block h-5 w-5 translate-x-5 rounded-full bg-brand-cyan shadow-sm"/></span>
           </div>
         </div>
 
