@@ -68,11 +68,11 @@ export function AuthProvider({ children }) {
     return data.user;
   }, [persist]);
 
-  const loginWithGoogle = useCallback(async () => {
+  const loginWithGoogle = useCallback(async (referralCode = '') => {
     if (!supabase) throw new Error('Google sign-in is not configured yet.');
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/?google=1` },
+      options: { redirectTo: `${window.location.origin}/?google=1${referralCode ? `&ref=${encodeURIComponent(referralCode)}` : ''}` },
     });
     if (error) throw error;
   }, []);
@@ -87,7 +87,8 @@ export function AuthProvider({ children }) {
     }
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return false;
-    const data = await api.googleLogin(session.access_token);
+    const referralCode = params.get('ref') || '';
+    const data = await api.googleLogin(session.access_token, referralCode);
     persist(data.token, data.user);
     await supabase.auth.signOut();
     return true;
