@@ -48,7 +48,16 @@ export default function App() {
   const [tab, setTab] = useState(user ? 'home' : referralCode ? 'home' : 'leaderboard');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [viewMode, setViewMode] = useState(() => localStorage.getItem('topTierViewMode') || 'mobile');
-  const toggleViewMode = () => setViewMode((current) => { const next = current === 'mobile' ? 'web' : 'mobile'; localStorage.setItem('topTierViewMode', next); return next; });
+  const toggleViewMode = () => setViewMode((current) => { const next = current === 'mobile' ? 'desktop' : 'mobile'; localStorage.setItem('topTierViewMode', next); return next; });
+
+  useEffect(() => {
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (!viewport) return;
+    viewport.setAttribute('content', viewMode === 'desktop'
+      ? 'width=1024, initial-scale=1, viewport-fit=cover, user-scalable=yes'
+      : 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no');
+    return () => viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no');
+  }, [viewMode]);
   const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
 
@@ -124,7 +133,7 @@ export default function App() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <nav className={`sticky top-0 z-40 border-b border-brand-blue/25 bg-[#030914]/95 px-6 py-3 backdrop-blur-xl ${viewMode === "web" ? "block" : "hidden md:block"}`}>
+      <nav className={`sticky top-0 z-40 border-b border-brand-blue/25 bg-[#030914]/95 px-6 py-3 backdrop-blur-xl ${viewMode === "desktop" ? "block" : "hidden md:block"}`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button
@@ -154,10 +163,7 @@ export default function App() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <InstallApp />
-            {!user && <button onClick={() => navigate('home')} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted">Log in</button>}
-          </div>
+          <div className="flex items-center gap-2"><InstallApp /><button type="button" onClick={toggleViewMode} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted hover:text-ink-primary" aria-label="Switch to mobile view">📱 Mobile</button>{!user && <button onClick={() => navigate('home')} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted">Log in</button>}</div>
         </div>
       </nav>
 
@@ -221,8 +227,8 @@ export default function App() {
                 )}
                 <div className="my-3 border-t border-[#12365A] pt-3">
                   <div className="mb-2 px-4 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">View</div>
-                  <button type="button" onClick={toggleViewMode} role="switch" aria-checked={viewMode === 'web'} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
-                    <span className="flex items-center gap-3"><span className="text-lg">{viewMode === 'mobile' ? '📱' : '🖥️'}</span><span>{viewMode === 'mobile' ? 'Desktop view' : 'Desktop view'}</span></span>
+                  <button type="button" onClick={toggleViewMode} role="switch" aria-checked={viewMode === 'desktop'} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="flex items-center gap-3"><span className="text-lg">{viewMode === 'mobile' ? '📱' : '🖥️'}</span><span>{viewMode === 'mobile' ? 'Desktop view' : 'Mobile view'}</span></span>
                     <span className={`relative h-6 w-11 rounded-full p-0.5 ${viewMode === 'web' ? 'bg-brand-cyan' : 'bg-[#334155]'}`}><span className={`block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${viewMode === 'web' ? 'translate-x-5' : 'translate-x-0'}`} /></span>
                   </button>
                 </div>
