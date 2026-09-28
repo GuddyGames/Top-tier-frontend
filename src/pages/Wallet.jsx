@@ -17,14 +17,14 @@ function ActivityRow({ item }) {
   const points = Number(item.points ?? item.amount ?? 0);
   const positive = points >= 0;
   return (
-    <div className="tt-card flex items-center justify-between rounded-2xl p-3">
+    <div className="tt-card flex min-w-0 flex-col gap-2 rounded-2xl p-3 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
       <div>
         <p className="text-xs font-semibold">{item.note || formatActivity(item)}</p>
         <p className="text-[10px] text-ink-muted">
           {item.created_at ? new Date(item.created_at).toLocaleString() : 'Recent'}
         </p>
       </div>
-      <span className={positive ? 'text-xs font-bold text-gain' : 'text-xs font-bold text-loss'}>
+      <span className={`shrink-0 ${positive ? 'text-xs font-bold text-gain' : 'text-xs font-bold text-loss'}`}>
         {positive ? '+' : ''}{points} pts
       </span>
     </div>
@@ -50,20 +50,20 @@ export default function Wallet() {
   const visibleItems = tab === 'earnings' ? earnings : transactions;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
-      <div className="tt-card relative overflow-hidden rounded-3xl p-5">
+    <div className="mx-auto w-full min-w-0 max-w-5xl px-3 pb-10 pt-4 sm:px-6 sm:pt-5 lg:px-8">
+      <div className="tt-card relative min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5">
         <p className="text-[10px] font-bold uppercase tracking-[.2em] text-brand-cyan">
           Your earnings and transactions
         </p>
         <h1 className="mt-2 font-display text-2xl font-bold">Wallet</h1>
-        <div className="mt-4 flex items-end justify-between">
+        <div className="mt-4 flex flex-col gap-3 min-[420px]:flex-row min-[420px]:items-end min-[420px]:justify-between">
           <div>
             <p className="text-[10px] text-ink-muted">Total Balance</p>
-            <p className="mt-1 font-display text-3xl font-bold">
+            <p className="mt-1 break-words font-display text-2xl font-bold sm:text-3xl">
               {(stats.total_points || 0).toLocaleString()} <span className="text-sm text-brand-cyan">pts</span>
             </p>
           </div>
-          <button className="rounded-xl bg-brand-blue px-4 py-3 text-xs font-bold text-white">Withdraw</button>
+          <button className="w-full rounded-xl bg-brand-blue px-4 py-3 text-xs font-bold text-white min-[420px]:w-auto">Withdraw</button>
         </div>
       </div>
 
