@@ -222,7 +222,7 @@ export default function App() {
                 <div className="my-3 border-t border-[#12365A] pt-3">
                   <div className="mb-2 px-4 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">View</div>
                   <button type="button" onClick={toggleViewMode} role="switch" aria-checked={viewMode === 'web'} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
-                    <span className="flex items-center gap-3"><span className="text-lg">{viewMode === 'mobile' ? '📱' : '🖥️'}</span><span>{viewMode === 'mobile' ? 'Mobile view' : 'Web view'}</span></span>
+                    <span className="flex items-center gap-3"><span className="text-lg">{viewMode === 'mobile' ? '📱' : '🖥️'}</span><span>{viewMode === 'mobile' ? 'Desktop view' : 'Desktop view'}</span></span>
                     <span className={`relative h-6 w-11 rounded-full p-0.5 ${viewMode === 'web' ? 'bg-brand-cyan' : 'bg-[#334155]'}`}><span className={`block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${viewMode === 'web' ? 'translate-x-5' : 'translate-x-0'}`} /></span>
                   </button>
                 </div>
