@@ -12,9 +12,9 @@ function getGreeting() {
 const Action = ({ icon, label, onClick }) => (
   <button
     onClick={onClick}
-    className="tt-card group flex min-w-0 w-full items-center gap-3 rounded-2xl p-3 text-left transition hover:border-brand-blue/60 hover:bg-surface/80 active:scale-[.99] sm:p-3.5"
+    className="tt-card group flex min-w-0 w-full items-center gap-3 rounded-2xl p-3.5 text-left transition hover:-translate-y-0.5 hover:border-brand-blue/60 hover:bg-surface/80 active:scale-[.99] sm:p-4"
   >
-    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-blue/10 text-lg text-brand-cyan sm:h-11 sm:w-11">
+    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-blue/10 text-lg text-brand-cyan shadow-[inset_0_0_18px_rgba(0,140,255,.08)] sm:h-11 sm:w-11">
       {icon}
     </span>
     <span className="min-w-0 truncate text-xs font-semibold sm:text-sm">{label}</span>
@@ -23,7 +23,7 @@ const Action = ({ icon, label, onClick }) => (
 );
 
 const StatCard = ({ label, value }) => (
-  <div className="tt-card min-w-0 rounded-2xl p-3 text-center sm:p-3.5">
+  <div className="tt-card min-w-0 rounded-2xl p-3 text-center transition hover:-translate-y-0.5 hover:border-brand-blue/40 sm:p-3.5">
     <p className="truncate text-[9px] text-ink-muted sm:text-[10px]">{label}</p>
     <p className="mt-1 truncate font-display text-lg font-bold sm:text-xl">{value}</p>
   </div>
@@ -67,7 +67,7 @@ export default function Home({ goToTerminal, goToLearn }) {
   return (
     <main className="mx-auto w-full max-w-6xl min-w-0 px-3 pb-10 pt-4 sm:px-6 sm:pt-5 lg:px-8 xl:px-10">
       {/* Brand header */}
-      <header className="flex min-w-0 items-start justify-between gap-3 sm:items-center">
+      <header className="flex min-w-0 items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate font-display text-lg font-black tracking-wide sm:text-xl">
             ♛ TOP <span className="text-brand-cyan">TIER</span>
@@ -78,7 +78,7 @@ export default function Home({ goToTerminal, goToLearn }) {
         <div className="flex shrink-0 gap-2">
           <button
             aria-label="Quick menu"
-            className="grid h-9 w-9 place-items-center rounded-xl border border-border bg-surface text-sm sm:h-10 sm:w-10"
+            className="grid h-10 w-10 place-items-center rounded-2xl border border-border bg-surface text-sm shadow-[0_8px_24px_rgba(0,0,0,.16)] transition hover:border-brand-cyan/40 active:scale-95 sm:h-11 sm:w-11"
           >
             ♧
           </button>
@@ -92,8 +92,8 @@ export default function Home({ goToTerminal, goToLearn }) {
       </header>
 
       {/* User summary */}
-      <section className="mt-4 flex min-w-0 items-center gap-3 sm:mt-6 sm:gap-4">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full border-2 border-brand-cyan/50 bg-brand-blue/20 text-xl sm:h-14 sm:w-14 sm:text-2xl">
+      <section className="relative mt-5 flex min-w-0 items-center gap-3 overflow-hidden rounded-3xl border border-brand-blue/25 bg-gradient-to-r from-brand-blue/10 via-surface/70 to-transparent p-3 sm:mt-6 sm:gap-4 sm:p-4">
+        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-brand-cyan/50 bg-brand-blue/15 text-xl shadow-[0_0_24px_rgba(0,140,255,.14)] sm:h-14 sm:w-14 sm:text-2xl">
           👤
         </div>
         <div className="min-w-0">
@@ -109,7 +109,7 @@ export default function Home({ goToTerminal, goToLearn }) {
       <div className="mt-4 grid gap-4 sm:mt-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(280px,.85fr)] lg:items-start lg:gap-5 xl:gap-6">
         <div className="min-w-0">
           {/* Daily tasks banner */}
-          <section className="relative min-h-[158px] overflow-hidden rounded-2xl border border-brand-blue/50 bg-gradient-to-r from-brand-blue/20 to-surface p-4 sm:min-h-[170px] sm:p-5">
+          <section className="relative min-h-[180px] overflow-hidden rounded-3xl border border-brand-blue/45 bg-gradient-to-br from-brand-blue/25 via-[#071426] to-surface p-4 shadow-[0_16px_40px_rgba(0,0,0,.18)] sm:min-h-[200px] sm:p-6">
             <div className="relative z-10 max-w-[80%] sm:max-w-[75%]">
               <p className="text-[9px] font-bold uppercase tracking-widest text-brand-cyan sm:text-[10px]">
                 ▣ DAILY TASKS
@@ -120,12 +120,12 @@ export default function Home({ goToTerminal, goToLearn }) {
               </h2>
               <button
                 onClick={() => nav('tasks')}
-                className="mt-3 rounded-lg bg-brand-blue px-3.5 py-2 text-[10px] font-bold text-white transition hover:opacity-90 sm:px-4 sm:text-xs"
+                className="mt-4 rounded-xl bg-brand-blue px-4 py-2.5 text-[10px] font-bold text-white shadow-[0_8px_22px_rgba(0,140,255,.22)] transition hover:brightness-110 active:scale-[.98] sm:px-5 sm:text-xs"
               >
                 View Tasks →
               </button>
             </div>
-            <div className="pointer-events-none absolute -right-1 bottom-1 text-5xl opacity-80 sm:right-4 sm:top-4 sm:text-6xl md:text-7xl">
+            <div className="pointer-events-none absolute -right-4 bottom-0 text-6xl opacity-80 sm:right-3 sm:top-3 sm:text-7xl md:text-8xl">
               🎁
             </div>
           </section>
@@ -139,7 +139,7 @@ export default function Home({ goToTerminal, goToLearn }) {
 
           {/* Quick actions */}
           <section className="mt-5 sm:mt-6">
-            <h2 className="font-display text-sm font-bold sm:text-base">Quick Actions</h2>
+            <div className="flex items-end justify-between"><div><h2 className="font-display text-sm font-bold sm:text-base">Quick Actions</h2><p className="mt-0.5 text-[9px] text-ink-muted sm:text-[10px]">Jump into your Top-Tier activity</p></div></div>
             <div className="mt-2 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:gap-3">
               <Action icon="✓" label="View Tasks" onClick={() => nav('tasks')} />
               <Action icon="♧" label="Referrals" onClick={() => nav('referrals')} />
@@ -152,10 +152,10 @@ export default function Home({ goToTerminal, goToLearn }) {
         {/* Secondary dashboard column */}
         <aside className="min-w-0">
           {tasks.length > 0 && (
-            <section className="tt-card rounded-2xl p-3.5 sm:p-4 lg:h-full">
+            <section className="tt-card relative overflow-hidden rounded-3xl p-4 sm:p-5 lg:h-full">
               <div className="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-start min-[420px]:justify-between lg:flex-col lg:items-start">
                 <div className="min-w-0">
-                  <p className="text-[9px] uppercase tracking-wide text-brand-cyan sm:text-[10px]">
+                  <p className="text-[9px] font-bold uppercase tracking-[.16em] text-brand-cyan sm:text-[10px]">
                     Published task
                   </p>
                   <p className="mt-1 break-words text-sm font-bold sm:text-base">{tasks[0].title}</p>
@@ -169,7 +169,7 @@ export default function Home({ goToTerminal, goToLearn }) {
               </p>
               <button
                 onClick={() => nav('tasks')}
-                className="mt-3 w-full rounded-xl border border-border px-3 py-2 text-[10px] font-semibold transition hover:border-brand-blue/60 sm:text-xs"
+                className="mt-4 w-full rounded-xl border border-brand-blue/30 bg-brand-blue/5 px-3 py-2.5 text-[10px] font-semibold transition hover:border-brand-blue/60 hover:bg-brand-blue/10 sm:text-xs"
               >
                 View all tasks →
               </button>
