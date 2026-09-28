@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './auth/AuthContext';
 import Home from './pages/Home.jsx';
@@ -47,18 +47,7 @@ export default function App() {
   const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
   const [tab, setTab] = useState(user ? 'home' : referralCode ? 'home' : 'leaderboard');
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [viewMode, setViewMode] = useState(() => localStorage.getItem('topTierViewMode') || 'mobile');
-  const toggleViewMode = () => setViewMode((current) => { const next = current === 'mobile' ? 'desktop' : 'mobile'; localStorage.setItem('topTierViewMode', next); return next; });
-
-  useEffect(() => {
-    const viewport = document.querySelector('meta[name="viewport"]');
-    if (!viewport) return;
-    viewport.setAttribute('content', viewMode === 'desktop'
-      ? 'width=1024, initial-scale=1, viewport-fit=cover, user-scalable=yes'
-      : 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no');
-    return () => viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no');
-  }, [viewMode]);
-  const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
+    const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
 
   useEffect(() => {
@@ -133,7 +122,7 @@ export default function App() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <nav className={`sticky top-0 z-40 border-b border-brand-blue/25 bg-[#030914]/95 px-6 py-3 backdrop-blur-xl ${viewMode === "desktop" ? "block" : "hidden md:block"}`}>
+      <nav className={`sticky top-0 z-40 border-b border-brand-blue/25 bg-[#030914]/95 px-6 py-3 backdrop-blur-xl hidden md:block`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button
@@ -163,7 +152,7 @@ export default function App() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2"><InstallApp /><button type="button" onClick={toggleViewMode} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted hover:text-ink-primary" aria-label="Switch to mobile view">📱 Mobile</button>{!user && <button onClick={() => navigate('home')} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted">Log in</button>}</div>
+          <div className="flex items-center gap-2"><InstallApp />{!user && <button onClick={() => navigate('home')} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted">Log in</button>}</div>
         </div>
       </nav>
 
