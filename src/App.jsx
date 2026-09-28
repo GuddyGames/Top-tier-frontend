@@ -156,7 +156,7 @@ export default function App() {
         </div>
       </nav>
 
-      <header className={`sticky top-0 z-40 flex items-center justify-between border-b border-brand-blue/25 bg-[#030914]/95 px-4 py-3 backdrop-blur-xl ${viewMode === "web" ? "hidden" : "md:hidden"}`}>
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-brand-blue/25 bg-[#030914]/95 px-4 py-3 backdrop-blur-xl md:hidden">
         <button
           onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
           aria-label={isAdmin ? 'Open control room' : 'Go to home'}
@@ -214,13 +214,6 @@ export default function App() {
                     <span>Terminal</span>
                   </button>
                 )}
-                <div className="my-3 border-t border-[#12365A] pt-3">
-                  <div className="mb-2 px-4 text-[10px] font-semibold uppercase tracking-wider text-ink-muted">View</div>
-                  <button type="button" onClick={toggleViewMode} role="switch" aria-checked={viewMode === 'desktop'} className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
-                    <span className="flex items-center gap-3"><span className="text-lg">{viewMode === 'mobile' ? '📱' : '🖥️'}</span><span>{viewMode === 'mobile' ? 'Desktop view' : 'Mobile view'}</span></span>
-                    <span className={`relative h-6 w-11 rounded-full p-0.5 ${viewMode === 'web' ? 'bg-brand-cyan' : 'bg-[#334155]'}`}><span className={`block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${viewMode === 'web' ? 'translate-x-5' : 'translate-x-0'}`} /></span>
-                  </button>
-                </div>
                 {isAdmin && (
                   <button onClick={() => navigate('admin')} className="flex w-full items-center gap-3 rounded-xl bg-brand-blue/10 px-4 py-3 text-left text-sm font-semibold text-brand-cyan">
                     <span className="text-lg">⚙</span>
@@ -233,7 +226,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <main className={`mx-auto min-h-[calc(100vh-1px)] max-w-6xl ${viewMode === "web" ? "pb-8" : "pb-24 md:pb-8"}`}>
+      <main className="mx-auto min-h-[calc(100vh-1px)] max-w-6xl pb-24 md:pb-8">
         <AnimatePresence mode="wait">
           <motion.div key={tab} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -14 }} transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}>
             {tab === 'auth' ? (
@@ -247,7 +240,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-brand-blue/25 bg-[#030914]/95 px-1 pb-[calc(8px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl ${viewMode === "web" ? "hidden" : "md:hidden"}`}>
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-brand-blue/25 bg-[#030914]/95 px-1 pb-[calc(8px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl md:hidden">
         <div className="mx-auto flex max-w-xl items-center justify-around gap-0.5 overflow-x-auto">
           {(user ? AUTH_TABS : PUBLIC_TABS).map((t) => (
             <button key={t.key} onClick={() => navigate(t.key)} className="relative flex min-w-[58px] flex-1 flex-col items-center gap-1 rounded-2xl px-1.5 py-2 text-[10px] font-semibold active:scale-95">
