@@ -50,14 +50,7 @@ export default function App() {
     const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
 
-  useEffect(() => {
-    if (user && new URLSearchParams(window.location.search).get('google') === '1') {
-      setTab('home');
-      historyRef.current = ['home'];
-    }
-  }, [user]);
-
-  if (!authReady) return <SplashScreen />;
+ if (!authReady) return <SplashScreen />;
 
   const isAdmin = user?.role === 'admin';
   // Authenticated navigation already contains the primary Tasks and Leaderboard entries.
