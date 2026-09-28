@@ -400,7 +400,7 @@ function OverviewTab() {
       <div className="tt-card rounded-2xl p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-display text-base font-semibold">Control Room Overview</h2>
+            <h2 className="font-display text-base font-semibold text-white">Control Room Overview</h2>
             <p className="mt-1 text-xs text-ink-muted">Use the sections below to manage users, referrals, tasks and submission reviews.</p>
           </div>
           <button onClick={load} disabled={loading} className="rounded-xl border border-border px-3 py-2 text-xs font-semibold hover:border-brand-cyan disabled:opacity-50">
@@ -643,7 +643,7 @@ function SupportTab() {
 function NotificationsAdminTab() {
   const [title,setTitle]=useState(''),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[result,setResult]=useState(null),[error,setError]=useState(null);
   const send=async e=>{e.preventDefault();setBusy(true);setResult(null);setError(null);try{const d=await api.adminSendNotification(title,message);setResult(`Sent to ${d.sent_to} active users.`);setTitle('');setMessage('')}catch(e){setError(e.message)}finally{setBusy(false)}};
-  return <div className="max-w-2xl"><div className="tt-card rounded-2xl p-5"><h2 className="font-display text-base font-semibold">Send notification</h2><p className="mt-1 text-xs text-ink-muted">Send an update to every active user. Users can read it from Profile → Notifications.</p><form onSubmit={send} className="mt-4 space-y-3"><input required maxLength={150} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Notification title" className="w-full rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><textarea required maxLength={2000} rows={5} value={message} onChange={e=>setMessage(e.target.value)} placeholder="Write the update..." className="w-full resize-y rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><button disabled={busy} className="w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white disabled:opacity-60">{busy?'Sending…':'Send to all active users'}</button></form>{result&&<p className="mt-3 text-xs text-gain">{result}</p>}{error&&<p className="mt-3 text-xs text-loss">{error}</p>}</div></div>;
+  return <div className="max-w-2xl"><div className="tt-card rounded-2xl p-5"><h2 className="font-display text-base font-semibold text-white">Send notification</h2><p className="mt-1 text-xs text-ink-muted">Send an update to every active user. Users can read it from Profile → Notifications.</p><form onSubmit={send} className="mt-4 space-y-3"><input required maxLength={150} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Notification title" className="w-full rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><textarea required maxLength={2000} rows={5} value={message} onChange={e=>setMessage(e.target.value)} placeholder="Write the update..." className="w-full resize-y rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><button disabled={busy} className="w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white disabled:opacity-60">{busy?'Sending…':'Send to all active users'}</button></form>{result&&<p className="mt-3 text-xs text-gain">{result}</p>}{error&&<p className="mt-3 text-xs text-loss">{error}</p>}</div></div>;
 }
 
 const TABS = [
