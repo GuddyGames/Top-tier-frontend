@@ -101,10 +101,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let active = true;
     if (!window.location.search.includes('google=1')) return undefined;
-    completeGoogleLogin().catch((error) => {
+    completeGoogleLogin().then((completed) => {
+      if (!active) return;
+      if (completed) {
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+        return;
+      }
+      console.error('[auth] Google sign-in returned without a Supabase session');
+    }).catch((error) => {
       if (active) console.error('[auth] Google sign-in failed:', error.message);
-    }).finally(() => {
-      window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
     });
     return () => { active = false; };
   }, [completeGoogleLogin]);
