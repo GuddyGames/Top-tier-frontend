@@ -41,10 +41,10 @@ export default function Profile() {
   const referrals=stats.referral_count||0;
   const privacyAccepted=p.privacy_policy_version===PRIVACY_VERSION && p.privacy_accepted_at;
 
-  return <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8">
+  return <div className="mx-auto w-full min-w-0 max-w-5xl px-3 pb-10 pt-4 sm:px-6 sm:pt-5 lg:px-8">
     <div className="tt-card overflow-hidden rounded-3xl">
-      <div className="flex items-center gap-3 border-b border-border bg-gradient-to-r from-brand-blue/20 to-surface p-5">
-        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full border-2 border-brand-cyan bg-brand-blue/20 font-display text-xl font-bold">{initials}</div>
+      <div className="flex min-w-0 flex-col items-start gap-3 border-b border-border bg-gradient-to-r from-brand-blue/20 to-surface p-4 min-[420px]:flex-row min-[420px]:items-center sm:p-5">
+        <div className="grid h-14 w-14 shrink-0 min-[420px]:h-16 min-[420px]:w-16 place-items-center rounded-full border-2 border-brand-cyan bg-brand-blue/20 font-display text-xl font-bold">{initials}</div>
         <div className="min-w-0 flex-1"><h1 className="font-display text-lg font-bold truncate">{p.username}</h1><p className="text-[10px] text-brand-cyan">@{p.telegram_username||'telegram-not-linked'}</p><p className="text-[10px] text-ink-muted">Level {Math.max(1,Math.floor((stats.total_points||0)/500)+1)} · {(stats.total_points||0).toLocaleString()} pts</p></div>
       </div>
 
