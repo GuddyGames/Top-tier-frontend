@@ -5,11 +5,32 @@ import { useAuth } from '../auth/AuthContext';
 const PRIVACY_VERSION = '1.0';
 
 function Modal({ title, children, onClose }) {
-  return <div className="fixed inset-0 z-[80] flex items-end justify-center overflow-y-auto bg-black/60 p-0 sm:items-center sm:p-4">
-    <div className="my-auto w-full max-w-lg rounded-t-3xl border border-border bg-[#071426] p-4 text-white shadow-2xl sm:rounded-3xl">
-      <div className="mb-3 flex items-center justify-between gap-3"><h2 className="min-w-0 break-words font-display text-base font-bold text-white">{title}</h2><button onClick={onClose} aria-label="Close" className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-border text-lg text-white">×</button></div>
+  return <div className="fixed inset-0 z-[80] flex items-end justify-center overflow-y-auto bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+    <div className="my-auto w-full max-w-lg rounded-t-3xl border border-white/10 bg-[#071426] p-4 text-white shadow-2xl shadow-black/40 sm:rounded-3xl sm:p-5">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 className="min-w-0 break-words font-display text-base font-bold text-white">{title}</h2>
+        <button onClick={onClose} aria-label="Close" className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-lg text-white transition hover:bg-white/10">×</button>
+      </div>
       {children}
     </div>
+  </div>;
+}
+
+function Stat({ value, label, accent = false }) {
+  return <div className="group min-w-0 p-3 text-center transition hover:bg-white/[0.025] sm:p-3.5">
+    <b className={`block truncate text-sm font-bold ${accent ? 'text-brand-cyan' : 'text-white'}`}>{value}</b>
+    <p className="mt-0.5 truncate text-[9px] font-medium uppercase tracking-[.08em] text-ink-muted">{label}</p>
+  </div>;
+}
+
+function SettingRow({ icon, title, description, action, danger = false }) {
+  return <div className={`group flex min-w-0 items-center gap-3 rounded-2xl border p-3.5 transition duration-200 sm:p-4 ${danger ? 'border-loss/20 bg-loss/[0.035] hover:border-loss/35' : 'border-border/80 bg-base/45 hover:-translate-y-0.5 hover:border-brand-blue/35 hover:bg-base/70'}`}>
+    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border text-base transition ${danger ? 'border-loss/20 bg-loss/5' : 'border-border/80 bg-surface/80 group-hover:border-brand-blue/30'}`}>{icon}</span>
+    <div className="min-w-0 flex-1">
+      <p className={`text-xs font-semibold ${danger ? 'text-loss' : 'text-white'}`}>{title}</p>
+      <p className="mt-1 break-words text-[9px] leading-4 text-ink-muted">{description}</p>
+    </div>
+    {action}
   </div>;
 }
 
@@ -26,7 +47,6 @@ export default function Profile() {
   useEffect(()=>{load()},[]);
 
   const toggleNotifications=async()=>{const next=!notificationEnabled;setNotificationEnabled(next);setNotificationSaving(true);try{const updated=await api.updateNotificationPreference(next);setP(x=>({...x,...updated}));}catch(e){setNotificationEnabled(!next);setError(e.message)}finally{setNotificationSaving(false)}};
-
   const save=async e=>{e.preventDefault();setSaving(true);setError(null);try{const updated=await api.updateMyProfile({username,email,telegramUsername:tg});setP(x=>({...x,...updated}));setEditing(false)}catch(e){setError(e.message)}finally{setSaving(false)}};
   const openNotifications=async()=>{setNotificationsOpen(true);try{const d=await api.getNotifications();setNotifications(d.notifications||[])}catch(e){setError(e.message)}};
   const openSupport=async()=>{setSupportOpen(true);try{setSupport(await api.getSupportChat())}catch(e){setError(e.message)}};
@@ -39,57 +59,98 @@ export default function Profile() {
   const initials=(p.username||'?').slice(0,2).toUpperCase();
   const stats=dash?.stats||{};
   const referrals=stats.referral_count||0;
+  const level=Math.max(1,Math.floor((stats.total_points||0)/500)+1);
   const privacyAccepted=p.privacy_policy_version===PRIVACY_VERSION && p.privacy_accepted_at;
 
   return <div className="mx-auto w-full min-w-0 max-w-5xl px-3 pb-10 pt-4 sm:px-6 sm:pt-5 lg:px-8">
-    <div className="tt-card overflow-hidden rounded-3xl">
-      <div className="flex min-w-0 flex-col items-start gap-3 border-b border-border bg-gradient-to-r from-brand-blue/20 to-surface p-4 min-[420px]:flex-row min-[420px]:items-center sm:p-5">
-        <div className="grid h-14 w-14 shrink-0 min-[420px]:h-16 min-[420px]:w-16 place-items-center rounded-full border-2 border-brand-cyan bg-brand-blue/20 font-display text-xl font-bold">{initials}</div>
-        <div className="min-w-0 flex-1"><h1 className="font-display text-lg font-bold truncate">{p.username}</h1><p className="text-[10px] text-brand-cyan">@{p.telegram_username||'telegram-not-linked'}</p><p className="text-[10px] text-ink-muted">Level {Math.max(1,Math.floor((stats.total_points||0)/500)+1)} · {(stats.total_points||0).toLocaleString()} pts</p></div>
-      </div>
-
-      <div className="grid grid-cols-2 divide-x divide-y divide-border bg-surface/80 sm:grid-cols-5 sm:divide-y-0">
-        <div className="p-3 text-center"><b>{referrals}</b><p className="text-[9px] text-ink-muted">Referrals</p></div>
-        <div className="p-3 text-center"><b>{stats.tasks_completed||0}</b><p className="text-[9px] text-ink-muted">Tasks Done</p></div>
-        <div className="p-3 text-center"><b>{stats.referral_points||0}</b><p className="text-[9px] text-ink-muted">Referral Pts</p></div>
-        <div className="p-3 text-center"><b>{stats.current_streak||0}</b><p className="text-[9px] text-ink-muted">Day Streak</p></div>
-        <div className="p-3 text-center"><b>{stats.rank ? '#'+stats.rank : '—'}</b><p className="text-[9px] text-ink-muted">Rank</p></div>
-      </div>
-
-      <div className="space-y-2 p-3 sm:p-4">
-        <div className="rounded-xl border border-border bg-base/50 p-3 sm:p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div><p className="text-xs font-semibold">✎ Edit Profile</p><p className="mt-1 text-[9px] text-ink-muted">Update your account details</p></div>
-            <button type="button" onClick={()=>setEditing(x=>!x)} className="w-full rounded-lg bg-brand-blue px-4 py-2 text-[10px] font-bold text-white sm:w-auto">{editing?'Close':'Edit details'}</button>
-          </div>
-          {editing&&<form onSubmit={save} className="mt-3 grid gap-3 rounded-xl border border-border bg-surface p-3">
-            <label className="text-[10px] text-ink-muted">Username<input value={username} onChange={e=>setUsername(e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-base px-3 py-2 text-xs outline-none focus:border-brand-cyan"/></label>
-            <label className="text-[10px] text-ink-muted">Email<input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="mt-1 w-full rounded-lg border border-border bg-base px-3 py-2 text-xs outline-none focus:border-brand-cyan"/></label>
-            <label className="text-[10px] text-ink-muted">Telegram Username<input value={tg} onChange={e=>setTg(e.target.value)} placeholder="yourhandle" className="mt-1 w-full rounded-lg border border-border bg-base px-3 py-2 text-xs outline-none focus:border-brand-cyan"/></label>
-            <button disabled={saving} className="w-full rounded-lg bg-brand-blue py-2.5 text-[10px] font-bold text-white disabled:opacity-60">{saving?'Saving…':'Save changes'}</button>
-          </form>}
+    <section className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-[#071426] to-surface shadow-[0_18px_55px_rgba(0,0,0,.22)]">
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-cyan/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 left-10 h-40 w-40 rounded-full bg-brand-blue/10 blur-3xl" />
+      <div className="relative flex min-w-0 flex-col gap-4 p-4 min-[420px]:flex-row min-[420px]:items-center sm:p-5 md:p-6">
+        <div className="relative shrink-0">
+          <div className="absolute inset-0 scale-110 rounded-full bg-brand-cyan/10 blur-md" />
+          <div className="relative grid h-16 w-16 place-items-center rounded-full border-2 border-brand-cyan/80 bg-brand-blue/25 font-display text-xl font-bold text-white shadow-lg shadow-brand-blue/10 sm:h-[72px] sm:w-[72px]">{initials}</div>
+          <span className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full border-2 border-[#071426] bg-gain text-[10px] font-black text-[#04110a]">✓</span>
         </div>
-
-        <div className="rounded-xl border border-border bg-base/50 px-3 py-3 sm:px-4">
-          <div className="flex items-center justify-between gap-3">
-            <button type="button" onClick={openNotifications} className="flex min-w-0 flex-1 items-center gap-2 text-left text-xs text-white"><span>🔔</span><span className="min-w-0"><b className="text-white">Notifications</b><span className="block break-words text-[9px] text-ink-muted">View updates about tasks and your account</span></span></button>
-            <button type="button" role="switch" aria-checked={notificationEnabled} aria-label="Toggle notifications" onClick={toggleNotifications} disabled={notificationSaving} className={`relative h-6 w-11 shrink-0 rounded-full p-0.5 transition ${notificationEnabled ? "bg-brand-cyan" : "bg-[#334155]"} ${notificationSaving ? "opacity-60" : ""}`}><span className={`block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${notificationEnabled ? "translate-x-5" : "translate-x-0"}`}/></button>
+        <div className="min-w-0 flex-1">
+          <p className="text-[9px] font-bold uppercase tracking-[.2em] text-brand-cyan">Top-Tier account</p>
+          <h1 className="mt-1 truncate font-display text-xl font-bold text-white sm:text-2xl">{p.username}</h1>
+          <p className="mt-1 truncate text-[10px] text-white/55">@{p.telegram_username||'telegram-not-linked'}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-brand-cyan/20 bg-brand-cyan/5 px-2.5 py-1 text-[9px] font-bold text-brand-cyan">Level {level}</span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] font-semibold text-white/70">{(stats.total_points||0).toLocaleString()} pts</span>
           </div>
         </div>
-
-        <button type="button" onClick={openSupport} className="flex w-full items-center justify-between rounded-xl border border-border bg-base/50 px-3 py-3 text-left text-xs text-white"><span className="min-w-0 break-words">💬 <span className="ml-2 font-semibold text-white">Support</span><span className="ml-2 text-[9px] text-ink-muted">Chat with an admin</span></span><span>›</span></button>
-
-        <button type="button" onClick={()=>setPrivacyOpen(true)} className="flex w-full items-center justify-between rounded-xl border border-border bg-base/50 px-3 py-3 text-left text-xs text-white"><span className="min-w-0 break-words">🔒 <span className="ml-2 font-semibold text-white">Privacy & Policy</span><span className="ml-2 text-[9px] text-ink-muted">{privacyAccepted?'Accepted':'Review required'}</span></span><span>›</span></button>
-
-        <button onClick={logout} className="w-full rounded-xl border border-loss/30 bg-loss/5 px-3 py-3 text-left text-xs text-loss">↪ <span className="ml-2">Log Out</span></button>
+        <div className="w-full shrink-0 min-[420px]:w-auto">
+          <button type="button" onClick={()=>setEditing(x=>!x)} className="w-full rounded-xl border border-brand-blue/30 bg-brand-blue/15 px-4 py-2.5 text-[10px] font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-blue/25 min-[420px]:w-auto">{editing?'Close editor':'Edit profile'}</button>
+        </div>
       </div>
+
+      <div className="grid grid-cols-2 border-t border-white/10 bg-black/10 sm:grid-cols-5">
+        <Stat value={referrals} label="Referrals" />
+        <Stat value={stats.tasks_completed||0} label="Tasks Done" />
+        <Stat value={stats.referral_points||0} label="Referral Pts" accent />
+        <Stat value={stats.current_streak||0} label="Day Streak" />
+        <Stat value={stats.rank ? '#'+stats.rank : '—'} label="Rank" accent />
+      </div>
+    </section>
+
+    <div className="mt-4 grid gap-3 lg:grid-cols-[1.15fr_.85fr]">
+      <section className="rounded-3xl border border-border/80 bg-surface/45 p-3 shadow-[0_12px_35px_rgba(0,0,0,.12)] sm:p-4">
+        <div className="mb-3 flex items-center gap-3">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-brand-blue/25 bg-brand-blue/10 text-sm">✎</span>
+          <div className="min-w-0">
+            <h2 className="text-sm font-bold text-white">Edit Profile</h2>
+            <p className="text-[9px] text-ink-muted">Update your account details</p>
+          </div>
+          <span className="ml-auto rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-ink-muted">{editing?'Editing':'Account'}</span>
+        </div>
+
+        {editing ? <form onSubmit={save} className="grid gap-3 rounded-2xl border border-border/80 bg-base/55 p-3 sm:grid-cols-2 sm:p-4">
+          <label className="text-[10px] font-medium text-ink-muted">Username<input value={username} onChange={e=>setUsername(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
+          <label className="text-[10px] font-medium text-ink-muted">Email<input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
+          <label className="text-[10px] font-medium text-ink-muted sm:col-span-2">Telegram Username<input value={tg} onChange={e=>setTg(e.target.value)} placeholder="yourhandle" className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
+          <button disabled={saving} className="w-full rounded-xl bg-brand-blue py-2.5 text-[10px] font-bold text-white shadow-lg shadow-brand-blue/10 transition hover:-translate-y-0.5 hover:bg-brand-blue/90 disabled:opacity-60 sm:col-span-2">{saving?'Saving…':'Save changes'}</button>
+        </form> : <button type="button" onClick={()=>setEditing(true)} className="flex w-full items-center justify-between rounded-2xl border border-dashed border-border bg-base/35 p-4 text-left transition hover:border-brand-blue/40 hover:bg-base/55">
+          <span><b className="block text-xs text-white">Manage your profile</b><span className="mt-1 block text-[9px] text-ink-muted">Username, email and Telegram details</span></span>
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-blue/10 text-brand-cyan">→</span>
+        </button>}
+      </section>
+
+      <section className="space-y-2 rounded-3xl border border-border/80 bg-surface/45 p-3 shadow-[0_12px_35px_rgba(0,0,0,.12)] sm:p-4">
+        <div className="mb-1 flex items-center justify-between px-1">
+          <div><h2 className="text-sm font-bold text-white">Account controls</h2><p className="text-[9px] text-ink-muted">Preferences and support</p></div>
+          <span className="text-[9px] text-brand-cyan">● Online</span>
+        </div>
+
+        <SettingRow icon="🔔" title="Notifications" description="View updates about tasks and your account" action={
+          <div className="flex shrink-0 items-center gap-2">
+            <button type="button" onClick={openNotifications} className="hidden rounded-lg border border-border px-2.5 py-1.5 text-[9px] font-bold text-white transition hover:bg-white/5 min-[420px]:block">View</button>
+            <button type="button" role="switch" aria-checked={notificationEnabled} aria-label="Toggle notifications" onClick={toggleNotifications} disabled={notificationSaving} className={`relative h-6 w-11 shrink-0 rounded-full p-0.5 transition ${notificationEnabled ? 'bg-brand-cyan' : 'bg-[#334155]'} ${notificationSaving ? 'opacity-60' : ''}`}><span className={`block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${notificationEnabled ? 'translate-x-5' : 'translate-x-0'}`}/></button>
+          </div>
+        } />
+        <button type="button" onClick={openNotifications} className="rounded-2xl border border-border/80 bg-base/45 p-3 text-left text-[9px] text-ink-muted min-[420px]:hidden">Tap to view notifications and account updates →</button>
+
+        <button type="button" onClick={openSupport} className="w-full text-left">
+          <SettingRow icon="💬" title="Support" description="Chat with an admin" action={<span className="text-lg text-white/50 transition group-hover:text-brand-cyan">›</span>} />
+        </button>
+
+        <button type="button" onClick={()=>setPrivacyOpen(true)} className="w-full text-left">
+          <SettingRow icon="🔒" title="Privacy & Policy" description={privacyAccepted?'Policy accepted':'Review required'} action={<span className={`rounded-full border px-2 py-1 text-[8px] font-bold ${privacyAccepted?'border-gain/20 bg-gain/5 text-gain':'border-amber-400/20 bg-amber-400/5 text-amber-300'}`}>{privacyAccepted?'Accepted':'Review'}</span>} />
+        </button>
+
+        <button type="button" onClick={logout} className="w-full text-left">
+          <SettingRow icon="↪" title="Log Out" description="Sign out of your Top-Tier account" danger action={<span className="text-lg text-loss/60">›</span>} />
+        </button>
+      </section>
     </div>
-    {error&&<p className="mt-3 text-xs text-loss">{error}</p>}
 
-    {notificationsOpen&&<Modal title="Notifications" onClose={()=>setNotificationsOpen(false)}><div className="max-h-[60vh] space-y-2 overflow-y-auto">{notifications.length?notifications.map(n=><button key={n.id} onClick={async()=>{await api.markNotificationRead(n.id);setNotifications(x=>x.map(i=>i.id===n.id?{...i,read_at:true}:i))}} className="w-full rounded-xl border border-border bg-base/60 p-3 text-left"><p className="text-xs font-semibold text-white">{n.title}</p><p className="mt-1 text-[10px] text-white/80">{n.message}</p><p className="mt-2 text-[9px] text-ink-muted">{new Date(n.created_at).toLocaleString()}</p></button>):<p className="py-8 text-center text-xs text-ink-muted">No notifications yet.</p>}</div></Modal>}
+    {error&&<p className="mt-3 rounded-xl border border-loss/20 bg-loss/5 px-3 py-2 text-xs text-loss">{error}</p>}
 
-    {supportOpen&&<Modal title="Support chat" onClose={()=>setSupportOpen(false)}><div className="max-h-[50vh] space-y-2 overflow-x-hidden overflow-y-auto rounded-xl bg-base/50 p-3">{support?.messages?.length?support.messages.map(m=><div key={m.id} className={`max-w-[85%] rounded-xl p-2.5 text-[10px] ${Number(m.sender_user_id)===Number(p.id)?'ml-auto bg-brand-blue text-white':'bg-surface'}`}><p>{m.message}</p><p className="mt-1 text-[8px] opacity-60">{m.username} · {new Date(m.created_at).toLocaleString()}</p></div>):<p className="py-8 text-center text-xs text-ink-muted">Start a conversation with support.</p>}</div><form onSubmit={sendSupport} className="mt-3 flex flex-col gap-2 min-[420px]:flex-row"><input value={supportText} onChange={e=>setSupportText(e.target.value)} placeholder="Write your complaint or question…" className="min-w-0 w-full flex-1 rounded-xl border border-border bg-base px-3 py-2.5 text-xs"/><button disabled={supportSending} className="w-full rounded-xl bg-brand-blue px-4 py-2.5 text-xs font-bold text-white min-[420px]:w-auto">{supportSending?'…':'Send'}</button></form></Modal>}
+    {notificationsOpen&&<Modal title="Notifications" onClose={()=>setNotificationsOpen(false)}><div className="max-h-[60vh] space-y-2 overflow-y-auto">{notifications.length?notifications.map(n=><button key={n.id} onClick={async()=>{await api.markNotificationRead(n.id);setNotifications(x=>x.map(i=>i.id===n.id?{...i,read_at:true}:i))}} className={`w-full rounded-2xl border p-3.5 text-left transition hover:border-brand-blue/35 ${n.read_at?'border-border bg-base/40':'border-brand-blue/25 bg-brand-blue/5'}`}><div className="flex items-start gap-3"><span className="mt-0.5 text-sm">🔔</span><div className="min-w-0 flex-1"><p className="text-xs font-semibold text-white">{n.title}</p><p className="mt-1 break-words text-[10px] leading-4 text-white/80">{n.message}</p><p className="mt-2 text-[9px] text-ink-muted">{new Date(n.created_at).toLocaleString()}</p></div></div></button>):<p className="py-8 text-center text-xs text-ink-muted">No notifications yet.</p>}</div></Modal>}
 
-    {privacyOpen&&<Modal title="Privacy & Policy" onClose={()=>setPrivacyOpen(false)}><div className="max-h-[55vh] overflow-y-auto space-y-3 text-[11px] leading-5 text-white"><p><b className="text-ink-primary">Top-Tier Privacy Policy — v{PRIVACY_VERSION}</b></p><p>We use account information such as your username, email and Telegram username to provide your account, tasks, referrals, notifications and support features.</p><p>Your task activity, referral relationships and support messages are stored to operate the service and help administrators respond to requests.</p><p>Keep your password private. Do not submit sensitive personal information in support chats.</p><p>You can review this policy from your Profile at any time.</p></div><button disabled={privacySaving} onClick={acceptPrivacy} className="mt-4 w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white">{privacySaving?'Saving…':privacyAccepted?'Policy accepted':'I have read and accept the Privacy Policy'}</button></Modal>}
+    {supportOpen&&<Modal title="Support chat" onClose={()=>setSupportOpen(false)}><div className="max-h-[50vh] space-y-2 overflow-x-hidden overflow-y-auto rounded-2xl border border-border/70 bg-base/50 p-3">{support?.messages?.length?support.messages.map(m=><div key={m.id} className={`max-w-[88%] rounded-2xl p-2.5 text-[10px] ${Number(m.sender_user_id)===Number(p.id)?'ml-auto bg-brand-blue text-white':'bg-surface text-white'}`}><p className="break-words">{m.message}</p><p className="mt-1 break-words text-[8px] opacity-60">{m.username} · {new Date(m.created_at).toLocaleString()}</p></div>):<p className="py-8 text-center text-xs text-ink-muted">Start a conversation with support.</p>}</div><form onSubmit={sendSupport} className="mt-3 flex flex-col gap-2 min-[420px]:flex-row"><input value={supportText} onChange={e=>setSupportText(e.target.value)} placeholder="Write your complaint or question…" className="min-w-0 w-full flex-1 rounded-xl border border-border bg-base px-3 py-2.5 text-xs text-white outline-none focus:border-brand-cyan"/><button disabled={supportSending} className="w-full rounded-xl bg-brand-blue px-4 py-2.5 text-xs font-bold text-white min-[420px]:w-auto">{supportSending?'…':'Send'}</button></form></Modal>}
+
+    {privacyOpen&&<Modal title="Privacy & Policy" onClose={()=>setPrivacyOpen(false)}><div className="max-h-[55vh] overflow-y-auto space-y-3 text-[11px] leading-5 text-white"><p><b className="text-ink-primary">Top-Tier Privacy Policy — v{PRIVACY_VERSION}</b></p><p>We use account information such as your username, email and Telegram username to provide your account, tasks, referrals, notifications and support features.</p><p>Your task activity, referral relationships and support messages are stored to operate the service and help administrators respond to requests.</p><p>Keep your password private. Do not submit sensitive personal information in support chats.</p><p>You can review this policy from your Profile at any time.</p></div><button disabled={privacySaving} onClick={acceptPrivacy} className="mt-4 w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white transition hover:bg-brand-blue/90 disabled:opacity-60">{privacySaving?'Saving…':privacyAccepted?'Policy accepted':'I have read and accept the Privacy Policy'}</button></Modal>}
   </div>;
 }
