@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './auth/AuthContext';
 import Home from './pages/Home.jsx';
@@ -51,6 +51,13 @@ export default function App() {
   const toggleViewMode = () => setViewMode((current) => { const next = current === 'mobile' ? 'web' : 'mobile'; localStorage.setItem('topTierViewMode', next); return next; });
   const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
+
+  useEffect(() => {
+    if (user && new URLSearchParams(window.location.search).get('google') === '1') {
+      setTab('home');
+      historyRef.current = ['home'];
+    }
+  }, [user]);
 
   if (!authReady) return <SplashScreen />;
 
