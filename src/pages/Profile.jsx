@@ -102,7 +102,7 @@ export default function Profile() {
         <div className="relative shrink-0">
           <div className="absolute inset-0 scale-110 rounded-full bg-brand-cyan/10 blur-md" />
           <div className="relative grid h-16 w-16 place-items-center rounded-full border-2 border-brand-cyan/80 bg-brand-blue/25 font-display text-xl font-bold text-white shadow-lg shadow-brand-blue/10 sm:h-[72px] sm:w-[72px]">{initials}</div>
-          <span className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full border-2 border-[#071426] bg-gain text-[10px] font-black text-[#04110a]">✓</span>
+          <span className={`absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full border-2 border-[#071426] text-[10px] font-black transition ${telegramStatus?.verified ? "bg-gain text-[#04110a] shadow-[0_0_14px_rgba(34,197,94,.3)]" : "bg-transparent text-ink-muted"}`}>✓</span>
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[9px] font-bold uppercase tracking-[.2em] text-brand-cyan">Top-Tier account</p>
