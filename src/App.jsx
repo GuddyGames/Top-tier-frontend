@@ -12,9 +12,7 @@ import Wallet from './pages/Wallet.jsx';
 import Auth from './pages/Auth.jsx';
 import Admin from './pages/Admin.jsx';
 import Tasks from './pages/Tasks.jsx';
-import InstallApp from './components/InstallApp.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
-import BrandLogo from './components/BrandLogo.jsx';
 
 const PUBLIC_TABS = [
   { key: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
@@ -115,32 +113,6 @@ export default function App() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#030914]/90 px-4 py-3 shadow-[0_8px_28px_rgba(0,0,0,.18)] backdrop-blur-2xl md:hidden">
-        <button
-          onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
-          aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-          className="rounded-2xl border border-transparent px-1 py-1 transition duration-200 active:scale-95"
-        >
-          <BrandLogo markClassName="h-9 w-9" textClassName="text-base" />
-        </button>
-        <div className="flex items-center gap-2">
-          {isAdmin && (
-            <button
-              type="button"
-              onClick={() => navigate('admin')}
-              aria-label="Open control room"
-              className="rounded-xl border border-brand-cyan/20 bg-brand-cyan/5 px-3 py-2 text-[10px] font-bold text-brand-cyan transition active:scale-95"
-            >
-              Control Room
-            </button>
-          )}
-          <InstallApp />
-          {tab !== (isAdmin ? 'admin' : user ? 'home' : 'leaderboard') && (
-            <button type="button" onClick={goBack} aria-label="Go back" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-2xl leading-none text-ink-muted shadow-sm transition active:scale-95 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white">‹</button>
-          )}
-        </div>
-      </header>
-
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -203,7 +175,7 @@ export default function App() {
             {tab === 'auth' ? (
               <Auth initialMode="signup" referralCode={referralCode} onDone={() => navigate('home', true)} />
             ) : tab === 'home' ? (
-              <Home goToTerminal={() => navigate('terminal')} goToLearn={() => navigate('learn')} />
+              <Home goToTerminal={() => navigate('terminal')} goToLearn={() => navigate('learn')} isAdmin={isAdmin} goToAdmin={() => navigate('admin')} />
             ) : tab === 'admin' && !isAdmin ? null : (
               PageComponent && <PageComponent />
             )}
