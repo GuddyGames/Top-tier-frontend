@@ -138,7 +138,6 @@ export default function Referrals() {
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-center gap-1.5">
                   <p className="truncate text-xs font-bold">{u.username || u.email}</p>
-                  <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border text-[8px] font-black ${u.verified_at || u.telegram_verified_at ? 'border-gain/40 bg-gain/10 text-gain' : 'border-white/15 bg-transparent text-ink-muted'}`} aria-label={u.verified_at || u.telegram_verified_at ? 'Verified' : 'Not verified'}>✓</span>
                 </div>
                 <p className="mt-0.5 truncate text-[10px] text-ink-muted">{u.telegram_username ? '@' + u.telegram_username : 'Telegram not linked'}</p>
               </div>
