@@ -34,7 +34,7 @@ const StatCard = ({ label, value, accent }) => (
   </div>
 );
 
-export default function Home({ goToTerminal, goToLearn }) {
+export default function Home({ goToTerminal, goToLearn, isAdmin = false, goToAdmin }) {
   const [data, setData] = useState(null);
   const [telegramStatus, setTelegramStatus] = useState(null);
   const [error, setError] = useState(null);
@@ -71,7 +71,16 @@ export default function Home({ goToTerminal, goToLearn }) {
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-xl border border-brand-cyan/25 bg-brand-blue/10 text-sm text-brand-cyan">♛</span>
-            <p className="truncate font-display text-lg font-black tracking-wide sm:text-xl">TOP <span className="text-brand-cyan">TIER</span></p>
+            {isAdmin ? (
+              <button type="button" onClick={goToAdmin} aria-label="Open Control Room" className="group min-w-0 text-left transition active:scale-[.98]">
+                <p className="truncate font-display text-lg font-black tracking-wide transition group-hover:text-brand-cyan sm:text-xl">TOP <span className="text-brand-cyan">TIER</span></p>
+                <p className="mt-0.5 text-[8px] font-bold uppercase tracking-[.16em] text-ink-muted transition group-hover:text-brand-cyan/80">Control Room</p>
+              </button>
+            ) : (
+              <div className="min-w-0">
+                <p className="truncate font-display text-lg font-black tracking-wide sm:text-xl">TOP <span className="text-brand-cyan">TIER</span></p>
+              </div>
+            )}
           </div>
           <p className="mt-0.5 pl-10 text-[9px] text-ink-muted sm:text-[10px]">Earn • Complete • Withdraw</p>
         </div>
