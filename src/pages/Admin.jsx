@@ -702,11 +702,7 @@ export default function Admin() {
               key={t.key}
               type="button"
               onClick={() => setTab(t.key)}
-              className={`relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm ${
-                tab === t.key
-                  ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20'
-                  : 'text-ink-muted hover:bg-surface/80 hover:text-ink'
-              }\`}
+              className={tab === t.key ? "relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm bg-brand-blue text-white shadow-lg shadow-brand-blue/20" : "relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm text-ink-muted hover:bg-surface/80 hover:text-ink"}
             >
               {t.label}
               {tab === t.key && <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-brand-cyan" />}
