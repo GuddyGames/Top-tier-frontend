@@ -661,24 +661,68 @@ const TABS = [
 export default function Admin() {
   const [tab, setTab] = useState('overview');
   const Active = TABS.find((t) => t.key === tab).Component;
+  const activeTab = TABS.find((t) => t.key === tab);
+
+  const sectionDescriptions = {
+    overview: 'A quick snapshot of users, referrals, submissions and outstanding tasks.',
+    users: 'Search, manage, suspend and adjust individual user accounts.',
+    referrals: 'Review referral relationships and the account details behind them.',
+    submissions: 'Review task proofs and approve or reject submissions.',
+    activity: 'Monitor points activity and account events across Top-Tier.',
+    trades: 'Monitor demo-terminal trades and their current status.',
+    tasks: 'Publish tasks for all users and track outstanding completions.',
+    support: 'Reply to users and manage open support conversations.',
+    notifications: 'Send important updates directly to active users.',
+  };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-10 pt-4 sm:px-8">
-      <div className="relative overflow-hidden rounded-2xl border border-brand-blue/40 bg-gradient-to-r from-[#071b35] via-[#061326] to-surface p-4 shadow-[0_20px_60px_rgba(0,0,0,.22)]"><p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">TOP TIER • ADMIN</p><h1 className="mt-2 font-display text-2xl font-bold">Control Room</h1>
-      <p className="mt-1 text-sm text-ink-muted">Manage users, referrals, tasks, submissions and activity.</p></div>
+    <div className="mx-auto w-full min-w-0 max-w-7xl px-4 pb-28 pt-4 sm:px-6 md:pb-10 lg:px-8">
+      <header className="relative overflow-hidden rounded-[28px] border border-brand-blue/30 bg-gradient-to-br from-[#071b35] via-[#061326] to-surface p-5 shadow-[0_24px_70px_rgba(0,0,0,.25)] sm:p-7">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-brand-blue/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/3 h-40 w-40 rounded-full bg-brand-cyan/10 blur-3xl" />
+        <div className="relative">
+          <div className="flex flex-col gap-4 min-[520px]:flex-row min-[520px]:items-end min-[520px]:justify-between">
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[.24em] text-brand-cyan">TOP TIER • ADMIN</p>
+              <h1 className="mt-2 font-display text-2xl font-black tracking-tight sm:text-3xl">Control Room</h1>
+              <p className="mt-1 max-w-2xl text-xs leading-5 text-ink-muted sm:text-sm">Manage users, referrals, tasks, submissions and activity.</p>
+            </div>
+            <div className="w-fit rounded-2xl border border-border/80 bg-surface/70 px-4 py-3">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-ink-muted">Current section</p>
+              <p className="mt-1 text-sm font-bold text-brand-cyan">{activeTab.label}</p>
+            </div>
+          </div>
+        </div>
+      </header>
 
-      <div className="mt-4 grid grid-cols-3 gap-1 rounded-2xl border border-brand-blue/20 bg-[#061326] p-1 sm:flex sm:flex-wrap">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-              tab === t.key ? 'bg-brand-blue text-white' : 'text-ink-muted hover:text-ink-primary'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <nav className="mt-4 overflow-x-auto rounded-2xl border border-brand-blue/20 bg-[#061326] p-1.5 shadow-[0_12px_35px_rgba(0,0,0,.16)]" aria-label="Admin sections">
+        <div className="flex min-w-max gap-1">
+          {TABS.map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTab(t.key)}
+              className={\`relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm \${
+                tab === t.key
+                  ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20'
+                  : 'text-ink-muted hover:bg-surface/80 hover:text-ink'
+              }\`}
+            >
+              {t.label}
+              {tab === t.key && <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-brand-cyan" />}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      <div className="mt-5 rounded-2xl border border-border/70 bg-surface/40 px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,.08)] sm:px-5">
+        <div className="flex flex-col gap-1 min-[520px]:flex-row min-[520px]:items-center min-[520px]:justify-between">
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-[.18em] text-brand-cyan">Control Room / {activeTab.label}</p>
+            <h2 className="mt-1 font-display text-base font-bold sm:text-lg">{activeTab.label}</h2>
+          </div>
+          <p className="max-w-xl text-[10px] leading-4 text-ink-muted min-[520px]:text-right sm:text-xs">{sectionDescriptions[tab]}</p>
+        </div>
       </div>
 
       <AnimatePresence mode="wait">
@@ -688,7 +732,7 @@ export default function Admin() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6"
+          className="mt-5 min-w-0"
         >
           <Active />
         </motion.div>
