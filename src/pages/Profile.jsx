@@ -62,6 +62,38 @@ export default function Profile() {
   const level=Math.max(1,Math.floor((stats.total_points||0)/500)+1);
   const privacyAccepted=p.privacy_policy_version===PRIVACY_VERSION && p.privacy_accepted_at;
 
+  if (editing) return <div className="mx-auto w-full min-w-0 max-w-3xl px-3 pb-10 pt-4 sm:px-6 sm:pt-5 lg:px-8">
+    <section className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-[#071426] to-surface shadow-[0_18px_55px_rgba(0,0,0,.22)]">
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-cyan/10 blur-3xl" />
+      <div className="relative p-4 sm:p-6">
+        <button type="button" onClick={() => { setEditing(false); setError(null); }} className="mb-5 flex items-center gap-2 rounded-xl border border-border bg-white/5 px-3 py-2 text-[10px] font-bold text-white transition hover:border-brand-cyan/40 hover:bg-white/10">
+          <span className="text-base">‹</span> Back to Profile
+        </button>
+        <div className="flex items-center gap-3">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-brand-cyan/25 bg-brand-blue/10 text-lg">✎</span>
+          <div className="min-w-0">
+            <p className="text-[9px] font-bold uppercase tracking-[.2em] text-brand-cyan">Account settings</p>
+            <h1 className="mt-1 font-display text-xl font-black text-white sm:text-2xl">Edit Profile</h1>
+            <p className="mt-1 text-[10px] text-ink-muted">Update your account details and save when you're done.</p>
+          </div>
+        </div>
+      </div>
+      <form onSubmit={save} className="relative grid gap-4 border-t border-white/10 p-4 sm:grid-cols-2 sm:p-6">
+        <label className="text-[10px] font-medium text-ink-muted">Username<input value={username} onChange={e=>setUsername(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-3 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
+        <label className="text-[10px] font-medium text-ink-muted">Email<input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-3 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
+        <label className="text-[10px] font-medium text-ink-muted sm:col-span-2">Telegram Username<input value={tg} onChange={e=>setTg(e.target.value)} placeholder="yourhandle" className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-3 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
+        <div className="sm:col-span-2 rounded-2xl border border-border/70 bg-base/40 p-3 text-[9px] leading-4 text-ink-muted">
+          Changes are only applied when you tap <span className="font-bold text-white">Save changes</span>. If you opened this by mistake, use <span className="font-bold text-white">Back to Profile</span> to leave without saving.
+        </div>
+        <div className="flex flex-col-reverse gap-2 min-[420px]:flex-row sm:col-span-2 sm:justify-end">
+          <button type="button" onClick={() => { setEditing(false); setError(null); }} className="w-full rounded-xl border border-border bg-white/5 px-5 py-3 text-[10px] font-bold text-white transition hover:bg-white/10 min-[420px]:w-auto">Back</button>
+          <button disabled={saving} className="w-full rounded-xl bg-brand-blue px-5 py-3 text-[10px] font-bold text-white shadow-lg shadow-brand-blue/10 transition hover:-translate-y-0.5 hover:bg-brand-blue/90 disabled:opacity-60 min-[420px]:w-auto">{saving?'Saving…':'Save changes'}</button>
+        </div>
+      </form>
+    </section>
+    {error&&<p className="mt-3 rounded-xl border border-loss/20 bg-loss/5 px-3 py-2 text-xs text-loss">{error}</p>}
+  </div>;
+
   return <div className="mx-auto w-full min-w-0 max-w-5xl px-3 pb-10 pt-4 sm:px-6 sm:pt-5 lg:px-8">
     <section className="relative overflow-hidden rounded-3xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/20 via-[#071426] to-surface shadow-[0_18px_55px_rgba(0,0,0,.22)]">
       <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-cyan/10 blur-3xl" />
@@ -82,7 +114,7 @@ export default function Profile() {
           </div>
         </div>
         <div className="w-full shrink-0 min-[420px]:w-auto">
-          <button type="button" onClick={()=>setEditing(x=>!x)} className="w-full rounded-xl border border-brand-blue/30 bg-brand-blue/15 px-4 py-2.5 text-[10px] font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-blue/25 min-[420px]:w-auto">{editing?'Close editor':'Edit profile'}</button>
+          <button type="button" onClick={()=>{setError(null);setEditing(true)}} className="w-full rounded-xl border border-brand-blue/30 bg-brand-blue/15 px-4 py-2.5 text-[10px] font-bold text-white transition hover:-translate-y-0.5 hover:bg-brand-blue/25 min-[420px]:w-auto">Edit profile</button>
         </div>
       </div>
 
@@ -95,28 +127,7 @@ export default function Profile() {
       </div>
     </section>
 
-    <div className="mt-4 grid gap-3 lg:grid-cols-[1.15fr_.85fr]">
-      <section className="rounded-3xl border border-border/80 bg-surface/45 p-3 shadow-[0_12px_35px_rgba(0,0,0,.12)] sm:p-4">
-        <div className="mb-3 flex items-center gap-3">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-brand-blue/25 bg-brand-blue/10 text-sm">✎</span>
-          <div className="min-w-0">
-            <h2 className="text-sm font-bold text-white">Edit Profile</h2>
-            <p className="text-[9px] text-ink-muted">Update your account details</p>
-          </div>
-          <span className="ml-auto rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-ink-muted">{editing?'Editing':'Account'}</span>
-        </div>
-
-        {editing ? <form onSubmit={save} className="grid gap-3 rounded-2xl border border-border/80 bg-base/55 p-3 sm:grid-cols-2 sm:p-4">
-          <label className="text-[10px] font-medium text-ink-muted">Username<input value={username} onChange={e=>setUsername(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
-          <label className="text-[10px] font-medium text-ink-muted">Email<input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
-          <label className="text-[10px] font-medium text-ink-muted sm:col-span-2">Telegram Username<input value={tg} onChange={e=>setTg(e.target.value)} placeholder="yourhandle" className="mt-1 w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-white outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"/></label>
-          <button disabled={saving} className="w-full rounded-xl bg-brand-blue py-2.5 text-[10px] font-bold text-white shadow-lg shadow-brand-blue/10 transition hover:-translate-y-0.5 hover:bg-brand-blue/90 disabled:opacity-60 sm:col-span-2">{saving?'Saving…':'Save changes'}</button>
-        </form> : <button type="button" onClick={()=>setEditing(true)} className="flex w-full items-center justify-between rounded-2xl border border-dashed border-border bg-base/35 p-4 text-left transition hover:border-brand-blue/40 hover:bg-base/55">
-          <span><b className="block text-xs text-white">Manage your profile</b><span className="mt-1 block text-[9px] text-ink-muted">Username, email and Telegram details</span></span>
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-blue/10 text-brand-cyan">→</span>
-        </button>}
-      </section>
-
+    <div className="mt-4">
       <section className="space-y-2 rounded-3xl border border-border/80 bg-surface/45 p-3 shadow-[0_12px_35px_rgba(0,0,0,.12)] sm:p-4">
         <div className="mb-1 flex items-center justify-between px-1">
           <div><h2 className="text-sm font-bold text-white">Account controls</h2><p className="text-[9px] text-ink-muted">Preferences and support</p></div>
