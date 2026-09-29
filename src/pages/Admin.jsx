@@ -189,61 +189,127 @@ function UsersTab() {
   };
 
   return (
-    <>
-      <input
-        placeholder="Search username or email…"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full max-w-sm tt-card rounded-2xl px-3 py-2 text-sm outline-none focus:border-brand-cyan"
-      />
-      {error && <p className="mt-4 text-sm text-loss">{error}</p>}
-
-      <motion.div variants={listVariants} initial="hidden" animate="show" className="mt-6 space-y-3">
-        {users.map((u) => (
-          <motion.div key={u.id} variants={itemVariants} className="group tt-card rounded-2xl border border-border/80 bg-surface/70 p-4 shadow-[0_12px_34px_rgba(0,0,0,.10)] transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue/30 hover:bg-surface">
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-medium">
-                  <EditableField value={u.username} placeholder="username" onSave={(v) => saveField(u, 'username', v)} />
-                  <span className="text-ink-muted"> · {u.email} · </span>
-                  <EditableField
-                    value={u.telegram_username}
-                    placeholder="telegram handle"
-                    onSave={(v) => saveField(u, 'telegramUsername', v)}
-                  />
-                </p>
-                <p className="mt-0.5 text-xs text-ink-muted">
-                  <ContributionField value={u.total_contribution} onSave={(value) => saveContribution(u, value)} />{' '}
-                  · {u.total_points} pts · rank {u.rank ?? '—'} · {u.referral_count} referrals ·{' '}
-                  {u.pending_tasks} pending task{u.pending_tasks === 1 ? '' : 's'}
-                </p>
-              </div>
-              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-                <StatusBadge status={u.status} />
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => toggleStatus(u)}
-                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-muted"
-                >
-                  {u.status === 'active' ? 'Suspend' : 'Reactivate'}
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => deleteUser(u)}
-                  className="rounded-lg border border-loss/40 px-3 py-1.5 text-xs font-medium text-loss hover:bg-loss/10"
-                >
-                  Delete account
-                </motion.button>
-              </div>
+    <div className="space-y-4">
+      <div className="relative overflow-hidden rounded-[24px] border border-brand-blue/20 bg-gradient-to-br from-surface via-surface/90 to-brand-blue/5 p-4 shadow-[0_14px_38px_rgba(0,0,0,.10)] sm:p-5">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand-cyan/10 blur-2xl" />
+        <div className="relative">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[9px] font-black uppercase tracking-[.2em] text-ink-muted">USER DIRECTORY</p>
+              <h2 className="mt-1 font-display text-base font-bold sm:text-lg">Manage accounts</h2>
+              <p className="mt-1 text-xs text-ink-muted">Search, edit, score, suspend or remove users.</p>
             </div>
-            <div className="mt-3 border-t border-[#12365A] pt-3">
-              <ScoreForm userId={u.id} onScored={load} />
+            <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 px-4 py-2 text-center">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-ink-muted">Accounts</p>
+              <p className="mt-0.5 font-display text-xl font-black text-brand-cyan">{users.length}</p>
+            </div>
+          </div>
+          <div className="relative mt-4">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">⌕</span>
+            <input
+              placeholder="Search username or email…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-2xl border border-border bg-base/70 py-3 pl-9 pr-3 text-sm text-ink-muted outline-none transition focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/10"
+            />
+          </div>
+        </div>
+      </div>
+
+      {error && <div className="rounded-2xl border border-loss/30 bg-loss/10 p-3 text-sm text-loss">{error}</div>}
+
+      <motion.div variants={listVariants} initial="hidden" animate="show" className="grid gap-3">
+        {users.map((u) => (
+          <motion.div
+            key={u.id}
+            variants={itemVariants}
+            className="group relative overflow-hidden rounded-[22px] border border-border/80 bg-surface/75 p-4 shadow-[0_12px_34px_rgba(0,0,0,.10)] transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue/30 hover:bg-surface sm:p-5"
+          >
+            <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-brand-blue/5 blur-2xl transition group-hover:bg-brand-blue/10" />
+            <div className="relative">
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-brand-blue/20 bg-brand-blue/10 text-sm font-black text-brand-cyan">
+                  {(u.username || u.email || '?').slice(0, 1).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <p className="break-words text-sm font-bold text-ink-muted">
+                        <EditableField value={u.username} placeholder="username" onSave={(v) => saveField(u, 'username', v)} />
+                      </p>
+                      <p className="mt-0.5 break-all text-xs text-ink-muted">{u.email}</p>
+                      <p className="mt-1 text-xs text-ink-muted">
+                        <span className="mr-1 text-brand-cyan">@</span>
+                        <EditableField
+                          value={u.telegram_username}
+                          placeholder="telegram handle"
+                          onSave={(v) => saveField(u, 'telegramUsername', v)}
+                        />
+                      </p>
+                    </div>
+                    <StatusBadge status={u.status} />
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    <div className="rounded-xl border border-border/70 bg-base/40 p-2.5">
+                      <p className="text-[9px] uppercase tracking-wider text-ink-muted">Contribution</p>
+                      <div className="mt-1 text-xs font-semibold text-ink-muted">
+                        <ContributionField value={u.total_contribution} onSave={(value) => saveContribution(u, value)} />
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-border/70 bg-base/40 p-2.5">
+                      <p className="text-[9px] uppercase tracking-wider text-ink-muted">Points</p>
+                      <p className="mt-1 text-sm font-black text-brand-cyan">{u.total_points}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/70 bg-base/40 p-2.5">
+                      <p className="text-[9px] uppercase tracking-wider text-ink-muted">Rank</p>
+                      <p className="mt-1 text-sm font-black text-ink-muted">#{u.rank ?? '—'}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/70 bg-base/40 p-2.5">
+                      <p className="text-[9px] uppercase tracking-wider text-ink-muted">Referrals</p>
+                      <p className="mt-1 text-sm font-black text-ink-muted">{u.referral_count}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-2 text-[10px] text-ink-muted">
+                    <span className="rounded-full border border-border bg-base/50 px-2.5 py-1">{u.pending_tasks} pending task{u.pending_tasks === 1 ? '' : 's'}</span>
+                    <span className="rounded-full border border-brand-blue/20 bg-brand-blue/5 px-2.5 py-1 text-brand-cyan">Account controls</span>
+                  </div>
+
+                  <div className="mt-4 flex flex-col gap-2 border-t border-border/70 pt-4 sm:flex-row sm:flex-wrap">
+                    <motion.button
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => toggleStatus(u)}
+                      className="flex-1 rounded-xl border border-border bg-base/40 px-3 py-2.5 text-xs font-bold text-ink-muted transition hover:border-brand-cyan/50 hover:bg-brand-blue/5 sm:flex-none"
+                    >
+                      {u.status === 'active' ? 'Suspend' : 'Reactivate'}
+                    </motion.button>
+                    <motion.button
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => deleteUser(u)}
+                      className="flex-1 rounded-xl border border-loss/40 bg-loss/5 px-3 py-2.5 text-xs font-bold text-loss transition hover:bg-loss/10 sm:flex-none"
+                    >
+                      Delete account
+                    </motion.button>
+                  </div>
+
+                  <div className="mt-3 rounded-2xl border border-border/70 bg-base/30 p-3">
+                    <p className="mb-2 text-[9px] font-black uppercase tracking-[.18em] text-ink-muted">Point adjustment</p>
+                    <ScoreForm userId={u.id} onScored={load} />
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         ))}
-        {users.length === 0 && <p className="text-sm text-ink-muted">No users match.</p>}
+        {users.length === 0 && (
+          <div className="rounded-[22px] border border-dashed border-border bg-surface/50 px-5 py-10 text-center">
+            <p className="text-sm font-semibold text-ink-muted">No users match.</p>
+            <p className="mt-1 text-xs text-ink-muted">Try another username or email search.</p>
+          </div>
+        )}
       </motion.div>
-    </>
+    </div>
   );
 }
 
