@@ -41,7 +41,8 @@ export default function Profile() {
   const [editing,setEditing]=useState(false), [saving,setSaving]=useState(false), [error,setError]=useState(null);
   const [notifications,setNotifications]=useState([]), [notificationsOpen,setNotificationsOpen]=useState(false);
   const [supportOpen,setSupportOpen]=useState(false), [support,setSupport]=useState(null), [supportText,setSupportText]=useState(''), [supportSending,setSupportSending]=useState(false);
-  const [privacyOpen,setPrivacyOpen]=useState(false), [privacySaving,setPrivacySaving]=useState(false), [notificationEnabled,setNotificationEnabled]=useState(true), [notificationSaving,setNotificationSaving]=useState(false);\n  const [telegramStatus,setTelegramStatus]=useState(null), [telegramLoading,setTelegramLoading]=useState(true), [telegramStarting,setTelegramStarting]=useState(false), [telegramError,setTelegramError]=useState(null);
+  const [privacyOpen,setPrivacyOpen]=useState(false), [privacySaving,setPrivacySaving]=useState(false), [notificationEnabled,setNotificationEnabled]=useState(true), [notificationSaving,setNotificationSaving]=useState(false);
+  const [telegramStatus,setTelegramStatus]=useState(null), [telegramLoading,setTelegramLoading]=useState(true), [telegramStarting,setTelegramStarting]=useState(false), [telegramError,setTelegramError]=useState(null);
 
   const load=()=>Promise.all([api.getMyProfile(),api.getMyDashboard(),api.getTelegramVerificationStatus()]).then(([profile,dashboard,telegram])=>{setP(profile);setDash(dashboard);setTg(profile.telegram_username||'');setUsername(profile.username||'');setEmail(profile.email||'');setNotificationEnabled(profile.notification_enabled!==false);setTelegramStatus(telegram);}).catch(e=>setError(e.message)).finally(()=>setTelegramLoading(false));
   useEffect(()=>{load()},[]);
