@@ -18,6 +18,27 @@ export default function Referrals() {
   const bonusEarned = data.referral_count * 10;
   const link = window.location.origin + '?ref=' + data.referral_code;
 
+  const share = async () => {
+    const shareData = {
+      title: 'Join Top-Tier',
+      text: 'Join Top-Tier using my referral link and start earning points.',
+      url: link,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (e) {
+      if (e?.name !== 'AbortError') {
+        try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch {}
+      }
+    }
+  };
+
   const copy = async () => {
     try { await navigator.clipboard.writeText(link); } catch {}
     setCopied(true);
@@ -94,7 +115,7 @@ export default function Referrals() {
             </div>
           ))}
         </div>
-        <button type="button" onClick={copy} className="mt-4 w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white shadow-lg shadow-brand-blue/15 transition hover:-translate-y-0.5 active:translate-y-0">
+        <button type="button" onClick={share} className="mt-4 w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white shadow-lg shadow-brand-blue/15 transition hover:-translate-y-0.5 active:translate-y-0">
           {copied ? '✓ Referral link copied' : 'Share Link'}
         </button>
       </section>
@@ -103,7 +124,7 @@ export default function Referrals() {
         <div className="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-end min-[420px]:justify-between">
           <div>
             <p className="text-[9px] font-bold uppercase tracking-wider text-brand-cyan">Your network</p>
-            <h2 className="mt-1 font-display text-base font-bold">Referred users</h2>
+            <h2 className="mt-1 font-display text-base font-bold text-ink-muted">Referred users</h2>
           </div>
           <span className="w-fit rounded-full border border-border bg-base/60 px-3 py-1 text-[9px] font-bold text-ink-muted">{referrals.length} {referrals.length === 1 ? 'referral' : 'referrals'}</span>
         </div>
@@ -115,7 +136,10 @@ export default function Referrals() {
                 {(u.username || u.email || '?').slice(0, 1).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-bold">{u.username || u.email}</p>
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <p className="truncate text-xs font-bold">{u.username || u.email}</p>
+                  <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border text-[8px] font-black ${u.verified_at || u.telegram_verified_at ? 'border-gain/40 bg-gain/10 text-gain' : 'border-white/15 bg-transparent text-ink-muted'}`} aria-label={u.verified_at || u.telegram_verified_at ? 'Verified' : 'Not verified'}>✓</span>
+                </div>
                 <p className="mt-0.5 truncate text-[10px] text-ink-muted">{u.telegram_username ? '@' + u.telegram_username : 'Telegram not linked'}</p>
               </div>
               <span className="shrink-0 rounded-full border border-brand-cyan/20 bg-brand-cyan/5 px-2.5 py-1 text-[9px] font-bold capitalize text-brand-cyan">{u.status || 'active'}</span>
