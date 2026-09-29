@@ -702,7 +702,7 @@ export default function Admin() {
               key={t.key}
               type="button"
               onClick={() => setTab(t.key)}
-              className={\`relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm \${
+              className={`relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm ${
                 tab === t.key
                   ? 'bg-brand-blue text-white shadow-lg shadow-brand-blue/20'
                   : 'text-ink-muted hover:bg-surface/80 hover:text-ink'
