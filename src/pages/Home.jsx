@@ -36,10 +36,13 @@ const StatCard = ({ label, value, accent }) => (
 
 export default function Home({ goToTerminal, goToLearn }) {
   const [data, setData] = useState(null);
+  const [telegramStatus, setTelegramStatus] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.getMyDashboard().then(setData).catch((e) => setError(e.message));
+    Promise.all([api.getMyDashboard(), api.getTelegramVerificationStatus()])
+      .then(([dashboard, telegram]) => { setData(dashboard); setTelegramStatus(telegram); })
+      .catch((e) => setError(e.message));
   }, []);
 
   if (error) return (
@@ -87,7 +90,7 @@ export default function Home({ goToTerminal, goToLearn }) {
           <div className="grid h-13 w-13 shrink-0 place-items-center rounded-2xl border border-brand-cyan/40 bg-gradient-to-br from-brand-blue/20 to-brand-cyan/5 text-xl shadow-[0_0_28px_rgba(0,140,255,.12)] sm:h-14 sm:w-14 sm:text-2xl">👤</div>
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-medium text-ink-muted sm:text-xs">{getGreeting()}</p>
-            <h1 className="truncate font-display text-base font-bold text-white sm:text-lg">{name}</h1>
+            <div className="relative flex min-w-0 items-center gap-1.5"><h1 className="truncate font-display text-base font-bold text-white sm:text-lg">{name}</h1><span aria-label={telegramStatus?.verified ? "Telegram verified" : "Telegram not verified"} className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border text-[8px] font-black transition ${telegramStatus?.verified ? "border-gain/50 bg-gain text-[#04110a] shadow-[0_0_10px_rgba(34,197,94,.25)]" : "border-white/15 bg-transparent text-ink-muted"}`}>✓</span></div>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] sm:text-xs">
               <span className="rounded-full border border-brand-cyan/20 bg-brand-cyan/5 px-2 py-0.5 text-brand-cyan">★ Level {level}</span>
               <span className="text-ink-muted">•</span>
