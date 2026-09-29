@@ -780,10 +780,10 @@ export default function Admin() {
       <div className="relative mt-5 overflow-hidden rounded-2xl border border-brand-blue/15 bg-gradient-to-r from-surface via-surface/80 to-brand-blue/5 px-4 py-3 shadow-[0_10px_28px_rgba(0,0,0,.08)] sm:px-5">
         <div className="flex flex-col gap-1 min-[520px]:flex-row min-[520px]:items-center min-[520px]:justify-between">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-[.18em] text-ink-muted">Control Room / {activeTab.label}</p>
-            <h2 className="mt-1 font-display text-base font-bold sm:text-lg">{activeTab.label}</h2>
+            <p className="text-[9px] font-black uppercase tracking-[.18em] text-gray-400">Control Room / {activeTab.label}</p>
+            <h2 className="mt-1 font-display text-base font-bold text-gray-400 sm:text-lg">{activeTab.label}</h2>
           </div>
-          <p className="max-w-xl text-[10px] leading-4 text-ink-muted min-[520px]:text-right sm:text-xs">{sectionDescriptions[tab]}</p>
+          <p className="max-w-xl text-[10px] leading-4 text-gray-400 min-[520px]:text-right sm:text-xs">{sectionDescriptions[tab]}</p>
         </div>
       </div>
 
