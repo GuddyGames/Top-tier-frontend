@@ -130,6 +130,30 @@ export default function Profile() {
     </section>
 
     <div className="mt-4">
+      <section className="relative overflow-hidden rounded-3xl border border-border/80 bg-surface/45 p-4 shadow-[0_12px_35px_rgba(0,0,0,.12)] sm:p-5">
+        <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-cyan/10 blur-3xl" />
+        <div className="relative">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[9px] font-bold uppercase tracking-[.2em] text-brand-cyan">Telegram verification</p>
+              <h2 className="mt-1 text-sm font-bold text-white">Confirm your Telegram account</h2>
+              <p className="mt-1 max-w-xl text-[10px] leading-4 text-ink-muted">Join the official Top-Tier Telegram channel, then verify your membership to activate your confirmation tick and receive your verification bonus.</p>
+            </div>
+            <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 text-lg font-black transition ${telegramStatus?.verified ? 'border-gain bg-gain/10 text-gain shadow-[0_0_18px_rgba(34,197,94,.25)]' : 'border-white/15 bg-transparent text-ink-muted'}`} aria-label={telegramStatus?.verified ? 'Telegram verified' : 'Telegram not verified'}>✓</span>
+          </div>
+          <div className="mt-4 flex flex-col gap-2 min-[480px]:flex-row">
+            <a href={telegramStatus?.channel_url || 'https://t.me/Toptiertradingchannel'} target="_blank" rel="noreferrer" className="flex-1 rounded-xl border border-brand-blue/30 bg-brand-blue/10 px-4 py-3 text-center text-[10px] font-bold text-brand-cyan transition hover:-translate-y-0.5 hover:bg-brand-blue/15">Join Telegram Channel</a>
+            <button type="button" onClick={startTelegramVerification} disabled={telegramStarting || telegramStatus?.verified} className="flex-1 rounded-xl bg-brand-blue px-4 py-3 text-[10px] font-bold text-white shadow-lg shadow-brand-blue/15 transition hover:-translate-y-0.5 hover:bg-brand-blue/90 disabled:cursor-not-allowed disabled:opacity-60">{telegramStarting ? 'Opening Telegram…' : telegramStatus?.verified ? 'Telegram verified ✓' : 'Verify Telegram'}</button>
+          </div>
+          <button type="button" onClick={refreshTelegramVerification} disabled={telegramLoading} className="mt-2 w-full rounded-xl border border-border bg-white/[0.03] px-4 py-2.5 text-[9px] font-bold text-ink-muted transition hover:border-brand-cyan/30 hover:text-white disabled:opacity-60">{telegramLoading ? 'Checking verification…' : 'I joined — check verification'}</button>
+          {telegramStatus?.verified && <p className="mt-3 rounded-xl border border-gain/20 bg-gain/5 px-3 py-2 text-[9px] font-semibold text-gain">Telegram membership confirmed{telegramStatus.telegram_username ? ` as @${telegramStatus.telegram_username}` : ''}. Your green tick is now active.</p>}
+          {!telegramStatus?.verified && <p className="mt-3 text-[9px] leading-4 text-ink-muted">After joining, tap <b className="text-white">Verify Telegram</b> to open the secure verification flow, then return here and tap <b className="text-white">I joined — check verification</b>.</p>}
+          {telegramError && <p className="mt-2 rounded-xl border border-loss/20 bg-loss/5 px-3 py-2 text-[9px] text-loss">{telegramError}</p>}
+        </div>
+      </section>
+    </div>
+
+    <div className="mt-4">
       <section className="space-y-2 rounded-3xl border border-border/80 bg-surface/45 p-3 shadow-[0_12px_35px_rgba(0,0,0,.12)] sm:p-4">
         <div className="mb-1 flex items-center justify-between px-1">
           <div><h2 className="text-sm font-bold text-white">Account controls</h2><p className="text-[9px] text-ink-muted">Preferences and support</p></div>
