@@ -29,7 +29,7 @@ export default function Referrals() {
       <section className="relative overflow-hidden rounded-[28px] border border-brand-blue/20 bg-gradient-to-br from-brand-blue/10 via-surface to-brand-cyan/5 p-5 shadow-[0_18px_50px_rgba(0,0,0,.14)] sm:p-7">
         <div className="pointer-events-none absolute -right-16 -top-20 h-40 w-40 rounded-full bg-brand-blue/10 blur-3xl" />
         <div className="relative">
-          <button type="button" onClick={() => window.history.back()} className="mb-5 inline-flex items-center gap-2 rounded-xl border border-border bg-surface/70 px-3 py-2 text-xs font-semibold text-ink-muted transition hover:border-brand-blue/40 hover:text-ink">
+          <button type="button" onClick={() => window.history.length > 1 ? window.history.back() : window.location.assign('/')} className="mb-5 inline-flex items-center gap-2 rounded-xl border border-border bg-surface/70 px-3 py-2 text-xs font-semibold text-ink-muted transition hover:border-brand-blue/40 hover:text-ink">
             <span className="text-lg leading-none">‹</span> Back
           </button>
           <p className="text-[10px] font-bold uppercase tracking-[.22em] text-brand-cyan">Invite friends • Earn more</p>
