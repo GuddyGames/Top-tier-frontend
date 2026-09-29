@@ -115,51 +115,29 @@ export default function App() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <nav className="sticky top-0 z-40 hidden border-b border-white/10 bg-[#030914]/90 px-4 py-3 shadow-[0_10px_35px_rgba(0,0,0,.18)] backdrop-blur-2xl md:block lg:px-6">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
-              aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-              className="rounded-2xl border border-transparent p-1 transition duration-200 hover:scale-[1.02] hover:border-brand-blue/25 hover:bg-white/[0.03]"
-            >
-              <BrandLogo />
-            </button>
-            {tab !== (isAdmin ? 'admin' : user ? 'home' : 'leaderboard') && (
-              <button
-                onClick={goBack}
-                aria-label="Go back"
-                className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-xl leading-none text-ink-muted shadow-sm transition hover:-translate-x-0.5 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white"
-              >
-                ←
-              </button>
-            )}
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.025] p-1 shadow-inner shadow-black/20">
-            {tabs.map((t) => (
-              <button key={t.key} onClick={() => navigate(t.key)} className="group relative rounded-xl px-3.5 py-2 text-[13px] font-semibold transition duration-200 hover:-translate-y-0.5">
-                {tab === t.key && <motion.span layoutId="desktop-nav-pill" className="absolute inset-0 rounded-xl bg-brand-blue" />}
-                <span className={`relative transition ${tab === t.key ? 'text-white' : 'text-ink-muted group-hover:text-white'}`}>{t.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2"><InstallApp />{!user && <button onClick={() => navigate('home')} className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-semibold text-ink-muted transition hover:-translate-y-0.5 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white">Log in</button>}</div>
-        </div>
-      </nav>
-
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#030914]/90 px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,.18)] backdrop-blur-2xl md:hidden">
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#030914]/90 px-4 py-3 shadow-[0_8px_28px_rgba(0,0,0,.18)] backdrop-blur-2xl md:hidden">
         <button
           onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
           aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-          className="rounded-2xl border border-transparent p-1 transition duration-200 active:scale-95"
+          className="rounded-2xl border border-transparent px-1 py-1 transition duration-200 active:scale-95"
         >
           <BrandLogo markClassName="h-9 w-9" textClassName="text-base" />
         </button>
         <div className="flex items-center gap-2">
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => navigate('admin')}
+              aria-label="Open control room"
+              className="rounded-xl border border-brand-cyan/20 bg-brand-cyan/5 px-3 py-2 text-[10px] font-bold text-brand-cyan transition active:scale-95"
+            >
+              Control Room
+            </button>
+          )}
           <InstallApp />
-          <button type="button" onClick={goBack} aria-label="Go back" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-2xl leading-none text-ink-muted shadow-sm transition active:scale-95 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white">‹</button>
+          {tab !== (isAdmin ? 'admin' : user ? 'home' : 'leaderboard') && (
+            <button type="button" onClick={goBack} aria-label="Go back" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-2xl leading-none text-ink-muted shadow-sm transition active:scale-95 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white">‹</button>
+          )}
         </div>
       </header>
 
