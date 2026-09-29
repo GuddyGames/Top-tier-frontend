@@ -13,6 +13,7 @@ import Auth from './pages/Auth.jsx';
 import Admin from './pages/Admin.jsx';
 import Tasks from './pages/Tasks.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
+import BrandLogo from './components/BrandLogo.jsx';
 
 const PUBLIC_TABS = [
   { key: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
