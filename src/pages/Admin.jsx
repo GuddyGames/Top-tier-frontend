@@ -73,7 +73,7 @@ function EditableField({ value, placeholder, onSave }) {
         className="text-left hover:underline decoration-dotted underline-offset-2"
         title="Click to edit"
       >
-        {value || <span className="text-ink-muted">{placeholder}</span>}
+        {value || <span className="text-ink-muted-muted">{placeholder}</span>}
       </button>
     );
   }
@@ -205,14 +205,14 @@ function UsersTab() {
               <div>
                 <p className="text-sm font-medium">
                   <EditableField value={u.username} placeholder="username" onSave={(v) => saveField(u, 'username', v)} />
-                  <span className="text-ink-muted"> · {u.email} · </span>
+                  <span className="text-ink-muted-muted"> · {u.email} · </span>
                   <EditableField
                     value={u.telegram_username}
                     placeholder="telegram handle"
                     onSave={(v) => saveField(u, 'telegramUsername', v)}
                   />
                 </p>
-                <p className="mt-0.5 text-xs text-ink-muted">
+                <p className="mt-0.5 text-xs text-ink-muted-muted">
                   <ContributionField value={u.total_contribution} onSave={(value) => saveContribution(u, value)} />{' '}
                   · {u.total_points} pts · rank {u.rank ?? '—'} · {u.referral_count} referrals ·{' '}
                   {u.pending_tasks} pending task{u.pending_tasks === 1 ? '' : 's'}
@@ -223,7 +223,7 @@ function UsersTab() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => toggleStatus(u)}
-                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink-primary"
+                  className="rounded-xl border border-border px-3 py-1.5 text-xs font-medium text-ink-muted-muted hover:text-ink-muted-primary"
                 >
                   {u.status === 'active' ? 'Suspend' : 'Reactivate'}
                 </motion.button>
@@ -241,7 +241,7 @@ function UsersTab() {
             </div>
           </motion.div>
         ))}
-        {users.length === 0 && <p className="text-sm text-ink-muted">No users match.</p>}
+        {users.length === 0 && <p className="text-sm text-ink-muted-muted">No users match.</p>}
       </motion.div>
     </>
   );
@@ -253,28 +253,28 @@ function ReferralsTab() {
   useEffect(() => { api.adminGetReferrals().then((d) => setReferrals(d.referrals || [])).catch((e) => setError(e.message)); }, []);
   return (
     <div>
-      <p className="text-sm text-ink-muted">Every referral relationship, including the referrer and the new user's Gmail, username and Telegram username.</p>
+      <p className="text-sm text-ink-muted-muted">Every referral relationship, including the referrer and the new user's Gmail, username and Telegram username.</p>
       {error && <p className="mt-3 text-sm text-loss">{error}</p>}
       <div className="mt-4 space-y-2">
         {referrals.map((r) => (
           <div key={r.referral_id} className="tt-card rounded-2xl p-4">
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <p className="text-xs text-ink-muted">Referrer</p>
+                <p className="text-xs text-ink-muted-muted">Referrer</p>
                 <p className="font-medium">{r.referrer_username}</p>
-                <p className="text-xs text-ink-muted">{r.referrer_email}</p>
-                <p className="text-xs text-ink-muted">{r.referrer_telegram_username ? '@' + r.referrer_telegram_username.replace(/^@/, '') : 'Telegram not provided'}</p>
+                <p className="text-xs text-ink-muted-muted">{r.referrer_email}</p>
+                <p className="text-xs text-ink-muted-muted">{r.referrer_telegram_username ? '@' + r.referrer_telegram_username.replace(/^@/, '') : 'Telegram not provided'}</p>
               </div>
               <div>
-                <p className="text-xs text-ink-muted">Referred user</p>
+                <p className="text-xs text-ink-muted-muted">Referred user</p>
                 <p className="font-medium">{r.referred_username}</p>
-                <p className="text-xs text-ink-muted">{r.referred_email}</p>
-                <p className="text-xs text-ink-muted">{r.referred_telegram_username ? '@' + r.referred_telegram_username.replace(/^@/, '') : 'Telegram not provided'}</p>
+                <p className="text-xs text-ink-muted-muted">{r.referred_email}</p>
+                <p className="text-xs text-ink-muted-muted">{r.referred_telegram_username ? '@' + r.referred_telegram_username.replace(/^@/, '') : 'Telegram not provided'}</p>
               </div>
             </div>
           </div>
         ))}
-        {referrals.length === 0 && <p className="text-sm text-ink-muted">No referrals yet.</p>}
+        {referrals.length === 0 && <p className="text-sm text-ink-muted-muted">No referrals yet.</p>}
       </div>
     </div>
   );
@@ -294,14 +294,14 @@ function ActivityTab() {
         >
           <span>
             <span className="font-medium">{a.username}</span>{' '}
-            <span className="text-ink-muted">{a.action_type.replace(/_/g, ' ')}</span>
+            <span className="text-ink-muted-muted">{a.action_type.replace(/_/g, ' ')}</span>
           </span>
           <span className={`tabular-nums font-medium ${a.points >= 0 ? 'text-gain' : 'text-loss'}`}>
             {a.points >= 0 ? '+' : ''}{a.points}
           </span>
         </motion.div>
       ))}
-      {activities.length === 0 && <p className="text-sm text-ink-muted">No activity yet.</p>}
+      {activities.length === 0 && <p className="text-sm text-ink-muted-muted">No activity yet.</p>}
     </motion.div>
   );
 }
@@ -319,7 +319,7 @@ function TradesTab() {
             key={f.label}
             onClick={() => setStatus(f.key)}
             className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
-              status === f.key ? 'bg-brand-blue text-white' : 'text-ink-muted hover:text-ink-primary'
+              status === f.key ? 'bg-brand-blue text-white' : 'text-ink-muted-muted hover:text-ink-muted-primary'
             }`}
           >
             {f.label}
@@ -335,14 +335,14 @@ function TradesTab() {
           >
             <span>
               <span className="font-medium">{t.username}</span>{' '}
-              <span className="text-ink-muted">{t.symbol} · {t.side} · {t.status}</span>
+              <span className="text-ink-muted-muted">{t.symbol} · {t.side} · {t.status}</span>
             </span>
-            <span className={`tabular-nums font-medium ${t.pnl == null ? 'text-ink-muted' : t.pnl >= 0 ? 'text-gain' : 'text-loss'}`}>
+            <span className={`tabular-nums font-medium ${t.pnl == null ? 'text-ink-muted-muted' : t.pnl >= 0 ? 'text-gain' : 'text-loss'}`}>
               {t.pnl == null ? '—' : `${t.pnl >= 0 ? '+' : ''}${parseFloat(t.pnl).toFixed(2)}`}
             </span>
           </motion.div>
         ))}
-        {trades.length === 0 && <p className="text-sm text-ink-muted">No trades yet.</p>}
+        {trades.length === 0 && <p className="text-sm text-ink-muted-muted">No trades yet.</p>}
       </motion.div>
     </>
   );
@@ -391,9 +391,9 @@ function OverviewTab() {
       <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 lg:grid-cols-4">
         {cards.map(([label, value, hint]) => (
           <div key={label} className="tt-card rounded-2xl p-4">
-            <p className="text-[10px] uppercase tracking-wider text-ink-muted">{label}</p>
+            <p className="text-[10px] uppercase tracking-wider text-ink-muted-muted">{label}</p>
             <p className="mt-2 font-display text-2xl font-bold">{loading ? '…' : value.toLocaleString()}</p>
-            <p className="mt-1 text-[10px] text-ink-muted">{hint}</p>
+            <p className="mt-1 text-[10px] text-ink-muted-muted">{hint}</p>
           </div>
         ))}
       </div>
@@ -401,7 +401,7 @@ function OverviewTab() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-base font-semibold text-white">Control Room Overview</h2>
-            <p className="mt-1 text-xs text-ink-muted">Use the sections below to manage users, referrals, tasks and submission reviews.</p>
+            <p className="mt-1 text-xs text-ink-muted-muted">Use the sections below to manage users, referrals, tasks and submission reviews.</p>
           </div>
           <button onClick={load} disabled={loading} className="rounded-xl border border-border px-3 py-2 text-xs font-semibold hover:border-brand-cyan disabled:opacity-50">
             {loading ? 'Refreshing…' : 'Refresh'}
@@ -458,7 +458,7 @@ function PendingTasksTab() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-base font-semibold">Submission Management</h2>
-            <p className="mt-1 text-xs text-ink-muted">Review screenshot and task submissions from every user in one queue.</p>
+            <p className="mt-1 text-xs text-ink-muted-muted">Review screenshot and task submissions from every user in one queue.</p>
           </div>
           <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
             <span className="rounded-full bg-brand-blue/15 px-3 py-1 text-xs font-bold text-brand-cyan">{total} found</span>
@@ -477,7 +477,7 @@ function PendingTasksTab() {
               key={filter.key}
               onClick={() => setStatus(filter.key)}
               className={`rounded-xl px-3 py-2 text-xs font-semibold transition ${
-                status === filter.key ? 'bg-brand-blue text-white' : 'border border-border text-ink-muted hover:text-ink-primary'
+                status === filter.key ? 'bg-brand-blue text-white' : 'border border-border text-ink-muted-muted hover:text-ink-muted-primary'
               }`}
             >
               {filter.label}
@@ -506,12 +506,12 @@ function PendingTasksTab() {
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold">{s.username}</span>
-                    <span className="rounded-full border border-border px-2 py-0.5 text-[9px] uppercase text-ink-muted">{s.status}</span>
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[9px] uppercase text-ink-muted-muted">{s.status}</span>
                     <span className="text-xs text-brand-cyan">+{s.points} pts</span>
                   </div>
-                  <p className="mt-1 text-xs text-ink-muted">{s.email}{s.telegram_username ? ` · @${s.telegram_username.replace(/^@/, '')}` : ''}</p>
+                  <p className="mt-1 text-xs text-ink-muted-muted">{s.email}{s.telegram_username ? ` · @${s.telegram_username.replace(/^@/, '')}` : ''}</p>
                   <p className="mt-2 text-sm font-medium">{s.task_title}</p>
-                  <p className="mt-1 text-[10px] text-ink-muted">Submitted {new Date(s.submitted_at).toLocaleString()}</p>
+                  <p className="mt-1 text-[10px] text-ink-muted-muted">Submitted {new Date(s.submitted_at).toLocaleString()}</p>
                 </div>
                 <div className="flex gap-2">
                   {s.status === 'pending' && (
@@ -540,13 +540,13 @@ function PendingTasksTab() {
                   <img src={s.proof_url} alt={`Proof for ${s.task_title}`} className="max-h-[420px] w-full rounded-xl border border-border bg-base object-contain" />
                 </a>
               ) : (
-                <div className="mt-4 rounded-xl border border-dashed border-border p-5 text-center text-xs text-ink-muted">No proof image attached.</div>
+                <div className="mt-4 rounded-xl border border-dashed border-border p-5 text-center text-xs text-ink-muted-muted">No proof image attached.</div>
               )}
             </div>
           </motion.article>
         ))}
         {submissions.length === 0 && (
-          <div className="tt-card rounded-2xl p-10 text-center text-sm text-ink-muted">
+          <div className="tt-card rounded-2xl p-10 text-center text-sm text-ink-muted-muted">
             {status === 'pending' ? 'No submissions are waiting for review.' : 'No submissions match this filter.'}
           </div>
         )}
@@ -604,7 +604,7 @@ function TasksAdminTab() {
         <div className="mt-3 space-y-2">
           {tasks.map((t) => (
             <div key={t.id} className="flex flex-col gap-3 tt-card rounded-2xl p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-              <div><p className="text-sm font-medium">{t.title}</p><p className="text-xs text-ink-muted">+{t.points} points</p></div>
+              <div><p className="text-sm font-medium">{t.title}</p><p className="text-xs text-ink-muted-muted">+{t.points} points</p></div>
               <button onClick={() => deactivate(t.id)} className="rounded-lg border border-loss/40 px-3 py-1.5 text-xs text-loss">Close task</button>
             </div>
           ))}
@@ -613,15 +613,15 @@ function TasksAdminTab() {
 
       <section>
         <h2 className="font-display text-sm font-semibold">Users who have not completed active tasks</h2>
-        <p className="mt-1 text-xs text-ink-muted">These users have not submitted a completion for the listed task.</p>
+        <p className="mt-1 text-xs text-ink-muted-muted">These users have not submitted a completion for the listed task.</p>
         <div className="mt-3 space-y-2">
           {outstanding.map((s) => (
             <div key={`${s.task_id}-${s.user_id}`} className="flex flex-col gap-2 tt-card rounded-2xl px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
-              <span><span className="font-medium">{s.username}</span><span className="text-ink-muted"> · {s.task_title}</span></span>
+              <span><span className="font-medium">{s.username}</span><span className="text-ink-muted-muted"> · {s.task_title}</span></span>
               <span className="text-brand-cyan">+{s.points} pending</span>
             </div>
           ))}
-          {outstanding.length === 0 && <p className="text-sm text-ink-muted">Everyone has submitted the active tasks.</p>}
+          {outstanding.length === 0 && <p className="text-sm text-ink-muted-muted">Everyone has submitted the active tasks.</p>}
         </div>
       </section>
     </div>
@@ -635,15 +635,15 @@ function SupportTab() {
   const open=async id=>{try{const d=await api.adminGetSupportChat(id);setSelected(id);setChat(d)}catch(e){setError(e.message)}};
   const send=async e=>{e.preventDefault();if(!text.trim()||!selected)return;setBusy(true);try{const d=await api.adminSendSupportMessage(selected,text.trim());setChat(x=>({...x,messages:[...(x?.messages||[]),d.message]}));setText('');await load()}catch(e){setError(e.message)}finally{setBusy(false)}};
   return <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
-    <div className="space-y-2"><h2 className="font-display text-sm font-semibold">Support chats</h2>{conversations.map(c=><button key={c.id} onClick={()=>open(c.id)} className={`w-full rounded-2xl border p-3 text-left ${selected===c.id?'border-brand-cyan bg-brand-blue/10':'border-border bg-base/40'}`}><p className="text-xs font-semibold">{c.username}</p><p className="truncate text-[10px] text-ink-muted">{c.last_message||'No messages yet'}</p></button>)}{!conversations.length&&<p className="text-xs text-ink-muted">No support chats yet.</p>}</div>
-    <div className="tt-card min-h-[420px] rounded-2xl p-4">{chat?<><div className="mb-3 border-b border-border pb-3"><p className="font-semibold">{chat.conversation?.id?'Support conversation':''}</p></div><div className="max-h-[45vh] space-y-2 overflow-y-auto">{(chat.messages||[]).map(m=><div key={m.id} className={`max-w-[85%] rounded-xl p-2.5 text-[10px] ${Number(m.sender_user_id)===Number(chat.conversation?.user_id)?'bg-surface':'ml-auto bg-brand-blue text-white'}`}><p>{m.message}</p><p className="mt-1 text-[8px] opacity-60">{m.username} · {new Date(m.created_at).toLocaleString()}</p></div>)}</div><form onSubmit={send} className="mt-3 flex gap-2"><input value={text} onChange={e=>setText(e.target.value)} placeholder="Reply to user…" className="min-w-0 flex-1 rounded-xl border border-border bg-base px-3 py-2.5 text-xs"/><button disabled={busy} className="rounded-xl bg-brand-blue px-4 text-xs font-bold text-white">{busy?'…':'Send'}</button></form></>:<p className="py-20 text-center text-xs text-ink-muted">Select a support conversation.</p>}{error&&<p className="mt-2 text-xs text-loss">{error}</p>}</div>
+    <div className="space-y-2"><h2 className="font-display text-sm font-semibold">Support chats</h2>{conversations.map(c=><button key={c.id} onClick={()=>open(c.id)} className={`w-full rounded-2xl border p-3 text-left ${selected===c.id?'border-brand-cyan bg-brand-blue/10':'border-border bg-base/40'}`}><p className="text-xs font-semibold">{c.username}</p><p className="truncate text-[10px] text-ink-muted-muted">{c.last_message||'No messages yet'}</p></button>)}{!conversations.length&&<p className="text-xs text-ink-muted-muted">No support chats yet.</p>}</div>
+    <div className="tt-card min-h-[420px] rounded-2xl p-4">{chat?<><div className="mb-3 border-b border-border pb-3"><p className="font-semibold">{chat.conversation?.id?'Support conversation':''}</p></div><div className="max-h-[45vh] space-y-2 overflow-y-auto">{(chat.messages||[]).map(m=><div key={m.id} className={`max-w-[85%] rounded-xl p-2.5 text-[10px] ${Number(m.sender_user_id)===Number(chat.conversation?.user_id)?'bg-surface':'ml-auto bg-brand-blue text-white'}`}><p>{m.message}</p><p className="mt-1 text-[8px] opacity-60">{m.username} · {new Date(m.created_at).toLocaleString()}</p></div>)}</div><form onSubmit={send} className="mt-3 flex gap-2"><input value={text} onChange={e=>setText(e.target.value)} placeholder="Reply to user…" className="min-w-0 flex-1 rounded-xl border border-border bg-base px-3 py-2.5 text-xs"/><button disabled={busy} className="rounded-xl bg-brand-blue px-4 text-xs font-bold text-white">{busy?'…':'Send'}</button></form></>:<p className="py-20 text-center text-xs text-ink-muted-muted">Select a support conversation.</p>}{error&&<p className="mt-2 text-xs text-loss">{error}</p>}</div>
   </div>;
 }
 
 function NotificationsAdminTab() {
   const [title,setTitle]=useState(''),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[result,setResult]=useState(null),[error,setError]=useState(null);
   const send=async e=>{e.preventDefault();setBusy(true);setResult(null);setError(null);try{const d=await api.adminSendNotification(title,message);setResult(`Sent to ${d.sent_to} active users.`);setTitle('');setMessage('')}catch(e){setError(e.message)}finally{setBusy(false)}};
-  return <div className="max-w-2xl"><div className="tt-card rounded-2xl p-5"><h2 className="font-display text-base font-semibold text-white">Send notification</h2><p className="mt-1 text-xs text-ink-muted">Send an update to every active user. Users can read it from Profile → Notifications.</p><form onSubmit={send} className="mt-4 space-y-3"><input required maxLength={150} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Notification title" className="w-full rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><textarea required maxLength={2000} rows={5} value={message} onChange={e=>setMessage(e.target.value)} placeholder="Write the update..." className="w-full resize-y rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><button disabled={busy} className="w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white disabled:opacity-60">{busy?'Sending…':'Send to all active users'}</button></form>{result&&<p className="mt-3 text-xs text-gain">{result}</p>}{error&&<p className="mt-3 text-xs text-loss">{error}</p>}</div></div>;
+  return <div className="max-w-2xl"><div className="tt-card rounded-2xl p-5"><h2 className="font-display text-base font-semibold text-white">Send notification</h2><p className="mt-1 text-xs text-ink-muted-muted">Send an update to every active user. Users can read it from Profile → Notifications.</p><form onSubmit={send} className="mt-4 space-y-3"><input required maxLength={150} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Notification title" className="w-full rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><textarea required maxLength={2000} rows={5} value={message} onChange={e=>setMessage(e.target.value)} placeholder="Write the update..." className="w-full resize-y rounded-xl border border-border bg-base px-3 py-2.5 text-sm outline-none focus:border-brand-cyan"/><button disabled={busy} className="w-full rounded-xl bg-brand-blue py-3 text-xs font-bold text-white disabled:opacity-60">{busy?'Sending…':'Send to all active users'}</button></form>{result&&<p className="mt-3 text-xs text-gain">{result}</p>}{error&&<p className="mt-3 text-xs text-loss">{error}</p>}</div></div>;
 }
 
 const TABS = [
@@ -685,10 +685,10 @@ export default function Admin() {
             <div className="min-w-0">
               <p className="text-[10px] font-black uppercase tracking-[.24em] text-brand-cyan">TOP TIER • ADMIN</p>
               <h1 className="mt-2 font-display text-2xl font-black tracking-tight sm:text-3xl">Control Room</h1>
-              <p className="mt-1 max-w-2xl text-xs leading-5 text-ink-muted sm:text-sm">Manage users, referrals, tasks, submissions and activity.</p>
+              <p className="mt-1 max-w-2xl text-xs leading-5 text-ink-muted-muted sm:text-sm">Manage users, referrals, tasks, submissions and activity.</p>
             </div>
             <div className="w-fit rounded-2xl border border-border/80 bg-surface/70 px-4 py-3">
-              <p className="text-[9px] font-bold uppercase tracking-wider text-ink-muted">Current section</p>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-ink-muted-muted">Current section</p>
               <p className="mt-1 text-sm font-bold text-brand-cyan">{activeTab.label}</p>
             </div>
           </div>
@@ -702,7 +702,7 @@ export default function Admin() {
               key={t.key}
               type="button"
               onClick={() => setTab(t.key)}
-              className={tab === t.key ? "relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm bg-brand-blue text-white shadow-lg shadow-brand-blue/20" : "relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm text-ink-muted hover:bg-surface/80 hover:text-ink"}
+              className={tab === t.key ? "relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm bg-brand-blue text-white shadow-lg shadow-brand-blue/20" : "relative rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-200 sm:text-sm text-ink-muted-muted hover:bg-surface/80 hover:text-ink-muted"}
             >
               {t.label}
               {tab === t.key && <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-brand-cyan" />}
@@ -717,7 +717,7 @@ export default function Admin() {
             <p className="text-[9px] font-black uppercase tracking-[.18em] text-brand-cyan">Control Room / {activeTab.label}</p>
             <h2 className="mt-1 font-display text-base font-bold sm:text-lg">{activeTab.label}</h2>
           </div>
-          <p className="max-w-xl text-[10px] leading-4 text-ink-muted min-[520px]:text-right sm:text-xs">{sectionDescriptions[tab]}</p>
+          <p className="max-w-xl text-[10px] leading-4 text-ink-muted-muted min-[520px]:text-right sm:text-xs">{sectionDescriptions[tab]}</p>
         </div>
       </div>
 
