@@ -74,7 +74,6 @@ export default function Home({ goToTerminal, goToLearn, isAdmin = false, goToAdm
             {isAdmin ? (
               <button type="button" onClick={goToAdmin} aria-label="Open Control Room" className="group min-w-0 text-left transition active:scale-[.98]">
                 <p className="truncate font-display text-lg font-black tracking-wide transition group-hover:text-brand-cyan sm:text-xl">TOP <span className="text-brand-cyan">TIER</span></p>
-                <p className="mt-0.5 text-[8px] font-bold uppercase tracking-[.16em] text-ink-muted transition group-hover:text-brand-cyan/80">Control Room</p>
               </button>
             ) : (
               <div className="min-w-0">
