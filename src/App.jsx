@@ -115,13 +115,13 @@ export default function App() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <nav className={`sticky top-0 z-40 border-b border-brand-blue/25 bg-[#030914]/95 px-6 py-3 backdrop-blur-xl hidden md:block`}>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+      <nav className="sticky top-0 z-40 hidden border-b border-white/10 bg-[#030914]/90 px-4 py-3 shadow-[0_10px_35px_rgba(0,0,0,.18)] backdrop-blur-2xl md:block lg:px-6">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
               aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-              className="rounded-xl transition-transform hover:scale-[1.02]"
+              className="rounded-2xl border border-transparent p-1 transition duration-200 hover:scale-[1.02] hover:border-brand-blue/25 hover:bg-white/[0.03]"
             >
               <BrandLogo />
             </button>
@@ -129,37 +129,37 @@ export default function App() {
               <button
                 onClick={goBack}
                 aria-label="Go back"
-                className="grid h-9 w-9 place-items-center rounded-xl border border-[#12365A] bg-[#071426] text-xl leading-none text-ink-muted hover:text-ink-primary"
+                className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-xl leading-none text-ink-muted shadow-sm transition hover:-translate-x-0.5 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white"
               >
                 ←
               </button>
             )}
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-1">
+          <div className="flex flex-wrap items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.025] p-1 shadow-inner shadow-black/20">
             {tabs.map((t) => (
-              <button key={t.key} onClick={() => navigate(t.key)} className="relative rounded-xl px-3 py-2 text-sm font-medium">
+              <button key={t.key} onClick={() => navigate(t.key)} className="group relative rounded-xl px-3.5 py-2 text-[13px] font-semibold transition duration-200 hover:-translate-y-0.5">
                 {tab === t.key && <motion.span layoutId="desktop-nav-pill" className="absolute inset-0 rounded-xl bg-brand-blue" />}
-                <span className={`relative ${tab === t.key ? 'text-base' : 'text-ink-muted hover:text-ink-primary'}`}>{t.label}</span>
+                <span className={`relative transition ${tab === t.key ? 'text-white' : 'text-ink-muted group-hover:text-white'}`}>{t.label}</span>
               </button>
             ))}
           </div>
 
-          <div className="flex items-center gap-2"><InstallApp />{!user && <button onClick={() => navigate('home')} className="rounded-xl border border-[#12365A] px-3 py-2 text-sm text-ink-muted">Log in</button>}</div>
+          <div className="flex items-center gap-2"><InstallApp />{!user && <button onClick={() => navigate('home')} className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-semibold text-ink-muted transition hover:-translate-y-0.5 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white">Log in</button>}</div>
         </div>
       </nav>
 
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-brand-blue/25 bg-[#030914]/95 px-4 py-3 backdrop-blur-xl md:hidden">
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#030914]/90 px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,.18)] backdrop-blur-2xl md:hidden">
         <button
           onClick={() => navigate(isAdmin ? 'admin' : user ? 'home' : 'leaderboard')}
           aria-label={isAdmin ? 'Open control room' : 'Go to home'}
-          className="rounded-xl transition-transform active:scale-95"
+          className="rounded-2xl border border-transparent p-1 transition duration-200 active:scale-95"
         >
           <BrandLogo markClassName="h-9 w-9" textClassName="text-base" />
         </button>
         <div className="flex items-center gap-2">
           <InstallApp />
-          <button type="button" onClick={goBack} aria-label="Go back" className="grid h-10 w-10 place-items-center rounded-xl border border-[#12365A] bg-[#071426] text-2xl leading-none active:scale-95">‹</button>
+          <button type="button" onClick={goBack} aria-label="Go back" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.035] text-2xl leading-none text-ink-muted shadow-sm transition active:scale-95 hover:border-brand-blue/40 hover:bg-brand-blue/10 hover:text-white">‹</button>
         </div>
       </header>
 
@@ -233,22 +233,22 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-brand-blue/25 bg-[#030914]/95 px-1 pb-[calc(8px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl md:hidden">
-        <div className="mx-auto flex max-w-xl items-center justify-around gap-0.5 overflow-x-auto">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#030914]/90 px-1 pb-[calc(9px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-14px_38px_rgba(0,0,0,.25)] backdrop-blur-2xl md:hidden">
+        <div className="mx-auto flex max-w-xl items-center justify-around gap-1 rounded-2xl border border-white/10 bg-white/[0.02] p-1 shadow-inner shadow-black/20">
           {(user ? AUTH_TABS : PUBLIC_TABS).map((t) => (
-            <button key={t.key} onClick={() => navigate(t.key)} className="relative flex min-w-[58px] flex-1 flex-col items-center gap-1 rounded-2xl px-1.5 py-2 text-[10px] font-semibold active:scale-95">
-              {tab === t.key && <motion.span layoutId="mobile-nav-pill" className="absolute inset-0 rounded-2xl bg-brand-blue/15" />}
-              <span className={`relative text-lg leading-none ${tab === t.key ? 'text-brand-cyan' : 'text-ink-muted'}`}>{t.icon}</span>
-              <span className={`relative whitespace-nowrap ${tab === t.key ? 'text-brand-cyan' : 'text-ink-muted'}`}>{t.label}</span>
+            <button key={t.key} onClick={() => navigate(t.key)} className="group relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[9px] font-semibold transition duration-200 active:scale-95">
+              {tab === t.key && <motion.span layoutId="mobile-nav-pill" className="absolute inset-0 rounded-xl border border-brand-blue/25 bg-gradient-to-b from-brand-blue/20 to-brand-blue/5 shadow-[0_0_18px_rgba(37,99,235,.12)]" />}
+              <span className={`relative text-lg leading-none transition duration-200 ${tab === t.key ? 'scale-110 text-brand-cyan drop-shadow-[0_0_8px_rgba(34,211,238,.25)]' : 'text-ink-muted group-hover:text-white'}`}>{t.icon}</span>
+              <span className={`relative whitespace-nowrap transition ${tab === t.key ? 'font-bold text-brand-cyan' : 'text-ink-muted group-hover:text-white'}`}>{t.label}</span>
             </button>
           ))}
-          <button onClick={() => setDrawerOpen(true)} className="relative flex min-w-[58px] flex-1 flex-col items-center gap-1 rounded-2xl px-1.5 py-2 text-[10px] font-semibold text-ink-muted active:scale-95">
-            <span className="text-lg leading-none">☰</span>
-            <span className="whitespace-nowrap">Menu</span>
+          <button onClick={() => setDrawerOpen(true)} className="group relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[9px] font-semibold text-ink-muted transition duration-200 active:scale-95">
+            <span className="text-lg leading-none transition group-hover:scale-105 group-hover:text-white">☰</span>
+            <span className="whitespace-nowrap transition group-hover:text-white">Menu</span>
           </button>
           {!user && (
-            <button onClick={() => navigate('home')} className="relative flex min-w-[58px] flex-1 flex-col items-center gap-1 rounded-2xl px-1.5 py-2 text-[10px] font-semibold text-brand-cyan active:scale-95">
-              <span className="text-lg leading-none">↪</span><span className="whitespace-nowrap">Log in</span>
+            <button onClick={() => navigate('home')} className="group relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[9px] font-semibold text-brand-cyan transition duration-200 active:scale-95">
+              <span className="text-lg leading-none transition group-hover:scale-105">↪</span><span className="whitespace-nowrap transition group-hover:text-white">Log in</span>
             </button>
           )}
         </div>
