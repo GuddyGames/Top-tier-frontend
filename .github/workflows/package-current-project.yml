@@ -10,21 +10,28 @@ jobs:
     steps:
       - name: Checkout frontend
         uses: actions/checkout@v4
+        with:
+          path: source-frontend
 
-      - name: Download backend at main
-        run: |
-          curl -L --fail -o backend.zip https://github.com/GuddyGames/Top-tier-backend/archive/refs/heads/main.zip
-          unzip -q backend.zip
-          mv Top-tier-backend-main backend
-          rm backend.zip
+      - name: Checkout backend
+        uses: actions/checkout@v4
+        with:
+          repository: GuddyGames/Top-tier-backend
+          ref: main
+          path: source-backend
 
       - name: Create project ZIP
+        working-directory: .
         run: |
-          rm -rf frontend-package
-          mkdir frontend-package
-          cp -R . frontend-package/frontend
-          rm -rf frontend-package/frontend/.git frontend-package/frontend/.github
-          zip -qr top-tier-project-current.zip frontend-package backend
+          rm -rf package
+          mkdir -p package/top-tier-project
+          cp -R source-frontend/. package/top-tier-project/frontend
+          cp -R source-backend package/top-tier-project/backend
+          rm -rf package/top-tier-project/frontend/.git
+          rm -rf package/top-tier-project/backend/.git
+          rm -rf package/top-tier-project/frontend/.github
+          cd package
+          zip -qr ../top-tier-project-current.zip top-tier-project
 
       - name: Upload project ZIP
         uses: actions/upload-artifact@v4
