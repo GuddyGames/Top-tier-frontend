@@ -1,0 +1,34 @@
+name: Build current project ZIP
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+
+      - name: Download backend at main
+        run: |
+          curl -L --fail -o backend.zip https://github.com/GuddyGames/Top-tier-backend/archive/refs/heads/main.zip
+          unzip -q backend.zip
+          mv Top-tier-backend-main backend
+          rm backend.zip
+
+      - name: Create project ZIP
+        run: |
+          rm -rf frontend-package
+          mkdir frontend-package
+          cp -R . frontend-package/frontend
+          rm -rf frontend-package/frontend/.git frontend-package/frontend/.github
+          zip -qr top-tier-project-current.zip frontend-package backend
+
+      - name: Upload project ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: top-tier-project-current
+          path: top-tier-project-current.zip
+          retention-days: 7
