@@ -174,3 +174,14 @@ button:disabled { cursor: not-allowed; }
 @media (forced-colors: active) {
   .tt-nav-link.is-active, :where(button, a):focus-visible { outline: 2px solid CanvasText; }
 }
+
+
+/* Evolution pass — responsive polish and shared interaction states */
+:root { --tt-content-width: 80rem; --tt-radius-card: 1.25rem; }
+#main-content { width: min(100%, var(--tt-content-width)); }
+.tt-card, .tt-header-action, .tt-nav-link, button, a { -webkit-tap-highlight-color: transparent; }
+.tt-card { border-radius: var(--tt-radius-card); }
+button:disabled { cursor: not-allowed; }
+@media (max-width: 380px) { .tt-nav-link { padding-inline: .55rem; gap: .35rem; font-size: .74rem; } }
+@media (min-width: 768px) { .tt-desktop-header > div { min-height: 4.5rem; } }
+@media (forced-colors: active) { .tt-nav-link.is-active, :where(button, a):focus-visible { outline: 2px solid CanvasText; } }
