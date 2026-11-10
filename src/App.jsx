@@ -24,10 +24,10 @@ const PUBLIC_TABS = [
 
 const AUTH_TABS = [
   { key: 'home', label: 'Home', icon: '⌂' },
+  { key: 'terminal', label: 'Markets', icon: '↗' },
+  { key: 'parallax', label: 'Parallax', icon: '⌁' },
   { key: 'tasks', label: 'Tasks', icon: '✓' },
-  { key: 'leaderboard', label: 'Leaderboard', icon: '♜' },
-  { key: 'wallet', label: 'Wallet', icon: '▣' },
-  { key: 'profile', label: 'Profile', icon: '○' },
+  { key: 'leaderboard', label: 'Ranks', icon: '♜' },
 ];
 
 const PAGE_COMPONENTS = {
@@ -149,9 +149,27 @@ export default function App() {
                   </button>
                 ))}
                 {user && (
+                  <button onClick={() => navigate('wallet')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="text-lg">▣</span>
+                    <span>Wallet</span>
+                  </button>
+                )}
+                {user && (
+                  <button onClick={() => navigate('profile')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="text-lg">○</span>
+                    <span>Profile & settings</span>
+                  </button>
+                )}
+                {user && (
                   <button onClick={() => navigate('learn')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
                     <span className="text-lg">📚</span>
-                    <span>Learn</span>
+                    <span>Academy</span>
+                  </button>
+                )}
+                {user && (
+                  <button onClick={() => navigate('referrals')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="text-lg">↗</span>
+                    <span>Referrals</span>
                   </button>
                 )}
                 {user && (
@@ -178,7 +196,30 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <main className="mx-auto min-h-[calc(100vh-1px)] max-w-6xl pb-24 md:pb-8">
+      <a href="#main-content" className="tt-skip-link">Skip to main content</a>
+      {user && (
+        <header className="tt-desktop-header">
+          <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6">
+            <button onClick={() => navigate('home')} aria-label="Top Tier home" className="shrink-0">
+              <BrandLogo markClassName="h-9 w-9" textClassName="text-base" />
+            </button>
+            <nav aria-label="Primary navigation" className="flex min-w-0 items-center gap-1">
+              {AUTH_TABS.map((item) => (
+                <button key={item.key} onClick={() => navigate(item.key)} aria-current={tab === item.key ? 'page' : undefined}
+                  className={`tt-nav-link ${tab === item.key ? 'is-active' : ''}`}>
+                  <span aria-hidden="true">{item.icon}</span>{item.label}
+                </button>
+              ))}
+            </nav>
+            <div className="flex shrink-0 items-center gap-2">
+              <button onClick={() => navigate('wallet')} className="tt-header-action">Wallet</button>
+              <button onClick={() => navigate('profile')} className="tt-header-action">Profile</button>
+              {isAdmin && <button onClick={() => navigate('admin')} className="tt-header-action tt-admin-action">Control room</button>}
+            </div>
+          </div>
+        </header>
+      )}
+      <main id="main-content" tabIndex="-1" className="mx-auto min-h-[calc(100vh-1px)] max-w-7xl pb-24 md:pb-8">
         <AnimatePresence mode="wait">
           <motion.div key={tab} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -14 }} transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}>
             {tab === 'auth' ? (
