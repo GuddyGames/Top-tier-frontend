@@ -54,6 +54,9 @@ export const api = {
     if (proofUrl) body.append('proofUrl', proofUrl);
     return request(`/api/tasks/${taskId}/submit`, { method: 'POST', body });
   },
+  getParallaxAccess: () => request('/api/parallax/access'),
+  getParallaxAnalysis: (symbol, timeframe = 'M15', outputsize = 120) => request(`/api/parallax/analyze?symbol=${encodeURIComponent(symbol)}&timeframe=${encodeURIComponent(timeframe)}&outputsize=${outputsize}`),
+  getParallaxHistory: () => request('/api/parallax/history'),
   getDemoPrices: () => request('/api/demo/prices'),
   getDemoCandles: (symbol, hours = 4, interval = 1) =>
     request(`/api/demo/prices/${encodeURIComponent(symbol)}/candles?hours=${hours}&interval=${interval}`),
