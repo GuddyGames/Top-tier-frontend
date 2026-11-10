@@ -12,6 +12,7 @@ import Wallet from './pages/Wallet.jsx';
 import Auth from './pages/Auth.jsx';
 import Admin from './pages/Admin.jsx';
 import Tasks from './pages/Tasks.jsx';
+import Parallax from './pages/Parallax.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 import BrandLogo from './components/BrandLogo.jsx';
 
@@ -39,6 +40,7 @@ const PAGE_COMPONENTS = {
   tasks: Tasks,
   referrals: Referrals,
   wallet: Wallet,
+  parallax: Parallax,
 };
 
 export default function App() {
@@ -96,7 +98,7 @@ export default function App() {
     }
   };
 
-  const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin', 'tasks', 'referrals', 'wallet'].includes(tab);
+  const needsAuth = ['home', 'terminal', 'dashboard', 'profile', 'admin', 'tasks', 'referrals', 'wallet', 'parallax'].includes(tab);
   if (!user && needsAuth) return <Auth initialMode={referralCode ? 'signup' : 'login'} referralCode={referralCode} onDone={() => navigate('home')} />;
 
   const PageComponent = PAGE_COMPONENTS[tab];
@@ -156,6 +158,12 @@ export default function App() {
                   <button onClick={() => navigate('terminal')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
                     <span className="text-lg">⌁</span>
                     <span>Terminal</span>
+                  </button>
+                )}
+                {user && (
+                  <button onClick={() => navigate('parallax')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold text-cyan-200 hover:bg-[#071426]">
+                    <span className="text-lg">⌁</span>
+                    <span>Parallax Intelligence</span>
                   </button>
                 )}
                 {isAdmin && (
