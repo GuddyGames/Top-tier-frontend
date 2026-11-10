@@ -24,10 +24,10 @@ const PUBLIC_TABS = [
 
 const AUTH_TABS = [
   { key: 'home', label: 'Home', icon: '⌂' },
-  { key: 'terminal', label: 'Markets', icon: '↗' },
-  { key: 'parallax', label: 'Parallax', icon: '⌁' },
+  { key: 'parallax', label: 'Markets', icon: '⌁' },
   { key: 'tasks', label: 'Tasks', icon: '✓' },
   { key: 'leaderboard', label: 'Ranks', icon: '♜' },
+  { key: 'wallet', label: 'Wallet', icon: '▣' },
 ];
 
 const PAGE_COMPONENTS = {
@@ -212,7 +212,6 @@ export default function App() {
               ))}
             </nav>
             <div className="flex shrink-0 items-center gap-2">
-              <button onClick={() => navigate('wallet')} className="tt-header-action">Wallet</button>
               <button onClick={() => navigate('profile')} className="tt-header-action">Profile</button>
               {isAdmin && <button onClick={() => navigate('admin')} className="tt-header-action tt-admin-action">Control room</button>}
             </div>
