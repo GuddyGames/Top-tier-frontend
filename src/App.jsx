@@ -27,7 +27,7 @@ const AUTH_TABS = [
   { key: 'tasks', label: 'Tasks', icon: '✓' },
   { key: 'leaderboard', label: 'Leaderboard', icon: '♜' },
   { key: 'wallet', label: 'Wallet', icon: '▣' },
-  { key: 'profile', label: 'Profile', icon: '○' },
+  { key: 'parallax', label: 'Markets', icon: '⌁' },
 ];
 
 const PAGE_COMPONENTS = {
@@ -148,6 +148,12 @@ export default function App() {
                     <span>{t.label}</span>
                   </button>
                 ))}
+                {user && (
+                  <button onClick={() => navigate('profile')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
+                    <span className="text-lg">○</span>
+                    <span>Profile & settings</span>
+                  </button>
+                )}
                 {user && (
                   <button onClick={() => navigate('learn')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
                     <span className="text-lg">📚</span>
