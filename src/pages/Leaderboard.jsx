@@ -53,6 +53,7 @@ export default function Leaderboard() {
   const [scoringId, setScoringId] = useState(null);
   const [scorePoints, setScorePoints] = useState('');
   const [scoreNote, setScoreNote] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     api.getLeaderboard(50).then((data) => setRows(data.leaderboard || [])).catch((err) => setError(err.message)).finally(() => setLoading(false));
@@ -60,6 +61,7 @@ export default function Leaderboard() {
 
   const podium = useMemo(() => rows.slice(0, 3), [rows]);
   const tableRows = useMemo(() => rows.slice(3), [rows]);
+  const filteredRows = useMemo(() => tableRows.filter((row) => (row.username || '').toLowerCase().includes(searchTerm.trim().toLowerCase())), [tableRows, searchTerm]);
 
   const applyScore = async (userId) => {
     const points = Number.parseInt(scorePoints, 10);
@@ -114,7 +116,32 @@ export default function Leaderboard() {
             <span className="self-start rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[8px] font-bold uppercase tracking-wider text-ink-muted sm:self-auto">Scroll table →</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="border-b border-[#12365A] px-3 py-3 sm:px-4">
+            <label className="block">
+              <span className="sr-only">Search players</span>
+              <input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Search players…" className="tt-evo-control w-full px-4 text-sm placeholder:text-ink-muted sm:max-w-sm" />
+            </label>
+          </div>
+
+          <div className="grid gap-2 p-3 md:hidden">
+            {filteredRows.map((row, index) => (
+              <article key={row.id} className="tt-evo-card flex min-w-0 items-center gap-3 p-3">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-brand-cyan/20 bg-brand-cyan/5 text-xs font-bold text-brand-cyan">#{row.rank ?? index + 4}</div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-white">{row.username}</p>
+                  <p className="mt-1 text-[11px] text-ink-muted">{row.referral_count ?? 0} referrals · {row.total_contribution ?? '—'} contribution</p>
+                </div>
+                <div className="shrink-0 text-right">
+                  <p className="text-sm font-bold tabular-nums text-white">{Number(row.total_points ?? 0).toLocaleString()}</p>
+                  <p className="text-[9px] uppercase tracking-wider text-ink-muted">points</p>
+                </div>
+                {isAdmin && <button type="button" onClick={() => { setScoringId(row.id); setScorePoints(''); setScoreNote(''); }} className="rounded-lg border border-brand-cyan/20 px-2 py-2 text-[10px] font-semibold text-brand-cyan">Adjust</button>}
+              </article>
+            ))}
+            {filteredRows.length === 0 && <p className="py-8 text-center text-sm text-ink-muted">No players match that search.</p>}
+          </div>
+
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[1080px] border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-[#12365A] bg-[#070809] text-[10px] uppercase tracking-[0.14em] text-ink-muted">
@@ -122,7 +149,7 @@ export default function Leaderboard() {
                 </tr>
               </thead>
               <motion.tbody variants={tbodyVariants} initial="hidden" animate="show">
-                {tableRows.map((row, index) => (
+                {filteredRows.map((row, index) => (
                   <motion.tr key={row.id} variants={rowVariants} whileHover={{ backgroundColor: 'rgba(0,140,255,0.04)' }} className="border-b border-[#12365A]/70 bg-[#030914] transition-colors">
                     <td className="px-4 py-3"><RankBadge position={row.rank ?? index + 4} /></td>
                     <td className="px-4 py-3 font-medium">{row.username}</td>
