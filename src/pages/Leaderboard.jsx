@@ -135,7 +135,12 @@ export default function Leaderboard() {
                   <p className="text-sm font-bold tabular-nums text-white">{Number(row.total_points ?? 0).toLocaleString()}</p>
                   <p className="text-[9px] uppercase tracking-wider text-ink-muted">points</p>
                 </div>
-                {isAdmin && <button type="button" onClick={() => { setScoringId(row.id); setScorePoints(''); setScoreNote(''); }} className="rounded-lg border border-brand-cyan/20 px-2 py-2 text-[10px] font-semibold text-brand-cyan">Adjust</button>}
+                {isAdmin && <button type="button" onClick={() => { setScoringId(scoringId === row.id ? null : row.id); setScorePoints(''); setScoreNote(''); }} className="rounded-lg border border-brand-cyan/20 px-2 py-2 text-[10px] font-semibold text-brand-cyan">{scoringId === row.id ? 'Close' : 'Adjust'}</button>}
+                {isAdmin && scoringId === row.id && <div className="mt-3 grid w-full grid-cols-2 gap-2">
+                  <input type="number" aria-label="Points adjustment" placeholder="± points" value={scorePoints} onChange={(event) => setScorePoints(event.target.value)} className="tt-evo-control min-w-0 px-3 text-xs" />
+                  <input aria-label="Adjustment reason" placeholder="Reason" value={scoreNote} onChange={(event) => setScoreNote(event.target.value)} className="tt-evo-control min-w-0 px-3 text-xs" />
+                  <button type="button" disabled={!scorePoints || Number(scorePoints) === 0} onClick={() => applyScore(row.id)} className="tt-evo-primary col-span-2 text-xs disabled:opacity-50">Apply points adjustment</button>
+                </div>}
               </article>
             ))}
             {filteredRows.length === 0 && <p className="py-8 text-center text-sm text-ink-muted">No players match that search.</p>}
