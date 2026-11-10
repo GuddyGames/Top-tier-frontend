@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import './styles/enterprise-theme.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from './auth/AuthContext';
 import Home from './pages/Home.jsx';
@@ -48,6 +49,15 @@ export default function App() {
   const referralCode = new URLSearchParams(window.location.search).get('ref') || '';
   const [tab, setTab] = useState(user ? 'home' : referralCode ? 'home' : 'leaderboard');
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [theme, setTheme] = useState(() => (typeof window !== 'undefined' && window.localStorage.getItem('top-tier-theme') === 'light' ? 'light' : 'dark'));
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem('top-tier-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
     const historyRef = useRef([user ? 'home' : referralCode ? 'home' : 'leaderboard']);
   const touchStartRef = useRef(null);
 
@@ -155,6 +165,12 @@ export default function App() {
                   </button>
                 )}
                 {user && (
+                  <button onClick={toggleTheme} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]" aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>
+                    <span className="text-lg" aria-hidden="true">{theme === 'dark' ? '☼' : '☾'}</span>
+                    <span>Switch to {theme === 'dark' ? 'light' : 'dark'} theme</span>
+                  </button>
+                )}
+                {user && (
                   <button onClick={() => navigate('profile')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
                     <span className="text-lg">○</span>
                     <span>Profile & settings</span>
@@ -212,6 +228,7 @@ export default function App() {
               ))}
             </nav>
             <div className="flex shrink-0 items-center gap-2">
+              <button onClick={toggleTheme} className="tt-header-action" aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>{theme === 'dark' ? '☼ Light' : '☾ Dark'}</button>
               <button onClick={() => navigate('profile')} className="tt-header-action">Profile</button>
               {isAdmin && <button onClick={() => navigate('admin')} className="tt-header-action tt-admin-action">Control room</button>}
             </div>

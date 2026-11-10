@@ -11,37 +11,29 @@ Set `VITE_API_URL` to the existing Top-tier backend URL. The Twelve Data API key
 The Parallax page displays analysis candidates and the user's recent analysis history. Free users currently have M15 and H1 analysis; premium timeframes are feature-gated by the backend. Subscription billing is not yet connected. Live broker execution is disabled.
 
 
-## Top-tier Evolution UI/UX — Developer Handoff
+## Top-tier 2.0 — Clean Enterprise UI/UX
 
-### Objective
-Full mobile-first redesign while preserving React 18, Vite, Tailwind, Framer Motion, API contracts, Supabase authentication, and existing user data.
+### Approved direction
+- **Visual style:** Clean Enterprise — professional, restrained, data-first layouts, clear hierarchy, consistent spacing and minimal decoration.
+- **Themes:** Dark and light, switchable by the user and persisted locally.
+- **Consistency:** Parallax shares the same design language as Home, Terminal, Ranks, Wallet and Admin.
 
-### Navigation
-Authenticated primary navigation: Home, Markets (Parallax), Tasks, Ranks, Wallet. Terminal, Academy, Referrals, Profile, and Admin remain available through the menu/header. Parallax is promoted to a primary destination.
+### Theme tokens
+- Light: canvas #F4F7FB, surface #FFFFFF, raised #F8FAFC, text #142238, muted #627187, border #DCE4EE, accent #2563EB.
+- Dark: canvas #0B1220, surface #111C2D, raised #172438, text #EDF3FB, muted #9AA9BD, border #26364B, accent #78A7FF.
+- Semantic positive/negative states; restrained gold for Premium.
+- Prefer 14px card radius, subtle shadows, 8px spacing increments, readable typography and clear focus states.
 
-### Screen specifications
-- **Home:** greeting, account identity, points/rank/streak, separate cash and points labels, primary actions, recent activity, task progress, referrals, and achievement progress. Never fabricate unavailable metrics.
-- **Markets / Parallax:** market/timeframe selectors, entitlement state, BUY/SELL/WAIT explanations, indicator context, data freshness, analysis history, and limitations. Admin Premium must be based on server-side role; paid Premium requires backend-verified entitlement. Never imply guaranteed accuracy or enable live execution.
-- **Trading terminal:** pair search, chart, timeframe, demo balance, order controls, SL/TP, positions, and history. Keep demo/live state unmistakable; live execution stays disabled.
-- **Ranks:** podium, personal rank, search/filter, compact responsive player cards. Desktop may use a table; mobile must not require horizontal scrolling. Preserve admin score adjustments.
-- **Wallet:** separate points from cash/account balance. Keep contributions, referral/task rewards, and transaction history distinct. Never label points as withdrawable cash.
-- **Admin:** overview, users, task-proof review, contribution verification, point adjustments, premium entitlement visibility, notifications, and audit visibility. Backend authorization remains authoritative.
+### Screen priorities
+1. Home: concise account overview, key metrics, primary actions, activity and progress.
+2. Markets / Parallax: shared cards and controls, market/timeframe selection, explainable analysis, data freshness, history and entitlement.
+3. Terminal: chart and order workspace, unmistakable demo status, risk controls and history.
+4. Ranks: responsive podium and player list; mobile cards instead of horizontally scrolling tables.
+5. Wallet: distinguish points from cash, contributions and activity.
+6. Admin: operational overview, user/task/contribution workflows and permission-aware controls.
 
-### Visual and interaction principles
-Evolve the existing navy/cyan identity. Prioritize hierarchy, legibility, consistent spacing, restrained gradients, 44px touch targets where practical, visible focus, semantic labels, reduced-motion support, and honest loading/error/empty states.
-
-### Responsive QA
-Test 360px, 390px, 768px, 1024px, and 1440px, including long usernames, large balances, empty/error/loading states, keyboard focus, and reduced motion.
+### Responsive and accessibility
+Test 360px, 390px, 768px, 1024px and 1440px. Support keyboard focus, semantic labels, reduced motion, readable contrast, long usernames, loading/error/empty states and safe-area insets.
 
 ### Safety boundaries
-No backend schema/API changes, payment integration, pricing promises, database migrations, production environment changes, deployment, or live broker execution in this UI pass. Never trust client-side role/plan state as an authorization boundary.
-
-### Acceptance checklist
-- [ ] Five primary destinations: Home, Markets, Tasks, Ranks, Wallet.
-- [ ] Parallax reachable in one tap.
-- [ ] Terminal, Academy, Referrals, Profile, and Admin remain reachable.
-- [ ] Leaderboard usable without horizontal scrolling on mobile.
-- [ ] Points and cash clearly distinguished.
-- [ ] Admin controls protected server-side.
-- [ ] Existing API calls and data models unchanged.
-- [ ] Build and responsive/accessibility checks pass before merge.
+Preserve React/Vite/Tailwind/Framer Motion, Supabase session, backend API contracts and user data. No billing, schema changes, migrations, production configuration changes or broker execution in this UI pass. Live trading remains disabled. Build and responsive/accessibility QA must pass before merge.
