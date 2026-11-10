@@ -49,3 +49,96 @@ input, textarea, select { font-size: 16px; }
     background: linear-gradient(90deg, transparent, #00A8FF, #19D9FF, transparent);
   }
 }
+
+
+/* Evolution UI foundation — additive tokens and reusable primitives. */
+:root {
+  color-scheme: dark;
+  --tt-bg: #050b18;
+  --tt-surface: #0d192b;
+  --tt-surface-raised: #14243a;
+  --tt-border: rgba(148, 174, 207, 0.14);
+  --tt-text: #f4f7fc;
+  --tt-muted: #91a1b8;
+  --tt-cyan: #19d9ff;
+  --tt-blue: #397bff;
+  --tt-positive: #22c987;
+  --tt-negative: #f06464;
+  --tt-premium: #f3c969;
+  --tt-radius-card: 18px;
+  --tt-shadow-card: 0 16px 42px rgba(0, 0, 0, 0.22);
+}
+
+body {
+  background-color: var(--tt-bg);
+  color: var(--tt-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--tt-cyan);
+  outline-offset: 3px;
+}
+
+@layer components {
+  .tt-evo-card {
+    border: 1px solid var(--tt-border);
+    border-radius: var(--tt-radius-card);
+    background: linear-gradient(155deg, rgba(20, 36, 58, 0.88), rgba(13, 25, 43, 0.96));
+    box-shadow: var(--tt-shadow-card);
+  }
+
+  .tt-evo-muted {
+    color: var(--tt-muted);
+  }
+
+  .tt-evo-eyebrow {
+    color: var(--tt-cyan);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .tt-evo-control {
+    min-height: 44px;
+    border: 1px solid var(--tt-border);
+    border-radius: 12px;
+    background: rgba(5, 11, 24, 0.72);
+    color: var(--tt-text);
+  }
+
+  .tt-evo-control:focus-visible {
+    border-color: var(--tt-cyan);
+  }
+
+  .tt-evo-primary {
+    min-height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(115deg, var(--tt-blue), #1aa8e8);
+    color: #fff;
+    font-weight: 700;
+    transition: filter 160ms ease, transform 160ms ease;
+  }
+
+  .tt-evo-primary:hover {
+    filter: brightness(1.12);
+  }
+
+  .tt-evo-primary:active {
+    transform: translateY(1px) scale(0.99);
+  }
+
+  .tt-evo-positive { color: var(--tt-positive); }
+  .tt-evo-negative { color: var(--tt-negative); }
+  .tt-evo-premium { color: var(--tt-premium); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
