@@ -157,12 +157,6 @@ export default function App() {
                   </button>
                 ))}
                 {user && (
-                  <button onClick={() => navigate('wallet')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
-                    <span className="text-lg">▣</span>
-                    <span>Wallet</span>
-                  </button>
-                )}
-                {user && (
                   <button onClick={toggleTheme} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]" aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>
                     <span className="text-lg" aria-hidden="true">{theme === 'dark' ? '☼' : '☾'}</span>
                     <span>Switch to {theme === 'dark' ? 'light' : 'dark'} theme</span>
@@ -184,12 +178,6 @@ export default function App() {
                   <button onClick={() => navigate('referrals')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
                     <span className="text-lg">↗</span>
                     <span>Referrals</span>
-                  </button>
-                )}
-                {user && (
-                  <button onClick={() => navigate('terminal')} className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium hover:bg-[#071426]">
-                    <span className="text-lg">⌁</span>
-                    <span>Terminal</span>
                   </button>
                 )}
                 {isAdmin && (

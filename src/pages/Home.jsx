@@ -145,7 +145,6 @@ export default function Home({ goToTerminal, goToLearn, isAdmin = false, goToAdm
               <span className="hidden rounded-full border border-border bg-surface/60 px-2 py-1 text-[8px] uppercase tracking-wider text-ink-muted min-[420px]:block">Quick access</span>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:gap-3">
-              <Action icon="⌁" label="Parallax Intelligence" hint="Explore market analysis" onClick={() => nav('parallax')} />
               <Action icon="↗" label="Markets & Terminal" hint="Practice trading" onClick={() => nav('terminal')} />
               <Action icon="✓" label="View Tasks" hint="Earn more points" onClick={() => nav('tasks')} />
               <Action icon="♧" label="Referrals" hint="Invite & earn" onClick={() => nav('referrals')} />
@@ -179,9 +178,6 @@ export default function Home({ goToTerminal, goToLearn, isAdmin = false, goToAdm
           )}
 
           <section className="mt-3 grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:mt-4 sm:gap-3">
-            <button onClick={() => nav('parallax')} className="group w-full rounded-2xl border border-brand-cyan/20 bg-brand-cyan/[0.04] px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-brand-cyan/50 hover:bg-brand-cyan/[0.08] sm:py-3.5">
-              <span className="block text-xs font-bold">Parallax Intelligence</span><span className="mt-1 block text-[9px] text-ink-muted">Market analysis & signals</span>
-            </button>
             <button onClick={goToTerminal} className="group w-full rounded-2xl border border-border bg-surface/60 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-brand-blue/50 hover:bg-surface sm:py-3.5">
               <span className="block text-xs font-bold">Practice Terminal</span><span className="mt-1 block text-[9px] text-ink-muted">Trade & practice</span>
             </button>
